@@ -1,0 +1,92 @@
+@model Flaw.Models.MembershipFee
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>MembershipFee</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.RealAmount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RealAmount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AmountWithDiscount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AmountWithDiscount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CurrentState)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CurrentState)
+        </dd>
+
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FullName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FullName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Start)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Start)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.End)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.End)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LeftOver)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LeftOver)
+        </dd>
+
+    </dl>
+</div>
+
+<div id="for_dept"></div>
+<div>
+    <a asp-action="Edit" asp-route-feeId="@Model.Id">Edit</a> |
+    <a asp-controller="PaymentModels" asp-action="Index" asp-route-id="@Model.Id">Payments</a> |
+    <a id="countDebt">Hashvel partqy orva drutyamb</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+            var index = window.location.href.lastIndexOf('/');
+            var id = window.location.href.substring(index + 1);
+            $("#countDebt").click(function () {
+                $.ajax({
+                    method: "GET",
+                    url: '@Url.Action("CountDebt","MembershipFees")',
+                    data: { id: id },
+                    success: function (result) {
+                        $("#for_dept").html(result);
+                    }
+                });
+            });
+        })
+    </script>
+}

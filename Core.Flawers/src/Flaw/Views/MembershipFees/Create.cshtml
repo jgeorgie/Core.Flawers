@@ -1,0 +1,85 @@
+@model Flaw.Models.MembershipFee
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>MembershipFee</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group">
+            <label asp-for="RealAmount" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="RealAmount" class="form-control" />
+                <span asp-validation-for="RealAmount" class="text-danger" />
+            </div>
+        </div>
+
+        @*<div class="form-group">
+        <label asp-for="AmountWithDiscount" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="AmountWithDiscount" class="form-control" />
+            <span asp-validation-for="AmountWithDiscount" class="text-danger" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="CurrentState" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <select asp-for="CurrentState" asp-items="Html.GetEnumSelectList<FeeState>()" class="form-control"></select>
+            <span asp-validation-for="CurrentState" class="text-danger" />
+        </div>
+    </div>*@
+
+        <div class="form-group">
+            <label asp-for="FullName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="text-danger" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Start" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Start" class="form-control" />
+                <span asp-validation-for="Start" class="text-danger" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="End" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="End" class="form-control" />
+                <span asp-validation-for="End" class="text-danger" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="LeftOver" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="LeftOver" class="form-control" />
+                <span asp-validation-for="LeftOver" class="text-danger" />
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
