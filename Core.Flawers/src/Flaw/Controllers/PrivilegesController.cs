@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Flaw.Controllers
 {
-    [Authorize(Roles ="SuperAdmin")]
+    [Authorize(Roles = "SuperAdmin")]
     public class PrivilegesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -110,6 +110,18 @@ namespace Flaw.Controllers
 
             if (ModelState.IsValid)
             {
+                var oldModel = _context.Privileges.Where(p => p.Id == privilege.Id).AsNoTracking().SingleOrDefault();
+                if (oldModel.Discount != privilege.Discount || oldModel.Start != privilege.Start || oldModel.End != privilege.End)
+                {
+                    var fee = _context.MembershipFees.Where(f => f.Id == privilege.MembershipFeeForeignKey).SingleOrDefault();
+                    var fullDays = (fee.End - fee.Start).TotalDays;
+                    var discountDays = (privilege.End - privilege.Start).TotalDays + 1;
+                    double PriceWithDiscount = fee.RealAmount - (fee.RealAmount * privilege.Discount / 100);
+                    fee.AmountWithDiscount = ((fullDays - discountDays) * (fee.RealAmount / fullDays)) + (discountDays * PriceWithDiscount / fullDays);
+                    _context.Entry(fee).State = EntityState.Modified;
+                }
+
+
                 try
                 {
                     _context.Update(privilege);

@@ -105,12 +105,41 @@ namespace Flaw.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AmountWithDiscount,CurrentState,End,FullName,RealAmount,Start,LeftOver")] MembershipFee membershipFee)
+        public async Task<IActionResult> Create([Bind("Id,AmountWithDiscount,CurrentState,End,FullName,RealAmount,Start,LeftOver,Periodicity")] MembershipFee membershipFee)
         {
             if (ModelState.IsValid)
             {
                 membershipFee.Id = Guid.NewGuid().ToString();
                 membershipFee.AmountWithDiscount = membershipFee.RealAmount;
+                if (membershipFee.Periodicity == FeePeriodicity.Month)
+                {
+                    var pendingPayment = new PendingPaymentModel()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Amount = membershipFee.RealAmount,
+                        Status = PaymentStatus.Pending,
+                        PaymentDeadline = membershipFee.End,
+                        MembershipFeeForeignKey = membershipFee.Id,
+                    };
+                    _context.Add(pendingPayment);
+                }
+                else
+                {
+
+                    for (int i = 1; i <= 12; i++)
+                    {
+                        var pendingPayment = new PendingPaymentModel()
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Amount = Math.Floor(membershipFee.RealAmount / 12),
+                            Status = PaymentStatus.Pending,
+                            PaymentDeadline = membershipFee.Start.AddMonths(i),
+                            MembershipFeeForeignKey = membershipFee.Id,
+                        };
+                        _context.Add(pendingPayment);
+                    }
+                }
+
                 _context.Add(membershipFee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -127,11 +156,11 @@ namespace Flaw.Controllers
             }
 
             var membershipFee = await _context.MembershipFees.SingleOrDefaultAsync(m => m.Id == id);
+
             if (membershipFee == null)
             {
                 return NotFound();
             }
-            //TempData["FeeState"] = membershipFee.CurrentState.ToString();
             return View(membershipFee);
         }
 
@@ -149,27 +178,27 @@ namespace Flaw.Controllers
 
             if (ModelState.IsValid)
             {
-                //var oldModel = _context.MembershipFees.SingleOrDefault(m => m.Id == membershipFee.Id);
-                //if (oldModel.RealAmount != membershipFee.RealAmount)
-                //{
-                //    if (HttpContext.User.Identity.Name != "admin@admin.am")
-                //    {
-                //        membershipFee.RealAmount = oldModel.RealAmount;
-                //        membershipFee.AmountWithDiscount = oldModel.AmountWithDiscount;
-                //    }
-                //    else
-                //    {
-                //        var feeAmountChange = new FeeAmountChangeModel()
-                //        {
-                //            id = Guid.NewGuid().ToString(),
-                //            ChangeDate = DateTime.Now.Date,
-                //            MembershipFeeForeignKey = membershipFee.Id,
-                //            NewAmount = membershipFee.RealAmount,
-                //            OldAmount = oldModel.RealAmount
-                //        };
-                //        _context.Add(feeAmountChange);
-                //    }
-                //}
+                var previousModel = _context.MembershipFees.Where(m => m.Id == membershipFee.Id).AsNoTracking().SingleOrDefault();
+                if (previousModel.RealAmount != membershipFee.RealAmount)
+                {
+                    if (HttpContext.User.Identity.Name != "admin@admin.am")
+                    {
+                        membershipFee.RealAmount = previousModel.RealAmount;
+                        membershipFee.AmountWithDiscount = previousModel.AmountWithDiscount;
+                    }
+                    else
+                    {
+                        var feeAmountChange = new FeeAmountChangeModel()
+                        {
+                            id = Guid.NewGuid().ToString(),
+                            ChangeDate = DateTime.Now.Date,
+                            MembershipFeeForeignKey = membershipFee.Id,
+                            NewAmount = membershipFee.RealAmount,
+                            OldAmount = previousModel.RealAmount
+                        };
+                        _context.Add(feeAmountChange);
+                    }
+                }
                 var privelege = _context.Privileges.Where(p => p.MembershipFeeForeignKey == membershipFee.Id).SingleOrDefault();
                 if (privelege == null)
                 {
@@ -180,7 +209,6 @@ namespace Flaw.Controllers
                     //TODO: Implement Edit with Discount
                 }
 
-                var previousModel = await _context.MembershipFees.SingleOrDefaultAsync(f => f.Id == membershipFee.Id);
                 var previousValue = previousModel.CurrentState;
                 if (membershipFee.CurrentState != previousValue)
                 {
@@ -195,8 +223,8 @@ namespace Flaw.Controllers
                     {
                         membershipFee.Reactiveted = DateTime.Now;
                     }
-
                 }
+
 
                 try
                 {

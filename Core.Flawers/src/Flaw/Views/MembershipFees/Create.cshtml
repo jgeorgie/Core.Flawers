@@ -67,6 +67,17 @@
             </div>
         </div>
 
+        @if (Context.User.Identity.Name == "admin@admin.am")
+        {
+            <div class="form-group">
+                <label asp-for="Periodicity" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <select asp-for="Periodicity" asp-items="Html.GetEnumSelectList<FeePeriodicity>()" class="form-control"></select>
+                    <span asp-validation-for="Periodicity" class="text-danger" />
+                </div>
+            </div>
+        }
+
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

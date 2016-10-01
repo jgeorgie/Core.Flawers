@@ -22,7 +22,7 @@ namespace Flaw.Controllers
         // GET: PaymentModels
         public async Task<IActionResult> Index(string feeId)
         {
-            var payments = await _context.PaymentModel.Where(p => p.MembershipFeeForeignKey == feeId).ToListAsync();
+            var payments = await _context.Payments.Where(p => p.MembershipFeeForeignKey == feeId).ToListAsync();
             //var applicationDbContext = _context.PaymentModel.Include(p => p.Fee);
             //return View(await applicationDbContext.ToListAsync());
             return View(payments);
@@ -36,7 +36,7 @@ namespace Flaw.Controllers
                 return NotFound();
             }
 
-            var paymentModel = await _context.PaymentModel.SingleOrDefaultAsync(m => m.Id == id);
+            var paymentModel = await _context.Payments.SingleOrDefaultAsync(m => m.Id == id);
             if (paymentModel == null)
             {
                 return NotFound();
@@ -78,7 +78,7 @@ namespace Flaw.Controllers
                 return NotFound();
             }
 
-            var paymentModel = await _context.PaymentModel.SingleOrDefaultAsync(m => m.Id == id);
+            var paymentModel = await _context.Payments.SingleOrDefaultAsync(m => m.Id == id);
             if (paymentModel == null)
             {
                 return NotFound();
@@ -131,7 +131,7 @@ namespace Flaw.Controllers
                 return NotFound();
             }
 
-            var paymentModel = await _context.PaymentModel.SingleOrDefaultAsync(m => m.Id == id);
+            var paymentModel = await _context.Payments.SingleOrDefaultAsync(m => m.Id == id);
             if (paymentModel == null)
             {
                 return NotFound();
@@ -145,15 +145,15 @@ namespace Flaw.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var paymentModel = await _context.PaymentModel.SingleOrDefaultAsync(m => m.Id == id);
-            _context.PaymentModel.Remove(paymentModel);
+            var paymentModel = await _context.Payments.SingleOrDefaultAsync(m => m.Id == id);
+            _context.Payments.Remove(paymentModel);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
         private bool PaymentModelExists(string id)
         {
-            return _context.PaymentModel.Any(e => e.Id == id);
+            return _context.Payments.Any(e => e.Id == id);
         }
     }
 }

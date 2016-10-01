@@ -5,12 +5,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Flaw.Data;
 
-namespace Flaw.Data.Migrations
+namespace Flaw.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161001114446_all")]
+    partial class all
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
@@ -184,15 +185,40 @@ namespace Flaw.Data.Migrations
 
                     b.Property<DateTime>("Date");
 
+                    b.Property<string>("FeeId");
+
                     b.Property<string>("MembershipFeeForeignKey");
+
+                    b.Property<string>("PendingPaymentModelId");
 
                     b.Property<int>("Type");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FeeId");
+
+                    b.HasIndex("PendingPaymentModelId");
+
+                    b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("Flaw.Models.PendingPaymentModel", b =>
+                {
+                    b.Property<string>("Id");
+
+                    b.Property<double>("Amount");
+
+                    b.Property<string>("MembershipFeeForeignKey");
+
+                    b.Property<DateTime>("PaymentDeadline");
+
+                    b.Property<int>("Status");
+
+                    b.HasKey("Id");
+
                     b.HasIndex("MembershipFeeForeignKey");
 
-                    b.ToTable("PaymentModel");
+                    b.ToTable("PendingPayments");
                 });
 
             modelBuilder.Entity("Flaw.Models.Privilege", b =>
@@ -314,11 +340,22 @@ namespace Flaw.Data.Migrations
             modelBuilder.Entity("Flaw.Models.FeeAmountChangeModel", b =>
                 {
                     b.HasOne("Flaw.Models.MembershipFee", "Fee")
-                        .WithMany()
+                        .WithMany("AmountChanges")
                         .HasForeignKey("FeeId");
                 });
 
             modelBuilder.Entity("Flaw.Models.PaymentModel", b =>
+                {
+                    b.HasOne("Flaw.Models.MembershipFee", "Fee")
+                        .WithMany()
+                        .HasForeignKey("FeeId");
+
+                    b.HasOne("Flaw.Models.PendingPaymentModel")
+                        .WithMany("MyProperty")
+                        .HasForeignKey("PendingPaymentModelId");
+                });
+
+            modelBuilder.Entity("Flaw.Models.PendingPaymentModel", b =>
                 {
                     b.HasOne("Flaw.Models.MembershipFee", "Fee")
                         .WithMany("Payments")

@@ -14,8 +14,13 @@ namespace Flaw.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlite("Filename=Flaw_dbo.db");
+        //}
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -31,7 +36,7 @@ namespace Flaw.Data
                 .HasForeignKey<CashModel>(b => b.PaymentModelId)
                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
 
-            builder.Entity<PaymentModel>()
+            builder.Entity<PendingPaymentModel>()
                 .HasOne(pt => pt.Fee)
                 .WithMany(p => p.Payments)
                 .HasForeignKey(pt => pt.MembershipFeeForeignKey)
@@ -49,9 +54,11 @@ namespace Flaw.Data
 
         public DbSet<MembershipFee> MembershipFees { get; set; }
 
-        public DbSet<PaymentModel> PaymentModel { get; set; }
+        public DbSet<PaymentModel> Payments { get; set; }
 
         public DbSet<FeeAmountChangeModel> FeeAmountChangeModels { get; set; }
+
+        public DbSet<PendingPaymentModel> PendingPayments { get; set; }
 
     }
 }

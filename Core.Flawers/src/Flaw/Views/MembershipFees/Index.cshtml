@@ -33,44 +33,51 @@
             <th>
                 @Html.DisplayNameFor(model => model.LeftOver)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Periodicity)
+            </th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.RealAmount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountWithDiscount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CurrentState)
-            </td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RealAmount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AmountWithDiscount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CurrentState)
+                </td>
 
-            <td>
-                @Html.DisplayFor(modelItem => item.FullName)
-            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
 
-            <td>
-                @Html.DisplayFor(modelItem => item.Start)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.End)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LeftOver)
-            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Start)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.End)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LeftOver)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Periodicity)
+                </td>
 
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                @if (Context.User.Identity.Name == "admin@admin.am")
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    @if (Context.User.Identity.Name == "admin@admin.am")
                 {
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                }
-            </td>
-        </tr>
-}
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

@@ -61,13 +61,35 @@
             @Html.DisplayFor(model => model.LeftOver)
         </dd>
 
+        @if (Model.Paused != null)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.Paused)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Paused)
+            </dd>
+        }
+
+        @if (Model.Reactiveted != null)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.Reactiveted)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Reactiveted)
+            </dd>
+
+        }
+
+
     </dl>
 </div>
 
 <div id="for_dept"></div>
 <div>
-    <a asp-action="Edit" asp-route-feeId="@Model.Id">Edit</a> |
-    <a asp-controller="PaymentModels" asp-action="Index" asp-route-id="@Model.Id">Payments</a> |
+    <a asp-action="Edit" asp-route-Id="@Model.Id">Edit</a> |
+    <a asp-controller="PendingPaymentModels" asp-action="Index" asp-route-id="@Model.Id">Payments</a> |
     <a id="countDebt">Hashvel partqy orva drutyamb</a> |
     <a asp-action="Index">Back to List</a>
 </div>
