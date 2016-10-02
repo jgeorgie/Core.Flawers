@@ -86,10 +86,18 @@
     </dl>
 </div>
 
+<div id="container_cash">
+
+</div>
+
+<div id="container_transfer">
+
+</div>
+
 <div id="for_dept"></div>
 <div>
     <a asp-action="Edit" asp-route-Id="@Model.Id">Edit</a> |
-    <a asp-controller="PendingPaymentModels" asp-action="Index" asp-route-id="@Model.Id">Payments</a> |
+    @*<a asp-action="GetAllPayments" asp-route-id="@Model.Id">Payments</a> |*@
     <a id="countDebt">Hashvel partqy orva drutyamb</a> |
     <a asp-action="Index">Back to List</a>
 </div>
@@ -99,6 +107,26 @@
         $(function () {
             var index = window.location.href.lastIndexOf('/');
             var id = window.location.href.substring(index + 1);
+
+            $.ajax({
+                method: "GET",
+                url: '@Url.Action("GetCashPayments", "MembershipFees")',
+                data: { id: id },
+                success: function (result) {
+                    $("#container_cash").html(result);
+                }
+            });
+
+            $.ajax({
+                method: "GET",
+                url: '@Url.Action("GetTransferPayments", "MembershipFees")',
+                data: { id: id },
+                success: function (result) {
+                    $("#container_transfer").html(result);
+                }
+            });
+
+
             $("#countDebt").click(function () {
                 $.ajax({
                     method: "GET",

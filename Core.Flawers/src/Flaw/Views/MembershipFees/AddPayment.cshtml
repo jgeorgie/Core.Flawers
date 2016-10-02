@@ -1,0 +1,120 @@
+@model Flaw.Models.PaymentModel
+
+@{
+    ViewData["Title"] = "AddPayment";
+}
+
+<style>
+    #container {
+        max-width: 900px;
+    }
+</style>
+
+<h2>AddPayment</h2>
+
+<div class="form-group">
+    <div class="col-md-10">
+        <select id="typeSelectList" class="form-control">
+            <option value="Transfer" selected>Transfer</option>
+            <option value="Cash">Cash</option>
+        </select>
+    </div>
+</div>
+<a href="#"><span id="selectType">Add</span></a>
+
+<div id="container">
+
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+            var url = window.location.href;
+            var index = url.lastIndexOf('/');
+            var feeId;
+            if (url[url.length - 1] == '#') {
+                feeId = url.substring(index + 1, url.length - 1);
+            } else {
+                feeId = url.substring(index + 1);
+            }
+
+            $("#selectType").click(function () {
+                if ($("#typeSelectList option:selected").text() == "Transfer") {
+                    $.ajax({
+                        method: "GET",
+                        url: '@Url.Action("CreateForFee", "TransferPayments")',
+                        data: { feeId: feeId },
+                        success: function (result) {
+                            $("#container").html(result);
+                            $('input[name="MembershipFeeId"]').val(feeId);
+                        }
+                    });
+                } else if ($("#typeSelectList option:selected").text() == "Cash") {
+                    $.ajax({
+                        method: "GET",
+                        url: '@Url.Action("CreateForFee","CashModels")',
+                        data: { feeId: feeId },
+                        success: function (result) {
+                            $("#container").html(result);
+                            $('input[name="MembershipFeeId"]').val(feeId);
+                        }
+                    });
+
+                }
+            });
+        });
+    </script>
+}
+
+@*<form asp-action="AddPayment">
+        <div class="form-horizontal">
+            <h4>PaymentModel</h4>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Amount" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Amount" class="form-control" />
+                    <span asp-validation-for="Amount" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CashPaymentId" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="CashPaymentId" class="form-control" />
+                    <span asp-validation-for="CashPaymentId" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Date" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Date" class="form-control" />
+                    <span asp-validation-for="Date" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="MembershipFeeForeignKey" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="MembershipFeeForeignKey" class="form-control" />
+                    <span asp-validation-for="MembershipFeeForeignKey" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Type" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <select asp-for="Type" class="form-control"></select>
+                    <span asp-validation-for="Type" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>*@
+

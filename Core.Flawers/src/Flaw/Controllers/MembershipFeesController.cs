@@ -9,6 +9,7 @@ using Flaw.Data;
 using Flaw.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
 
 namespace Flaw.Controllers
 {
@@ -26,6 +27,11 @@ namespace Flaw.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _context.MembershipFees.ToListAsync());
+        }
+
+        public IActionResult AddPayment(string id)
+        {
+            return View();
         }
 
         // GET: MembershipFees/Details/5
@@ -111,34 +117,34 @@ namespace Flaw.Controllers
             {
                 membershipFee.Id = Guid.NewGuid().ToString();
                 membershipFee.AmountWithDiscount = membershipFee.RealAmount;
-                if (membershipFee.Periodicity == FeePeriodicity.Month)
-                {
-                    var pendingPayment = new PendingPaymentModel()
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        Amount = membershipFee.RealAmount,
-                        Status = PaymentStatus.Pending,
-                        PaymentDeadline = membershipFee.End,
-                        MembershipFeeForeignKey = membershipFee.Id,
-                    };
-                    _context.Add(pendingPayment);
-                }
-                else
-                {
+                //if (membershipFee.Periodicity == FeePeriodicity.Month)
+                //{
+                //    var pendingPayment = new PendingPaymentModel()
+                //    {
+                //        Id = Guid.NewGuid().ToString(),
+                //        Amount = membershipFee.RealAmount,
+                //        Status = PaymentStatus.Pending,
+                //        PaymentDeadline = membershipFee.End,
+                //        MembershipFeeForeignKey = membershipFee.Id,
+                //    };
+                //    _context.Add(pendingPayment);
+                //}
+                //else
+                //{
 
-                    for (int i = 1; i <= 12; i++)
-                    {
-                        var pendingPayment = new PendingPaymentModel()
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            Amount = Math.Floor(membershipFee.RealAmount / 12),
-                            Status = PaymentStatus.Pending,
-                            PaymentDeadline = membershipFee.Start.AddMonths(i),
-                            MembershipFeeForeignKey = membershipFee.Id,
-                        };
-                        _context.Add(pendingPayment);
-                    }
-                }
+                //    for (int i = 1; i <= 12; i++)
+                //    {
+                //        var pendingPayment = new PendingPaymentModel()
+                //        {
+                //            Id = Guid.NewGuid().ToString(),
+                //            Amount = Math.Floor(membershipFee.RealAmount / 12),
+                //            Status = PaymentStatus.Pending,
+                //            PaymentDeadline = membershipFee.Start.AddMonths(i),
+                //            MembershipFeeForeignKey = membershipFee.Id,
+                //        };
+                //        _context.Add(pendingPayment);
+                //    }
+                //}
 
                 _context.Add(membershipFee);
                 await _context.SaveChangesAsync();
@@ -146,6 +152,30 @@ namespace Flaw.Controllers
             }
             return View(membershipFee);
         }
+
+        public async Task<IActionResult> GetTransferPayments(string id)
+        {
+            var transfer = await _context.TransferPayments.Where(t => t.MembershipFeeId == id).ToListAsync();
+
+            if (transfer.Count != 0)
+            {
+                return PartialView("_Transfers", transfer);
+            }
+            return BadRequest();
+        }
+
+        public async Task<IActionResult> GetCashPayments(string id)
+        {
+            var transfer = await _context.CashModel.Where(c => c.MembershipFeeId == id).ToListAsync();
+
+            if (transfer.Count != 0)
+            {
+                return PartialView("_CashPayments", transfer);
+            }
+
+            return BadRequest();
+        }
+
 
         // GET: MembershipFees/Edit/5
         public async Task<IActionResult> Edit(string id)

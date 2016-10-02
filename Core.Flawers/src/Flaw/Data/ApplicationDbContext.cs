@@ -30,16 +30,15 @@ namespace Flaw.Data
                  .HasForeignKey<Privilege>(b => b.MembershipFeeForeignKey)
                  .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
 
-            builder.Entity<PaymentModel>()
-                .HasOne(p => p.CashPayment)
-                .WithOne(i => i.Payment)
-                .HasForeignKey<CashModel>(b => b.PaymentModelId)
+            builder.Entity<TransferPayment>()
+                .HasOne(p => p.Fee)
+                .WithMany(i => i.TransferPayments)
                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
 
-            builder.Entity<PendingPaymentModel>()
+            builder.Entity<CashModel>()
                 .HasOne(pt => pt.Fee)
-                .WithMany(p => p.Payments)
-                .HasForeignKey(pt => pt.MembershipFeeForeignKey)
+                .WithMany(p => p.CashPayments)
+                .HasForeignKey(pt => pt.MembershipFeeId)
                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
 
             base.OnModelCreating(builder);
@@ -50,15 +49,14 @@ namespace Flaw.Data
 
         public DbSet<CashModel> CashModel { get; set; }
 
+        public DbSet<TransferPayment> TransferPayments { get; set; }
+
         public DbSet<Privilege> Privileges { get; set; }
 
         public DbSet<MembershipFee> MembershipFees { get; set; }
 
-        public DbSet<PaymentModel> Payments { get; set; }
-
         public DbSet<FeeAmountChangeModel> FeeAmountChangeModels { get; set; }
 
-        public DbSet<PendingPaymentModel> PendingPayments { get; set; }
 
     }
 }

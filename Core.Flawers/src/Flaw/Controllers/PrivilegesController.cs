@@ -70,7 +70,20 @@ namespace Flaw.Controllers
                 var discountDays = (privilege.End - privilege.Start).TotalDays;
                 double PriceWithDiscount = fee.RealAmount - (fee.RealAmount * privilege.Discount / 100);
                 fee.AmountWithDiscount = ((fullDays - discountDays) * (fee.RealAmount / fullDays)) + (discountDays * PriceWithDiscount / fullDays);
-                _context.Entry(fee).State = EntityState.Modified;
+                fee.LeftOver = fee.AmountWithDiscount;
+                var transfers = await _context.TransferPayments.Where(t => t.MembershipFeeId == privilege.MembershipFeeForeignKey).ToListAsync();
+                var cashs = await _context.CashModel.Where(c => c.MembershipFeeId == privilege.MembershipFeeForeignKey).ToListAsync();
+
+                foreach (var t in transfers)
+                {
+                    fee.LeftOver -= t.Amount;
+                }
+                foreach (var c in cashs)
+                {
+                    fee.LeftOver -= c.Amount;
+                }
+
+                _context.Update(fee);
 
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -115,9 +128,22 @@ namespace Flaw.Controllers
                 {
                     var fee = _context.MembershipFees.Where(f => f.Id == privilege.MembershipFeeForeignKey).SingleOrDefault();
                     var fullDays = (fee.End - fee.Start).TotalDays;
-                    var discountDays = (privilege.End - privilege.Start).TotalDays + 1;
+                    var discountDays = (privilege.End - privilege.Start).TotalDays;
                     double PriceWithDiscount = fee.RealAmount - (fee.RealAmount * privilege.Discount / 100);
                     fee.AmountWithDiscount = ((fullDays - discountDays) * (fee.RealAmount / fullDays)) + (discountDays * PriceWithDiscount / fullDays);
+
+                    fee.LeftOver = fee.AmountWithDiscount;
+                    var transfers = await _context.TransferPayments.Where(t => t.MembershipFeeId == privilege.MembershipFeeForeignKey).ToListAsync();
+                    var cashs = await _context.CashModel.Where(c => c.MembershipFeeId == privilege.MembershipFeeForeignKey).ToListAsync();
+
+                    foreach (var t in transfers)
+                    {
+                        fee.LeftOver -= t.Amount;
+                    }
+                    foreach (var c in cashs)
+                    {
+                        fee.LeftOver -= c.Amount;
+                    }
                     _context.Entry(fee).State = EntityState.Modified;
                 }
 

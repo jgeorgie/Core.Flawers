@@ -1,4 +1,4 @@
-@model Flaw.Models.PendingPaymentModel
+@model Flaw.Models.TransferPayment
 
 @{
     ViewData["Title"] = "Create";
@@ -8,7 +8,7 @@
 
 <form asp-action="Create">
     <div class="form-horizontal">
-        <h4>PendingPaymentModel</h4>
+        <h4>TransferPayment</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
@@ -19,23 +19,23 @@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="MembershipFeeForeignKey" class="col-md-2 control-label"></label>
+            <label asp-for="Date" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="MembershipFeeForeignKey" class ="form-control" asp-items="ViewBag.MembershipFeeForeignKey"></select>
+                <input asp-for="Date" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger" />
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="PaymentDeadline" class="col-md-2 control-label"></label>
+            <label asp-for="Destination" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="PaymentDeadline" class="form-control" />
-                <span asp-validation-for="PaymentDeadline" class="text-danger" />
+                <input asp-for="Destination" class="form-control" />
+                <span asp-validation-for="Destination" class="text-danger" />
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="Status" class="col-md-2 control-label"></label>
+            <label asp-for="MembershipFeeId" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="Status" class="form-control"></select>
-                <span asp-validation-for="Status" class="text-danger" />
+                <select asp-for="MembershipFeeId" class ="form-control" asp-items="ViewBag.MembershipFeeId"></select>
             </div>
         </div>
         <div class="form-group">
@@ -50,6 +50,3 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

@@ -14,7 +14,7 @@
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.OrdersNumber)
-            </th>    
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Аccount)
             </th>
@@ -40,39 +40,45 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrdersNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Аccount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AccountingPass)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Amount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Destination)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrdersNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Аccount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AccountingPass)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Destination)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    @if (Context.User.Identity.Name == "admin@admin.am")
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+
+                    }
+
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

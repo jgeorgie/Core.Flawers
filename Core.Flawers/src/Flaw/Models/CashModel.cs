@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Flaw.Models
 {
-    public class CashModel
+    public class CashModel : IPayments
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Id { get; set; }
@@ -37,8 +37,8 @@ namespace Flaw.Models
         public BargainType Type { get; set; }
 
 
-        public string PaymentModelId { get; set; }
-        public PaymentModel Payment { get; set; }
+        public string MembershipFeeId { get; set; }
+        public MembershipFee Fee { get; set; }
 
     }
 

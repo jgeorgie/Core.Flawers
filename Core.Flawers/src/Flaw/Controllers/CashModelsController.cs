@@ -66,6 +66,30 @@ namespace Flaw.Controllers
             return View();
         }
 
+        public IActionResult CreateForFee(string Id)
+        {
+            ViewBag.FeeId = Id;
+            return PartialView("_CreateForFee");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateForFee([Bind("Id,OrdersNumber,Date,AccountingPass,Amount,Destination,FullName,Type,Аccount,MembershipFeeId")] CashModel cashModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var fee = _context.MembershipFees.SingleOrDefault(f => f.Id == cashModel.MembershipFeeId);
+                fee.LeftOver -= cashModel.Amount;
+                _context.Update(fee);
+                cashModel.Id = Guid.NewGuid().ToString();
+                _context.Add(cashModel);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            return View(cashModel);
+        }
+
+
         // POST: CashModels/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -78,15 +102,15 @@ namespace Flaw.Controllers
                 if (cashModel.Type == BargainType.CashIn)
                 {
                     //TODO: MembershipFeeFoerignKey
-                    var payment = new PaymentModel()
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        Amount = cashModel.Amount,
-                        Date = cashModel.Date,
-                        Type = PaymentType.Cash,
-                        CashPaymentId = cashModel.Id,
-                        //MembershipFeeForeignKey=cashModel.
-                    };
+                    //var payment = new PaymentModel()
+                    //{
+                    //    Id = Guid.NewGuid().ToString(),
+                    //    Amount = cashModel.Amount,
+                    //    Date = cashModel.Date,
+                    //    Type = PaymentType.Cash,
+                    //    CashPaymentId = cashModel.Id,
+                    //    //MembershipFeeForeignKey=cashModel.
+                    //};
                 }
                 cashModel.Id = Guid.NewGuid().ToString();
                 _context.Add(cashModel);
@@ -148,6 +172,7 @@ namespace Flaw.Controllers
         }
 
         // GET: CashModels/Delete/5
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -165,6 +190,7 @@ namespace Flaw.Controllers
         }
 
         // POST: CashModels/Delete/5
+        [Authorize(Roles = "SuperAdmin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)

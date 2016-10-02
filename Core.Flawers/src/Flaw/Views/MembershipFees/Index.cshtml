@@ -71,9 +71,10 @@
 
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="AddPayment" asp-route-id="@item.Id">Add Payment</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     @if (Context.User.Identity.Name == "admin@admin.am")
-                {
+                    {
                         <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                     }
                 </td>
@@ -81,3 +82,15 @@
         }
     </tbody>
 </table>
+
+
+
+@*@section scripts{
+    <script>
+        $(function () {
+            $(".add_payment").click(function () {
+
+            });
+        });
+    </script>
+}*@

@@ -50,7 +50,9 @@ namespace Flaw.Models
         public Privilege Privilege { get; set; }
 
         public List<FeeAmountChangeModel> AmountChanges { get; set; }
-        public List<PendingPaymentModel> Payments { get; set; }
+        public List<CashModel> CashPayments { get; set; }
+
+        public List<TransferPayment> TransferPayments { get; set; }
 
     }
 

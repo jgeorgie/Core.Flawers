@@ -1,4 +1,4 @@
-@model Flaw.Models.PendingPaymentModel
+@model Flaw.Models.TransferPayment
 
 @{
     ViewData["Title"] = "Delete";
@@ -8,7 +8,7 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>PendingPaymentModel</h4>
+    <h4>TransferPayment</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -18,16 +18,16 @@
             @Html.DisplayFor(model => model.Amount)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.PaymentDeadline)
+            @Html.DisplayNameFor(model => model.Date)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.PaymentDeadline)
+            @Html.DisplayFor(model => model.Date)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Status)
+            @Html.DisplayNameFor(model => model.Destination)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Status)
+            @Html.DisplayFor(model => model.Destination)
         </dd>
     </dl>
     
