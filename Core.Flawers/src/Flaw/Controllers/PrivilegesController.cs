@@ -45,6 +45,12 @@ namespace Flaw.Controllers
             return View(privilege);
         }
 
+        public async Task<IActionResult> Notifications()
+        {
+            var priv = await _context.Privileges.Where(p => p.End.Date >= DateTime.Now.Date && (p.End - DateTime.Now).TotalDays <= 3).ToListAsync();
+            return View(priv);
+        }
+
         // GET: Privileges/Create
         public IActionResult Create(string feeId)
         {
@@ -144,7 +150,7 @@ namespace Flaw.Controllers
                     {
                         fee.LeftOver -= c.Amount;
                     }
-                    _context.Entry(fee).State = EntityState.Modified;
+                    _context.Update(fee);
                 }
 
 

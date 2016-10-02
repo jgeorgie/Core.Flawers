@@ -97,7 +97,10 @@
 <div id="for_dept"></div>
 <div>
     <a asp-action="Edit" asp-route-Id="@Model.Id">Edit</a> |
-    @*<a asp-action="GetAllPayments" asp-route-id="@Model.Id">Payments</a> |*@
+    @if (Context.User.Identity.Name == "admin@admin.am")
+    {
+        <a asp-action="AmountChangeModels" asp-route-id="@Model.Id">Andamavchari chapi popoxutyunner</a> @:| 
+    }
     <a id="countDebt">Hashvel partqy orva drutyamb</a> |
     <a asp-action="Index">Back to List</a>
 </div>
