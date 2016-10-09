@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,8 +9,15 @@ namespace Flaw.Models
 {
     public class Privilege
     {
+       
+        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Id { get; set; }
+
+
+        public int PrivilegeNumber { get; set; }
+
+        public string Type { get; set; }
 
         public DateTime Start { get; set; }
 
@@ -24,4 +32,6 @@ namespace Flaw.Models
         public string MembershipFeeForeignKey { get; set; }
         public MembershipFee Fee { get; set; }
     }
+
+
 }

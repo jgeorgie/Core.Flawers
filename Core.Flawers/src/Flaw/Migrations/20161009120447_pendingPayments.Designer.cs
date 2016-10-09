@@ -8,9 +8,10 @@ using Flaw.Data;
 namespace Flaw.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161009120447_pendingPayments")]
+    partial class pendingPayments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
@@ -193,13 +194,9 @@ namespace Flaw.Migrations
 
                     b.Property<string>("CashPaymentId");
 
-                    b.Property<double?>("DepositOrDebt");
-
                     b.Property<string>("FeeId");
 
                     b.Property<string>("MembershipFeeForeignKey");
-
-                    b.Property<DateTime>("PayedOn");
 
                     b.Property<DateTime>("PaymentDeadline");
 
@@ -256,8 +253,6 @@ namespace Flaw.Migrations
                     b.Property<string>("Destination");
 
                     b.Property<string>("MembershipFeeId");
-
-                    b.Property<string>("PaymentNo");
 
                     b.HasKey("Id");
 

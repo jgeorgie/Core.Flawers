@@ -8,9 +8,10 @@ using Flaw.Data;
 namespace Flaw.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161009112338_a")]
+    partial class a
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
@@ -150,7 +151,7 @@ namespace Flaw.Migrations
 
                     b.Property<int>("CurrentState");
 
-                    b.Property<double?>("Deposit");
+                    b.Property<double>("Deposit");
 
                     b.Property<DateTime>("End");
 
@@ -181,43 +182,6 @@ namespace Flaw.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MembershipFees");
-                });
-
-            modelBuilder.Entity("Flaw.Models.PendingPaymentModel", b =>
-                {
-                    b.Property<string>("Id");
-
-                    b.Property<double>("Amount");
-
-                    b.Property<string>("CashPaymentForeignKey");
-
-                    b.Property<string>("CashPaymentId");
-
-                    b.Property<double?>("DepositOrDebt");
-
-                    b.Property<string>("FeeId");
-
-                    b.Property<string>("MembershipFeeForeignKey");
-
-                    b.Property<DateTime>("PayedOn");
-
-                    b.Property<DateTime>("PaymentDeadline");
-
-                    b.Property<int>("Status");
-
-                    b.Property<string>("TransferPaymentForeignKey");
-
-                    b.Property<string>("TransferPaymentId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CashPaymentId");
-
-                    b.HasIndex("FeeId");
-
-                    b.HasIndex("TransferPaymentId");
-
-                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("Flaw.Models.Privilege", b =>
@@ -256,8 +220,6 @@ namespace Flaw.Migrations
                     b.Property<string>("Destination");
 
                     b.Property<string>("MembershipFeeId");
-
-                    b.Property<string>("PaymentNo");
 
                     b.HasKey("Id");
 
@@ -365,21 +327,6 @@ namespace Flaw.Migrations
                     b.HasOne("Flaw.Models.MembershipFee", "Fee")
                         .WithMany("AmountChanges")
                         .HasForeignKey("FeeId");
-                });
-
-            modelBuilder.Entity("Flaw.Models.PendingPaymentModel", b =>
-                {
-                    b.HasOne("Flaw.Models.CashModel", "CashPayment")
-                        .WithMany()
-                        .HasForeignKey("CashPaymentId");
-
-                    b.HasOne("Flaw.Models.MembershipFee", "Fee")
-                        .WithMany()
-                        .HasForeignKey("FeeId");
-
-                    b.HasOne("Flaw.Models.TransferPayment", "TransferPayment")
-                        .WithMany()
-                        .HasForeignKey("TransferPaymentId");
                 });
 
             modelBuilder.Entity("Flaw.Models.Privilege", b =>

@@ -17,17 +17,14 @@ namespace Flaw.Data
             //Database.EnsureCreated();
         }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlite("Filename=Flaw_dbo.db");
-        //}
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<MembershipFee>()
-                 .HasOne(p => p.Privilege)
-                 .WithOne(i => i.Fee)
-                 .HasForeignKey<Privilege>(b => b.MembershipFeeForeignKey)
+
+            builder.Entity<Privilege>()
+                 .HasOne(pt => pt.Fee)
+                 .WithMany(p => p.Privileges)
+                 .HasForeignKey(f => f.MembershipFeeForeignKey)
                  .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
 
             builder.Entity<TransferPayment>()
@@ -50,6 +47,8 @@ namespace Flaw.Data
         public DbSet<CashModel> CashModel { get; set; }
 
         public DbSet<TransferPayment> TransferPayments { get; set; }
+
+        public DbSet<PendingPaymentModel> Payments { get; set; }
 
         public DbSet<Privilege> Privileges { get; set; }
 

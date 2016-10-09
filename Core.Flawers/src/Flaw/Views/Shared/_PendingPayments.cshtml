@@ -1,0 +1,60 @@
+@model IEnumerable<Flaw.Models.PendingPaymentModel>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentDeadline)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DepositOrDebt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentDeadline)
+                </td>
+
+                <td>
+                    @if (item.DepositOrDebt == null)
+                    {
+                       @:- @item.Amount
+                    }
+                    else if (item.DepositOrDebt > 0)
+                    {
+                         @:- @(item.Amount - item.DepositOrDebt)
+                    }
+                    else
+                    {
+                        @:0
+                    }
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+
+                @*<td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>*@
+            </tr>
+                            }
+    </tbody>
+</table>

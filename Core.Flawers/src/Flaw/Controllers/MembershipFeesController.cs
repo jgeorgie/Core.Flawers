@@ -119,19 +119,54 @@ namespace Flaw.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AmountWithDiscount,CurrentState,End,FullName,RealAmount,Start,LeftOver,Periodicity")] MembershipFee membershipFee)
+        public async Task<IActionResult> Create([Bind("Id,AmountWithDiscount,CurrentState,FirstName,LastName,MiddleName,RealAmount,Start,LeftOver,Periodicity,Deposit")] MembershipFee membershipFee)
         {
             if (ModelState.IsValid)
             {
                 membershipFee.Id = Guid.NewGuid().ToString();
                 membershipFee.AmountWithDiscount = membershipFee.RealAmount;
                 membershipFee.LeftOver = membershipFee.AmountWithDiscount;
+                membershipFee.MonthlyPay = Math.Floor(membershipFee.RealAmount / 12);
+
+                if (membershipFee.Deposit != null)
+                {
+                    membershipFee.LeftOver -= (double)membershipFee.Deposit;
+                }
+
+                if (membershipFee.Periodicity == FeePeriodicity.Year)
+                {
+                    membershipFee.End = membershipFee.Start.AddMonths(12);
+                    int month = membershipFee.Start.Month;
+                    for (int i = 1; i <= 12; i++)
+                    {
+                        var payment = new PendingPaymentModel()
+                        {
+                            MembershipFeeForeignKey = membershipFee.Id,
+                            Amount = Math.Floor(membershipFee.RealAmount / 12),
+                            Id = Guid.NewGuid().ToString(),
+                            PaymentDeadline = month + i <= 12 ? new DateTime(DateTime.Now.Year, month + i, 15) : new DateTime(DateTime.Now.Year + 1, month + i - 12, 15),
+                            Status = PaymentStatus.Pending
+                        };
+
+                        _context.Payments.Add(payment);
+                    }
+                }
 
                 _context.Add(membershipFee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(membershipFee);
+        }
+
+        public async Task<IActionResult> GetPendingPayments(string id)
+        {
+            var payments = await _context.Payments.Where(p => p.MembershipFeeForeignKey == id).OrderBy(p => p.PaymentDeadline).ToListAsync();
+            if (payments.Count != 0)
+            {
+                return PartialView("_PendingPayments", payments);
+            }
+            return BadRequest();
         }
 
         public async Task<IActionResult> GetTransferPayments(string id)

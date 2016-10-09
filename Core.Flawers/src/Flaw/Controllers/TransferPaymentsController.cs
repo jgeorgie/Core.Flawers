@@ -57,7 +57,7 @@ namespace Flaw.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Amount,Date,Destination,MembershipFeeId")] TransferPayment transferPayment)
+        public async Task<IActionResult> Create([Bind("Id,Amount,Date,PaymentNo,Destination,MembershipFeeId")] TransferPayment transferPayment)
         {
             if (ModelState.IsValid)
             {
@@ -77,17 +77,89 @@ namespace Flaw.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateForFee([Bind("Amount,Date,Destination,MembershipFeeId")] TransferPayment transferPayment)
+        public async Task<IActionResult> CreateForFee([Bind("Amount,Date,PaymentNo,Destination,MembershipFeeId")] TransferPayment transferPayment)
         {
             if (ModelState.IsValid)
             {
                 var fee = await _context.MembershipFees.SingleOrDefaultAsync(f => f.Id == transferPayment.MembershipFeeId);
+                var payments = await _context.Payments.Where(p => p.MembershipFeeForeignKey == fee.Id && p.Status == PaymentStatus.Pending).OrderBy(p => p.PaymentDeadline).ToListAsync();
+                double amount = transferPayment.Amount;
+
+                if (amount > 0)
+                {
+                    for (int i = 0; i < payments.Count; i++)
+                    {
+                        double depOrDebt = payments[i].DepositOrDebt == null ? 0 : (double)payments[i].DepositOrDebt;
+                        if (depOrDebt <= 0)
+                        {
+                            if (amount >= payments[i].Amount)
+                            {
+                                payments[i].Status = PaymentStatus.Payed;
+                                payments[i].TransferPaymentForeignKey = transferPayment.Id;
+                                payments[i].PayedOn = transferPayment.Date;
+                                payments[i].DepositOrDebt = 0;
+
+
+                                _context.Update(payments[i]);
+
+                                amount -= payments[i].Amount;
+
+                                if (amount == 0)
+                                {
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                if (payments[i].DepositOrDebt == null)
+                                {
+                                    payments[i].DepositOrDebt = amount;
+                                }
+                                else
+                                {
+                                    payments[i].DepositOrDebt += amount;
+                                }
+                                _context.Update(payments[i]);
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if (amount >= payments[i].Amount - depOrDebt)
+                            {
+                                payments[i].Status = PaymentStatus.Payed;
+                                payments[i].TransferPaymentForeignKey = transferPayment.Id;
+                                payments[i].PayedOn = transferPayment.Date;
+
+                                amount -= payments[i].Amount - (double)payments[i].DepositOrDebt;
+                                payments[i].DepositOrDebt = 0;
+
+                                _context.Update(payments[i]);
+
+                                
+
+                                if (amount == 0)
+                                {
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                payments[i].DepositOrDebt += amount;
+
+                                _context.Update(payments[i]);
+                                break;
+                            }
+                        }
+                    }
+                }
+
                 fee.LeftOver -= transferPayment.Amount;
                 _context.Update(fee);
                 transferPayment.Id = Guid.NewGuid().ToString();
                 _context.Add(transferPayment);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index","MembershipFees");
             }
             ViewData["MembershipFeeId"] = new SelectList(_context.MembershipFees, "Id", "Id", transferPayment.MembershipFeeId);
             return View(transferPayment);
@@ -116,7 +188,7 @@ namespace Flaw.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Amount,Date,Destination,MembershipFeeId")] TransferPayment transferPayment)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Amount,Date,PaymentNo,Destination,MembershipFeeId")] TransferPayment transferPayment)
         {
             if (id != transferPayment.Id)
             {
@@ -148,7 +220,7 @@ namespace Flaw.Controllers
         }
 
         // GET: TransferPayments/Delete/5
-        [Authorize(Roles ="SuperAdmin")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)

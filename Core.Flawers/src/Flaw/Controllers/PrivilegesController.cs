@@ -59,6 +59,8 @@ namespace Flaw.Controllers
             return View();
         }
 
+
+
         // POST: Privileges/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -66,12 +68,15 @@ namespace Flaw.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Description,Discount,End,MembershipFeeForeignKey,Start")] Privilege privilege)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && privilege.Start.Date >= DateTime.Now.Date)
             {
                 privilege.Id = Guid.NewGuid().ToString();
+                privilege.PrivilegeNumber = privilege.GetHashCode();
                 _context.Add(privilege);
 
                 var fee = _context.MembershipFees.Where(f => f.Id == privilege.MembershipFeeForeignKey).SingleOrDefault();
+                fee.ActivePrivilegeNo = privilege.PrivilegeNumber;
+
                 var fullDays = (fee.End - fee.Start).TotalDays;
                 var discountDays = (privilege.End - privilege.Start).TotalDays;
                 double PriceWithDiscount = fee.RealAmount - (fee.RealAmount * privilege.Discount / 100);

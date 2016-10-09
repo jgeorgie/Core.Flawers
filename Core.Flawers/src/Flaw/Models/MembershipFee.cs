@@ -10,17 +10,25 @@ namespace Flaw.Models
     public class MembershipFee
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [Key]
         public string Id { get; set; }
 
-        [Display(Name = "Անուն Ազգանուն")]
-        public string FullName { get; set; }
+        [Display(Name = "Անուն")]
+        public string FirstName { get; set; }
+
+        [Display(Name = "Ազգանուն")]
+        public string LastName { get; set; }
+
+        [Display(Name = "Հայրանուն")]
+        public string MiddleName { get; set; }
 
         [Display(Name = "Սկիզբ")]
         public DateTime Start { get; set; }
 
         [Display(Name = "Ավարտ")]
         public DateTime End { get; set; }
+
+        [Display(Name = "Անդամավճարի ամսական վճար")]
+        public double MonthlyPay { get; set; }
 
         [Display(Name = "Անդամավճարի չափ")]
         public double RealAmount { get; set; }
@@ -40,18 +48,23 @@ namespace Flaw.Models
 
         public int? TotalDaysPaused { get; set; }
 
-        [Display(Name = "Ընթացիկ գումարի չափ")]
+        [Display(Name = "Պարտք")]
         public double LeftOver { get; set; }
 
-        [Display(Name = "Պարտքը օրվա դրությամբ")]
+        [Display(Name = "Կանխավճար")]
+        public double? Deposit { get; set; }
+
+
         public double currentDebt { get; set; }
 
 
-        public Privilege Privilege { get; set; }
+        [Display(Name = "Արտոնագրի համար")]
+        public int ActivePrivilegeNo { get; set; }
+        public List<Privilege> Privileges { get; set; }
+
 
         public List<FeeAmountChangeModel> AmountChanges { get; set; }
         public List<CashModel> CashPayments { get; set; }
-
         public List<TransferPayment> TransferPayments { get; set; }
 
     }

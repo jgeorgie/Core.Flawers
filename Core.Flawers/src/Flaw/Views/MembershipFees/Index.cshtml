@@ -1,9 +1,7 @@
 @model IEnumerable<Flaw.Models.MembershipFee>
-
 @{
     ViewData["Title"] = "Index";
 }
-
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -17,19 +15,26 @@
                 @Html.DisplayNameFor(model => model.AmountWithDiscount)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.MonthlyPay)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.CurrentState)
             </th>
-
             <th>
-                @Html.DisplayNameFor(model => model.FullName)
+                @Html.DisplayNameFor(model => model.FirstName)
             </th>
-
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MiddleName)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Start)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.End)
-            </th>
+            </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.LeftOver)
             </th>
@@ -49,26 +54,32 @@
                     @Html.DisplayFor(modelItem => item.AmountWithDiscount)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.MonthlyPay)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.CurrentState)
                 </td>
-
                 <td>
-                    @Html.DisplayFor(modelItem => item.FullName)
+                    @Html.DisplayFor(modelItem => item.FirstName)
                 </td>
-
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MiddleName)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Start)
                 </td>
-                <td>
+                @*<td>
                     @Html.DisplayFor(modelItem => item.End)
-                </td>
+                </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.LeftOver)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Periodicity)
                 </td>
-
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="AddPayment" asp-route-id="@item.Id">Add Payment</a> |
@@ -83,14 +94,12 @@
     </tbody>
 </table>
 
-
-
 @*@section scripts{
-    <script>
-        $(function () {
-            $(".add_payment").click(function () {
+        <script>
+            $(function () {
+                $(".add_payment").click(function () {
 
+                });
             });
-        });
-    </script>
-}*@
+        </script>
+    }*@

@@ -36,10 +36,26 @@
     </div>*@
 
         <div class="form-group">
-            <label asp-for="FullName" class="col-md-2 control-label"></label>
+            <label asp-for="FirstName" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="FullName" class="form-control" />
-                <span asp-validation-for="FullName" class="text-danger" />
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="LastName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="MiddleName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="MiddleName" class="form-control" />
+                <span asp-validation-for="MiddleName" class="text-danger" />
             </div>
         </div>
 
@@ -51,21 +67,21 @@
             </div>
         </div>
 
-        <div class="form-group">
+        @*<div class="form-group">
             <label asp-for="End" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <input asp-for="End" class="form-control" />
                 <span asp-validation-for="End" class="text-danger" />
             </div>
-        </div>
+        </div>*@
 
-        <div class="form-group">
-            <label asp-for="LeftOver" class="col-md-2 control-label"></label>
+        @*<div class="form-group">
+            <label asp-for="Deposit" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="LeftOver" class="form-control" />
-                <span asp-validation-for="LeftOver" class="text-danger" />
+                <input asp-for="Deposit" class="form-control" />
+                <span asp-validation-for="Deposit" class="text-danger" />
             </div>
-        </div>
+        </div>*@
 
         @if (Context.User.Identity.Name == "admin@admin.am")
         {

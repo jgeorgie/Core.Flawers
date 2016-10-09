@@ -50,7 +50,6 @@ namespace Flaw.Controllers
         public void ExportToXML(string id)
         {
             var cashModel = _context.CashModel.Where(c => c.Id == id).SingleOrDefault();
-            //XmlRootAttribute root = new XmlRootAttribute("response");
 
             var xs = new XmlSerializer(cashModel.GetType());
             HttpContext.Response.ContentType = "text/xml";
@@ -80,11 +79,82 @@ namespace Flaw.Controllers
             {
                 var fee = _context.MembershipFees.SingleOrDefault(f => f.Id == cashModel.MembershipFeeId);
                 fee.LeftOver -= cashModel.Amount;
+                var payments = await _context.Payments.Where(p => p.MembershipFeeForeignKey == cashModel.MembershipFeeId && p.Status == PaymentStatus.Pending).OrderBy(p => p.PaymentDeadline).ToListAsync();
+
+                double amount = cashModel.Amount;
+
+                if (amount > 0)
+                {
+                    for (int i = 0; i < payments.Count; i++)
+                    {
+                        double depOrDebt = payments[i].DepositOrDebt == null ? 0 : (double)payments[i].DepositOrDebt;
+                        if (depOrDebt <= 0)
+                        {
+                            if (amount >= payments[i].Amount)
+                            {
+                                payments[i].Status = PaymentStatus.Payed;
+                                payments[i].CashPaymentForeignKey = cashModel.Id;
+                                payments[i].PayedOn = cashModel.Date;
+                                payments[i].DepositOrDebt = 0;
+
+
+                                _context.Update(payments[i]);
+
+                                amount -= payments[i].Amount;
+
+                                if (amount == 0)
+                                {
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                if (payments[i].DepositOrDebt == null)
+                                {
+                                    payments[i].DepositOrDebt = amount;
+                                }
+                                else
+                                {
+                                    payments[i].DepositOrDebt += amount;
+                                }
+                                _context.Update(payments[i]);
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if (amount >= payments[i].Amount - depOrDebt)
+                            {
+                                payments[i].Status = PaymentStatus.Payed;
+                                payments[i].CashPaymentForeignKey = cashModel.Id;
+                                payments[i].PayedOn = cashModel.Date;
+
+                                amount -= payments[i].Amount - (double)payments[i].DepositOrDebt;
+                                payments[i].DepositOrDebt = 0;
+
+                                _context.Update(payments[i]);
+
+                                if (amount == 0)
+                                {
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                payments[i].DepositOrDebt += amount;
+
+                                _context.Update(payments[i]);
+                                break;
+                            }
+                        }
+                    }
+                }
+
                 _context.Update(fee);
                 cashModel.Id = Guid.NewGuid().ToString();
                 _context.Add(cashModel);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index","MembershipFee");
             }
             return View(cashModel);
         }
