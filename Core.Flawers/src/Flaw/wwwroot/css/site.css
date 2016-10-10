@@ -49,6 +49,14 @@ table{
     border:solid;
     border-style:ridge;
 }
+#legendo{
+    font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
+    border:none;
+    width:auto;
+}
+#container_divs{
+    border:groove;
+}
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */
