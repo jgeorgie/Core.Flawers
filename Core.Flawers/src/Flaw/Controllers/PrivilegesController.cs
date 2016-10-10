@@ -24,7 +24,7 @@ namespace Flaw.Controllers
         // GET: Privileges
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Privileges.Include(p => p.Fee);
+            var applicationDbContext = _context.Privileges;
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -45,17 +45,17 @@ namespace Flaw.Controllers
             return View(privilege);
         }
 
-        public async Task<IActionResult> Notifications()
-        {
-            var priv = await _context.Privileges.Where(p => p.End.Date >= DateTime.Now.Date && (p.End - DateTime.Now).TotalDays <= 3).ToListAsync();
-            return View(priv);
-        }
+        //public async Task<IActionResult> Notifications()
+        //{
+        //    var priv = await _context.Privileges.Where(p => p.End.Date >= DateTime.Now.Date && (p.End - DateTime.Now).TotalDays <= 3).ToListAsync();
+        //    return View(priv);
+        //}
 
         // GET: Privileges/Create
-        public IActionResult Create(string feeId)
+        public IActionResult Create()
         {
             //ViewData["MembershipFeeForeignKey"] = new SelectList(_context.MembershipFees, "Id", "Id");
-            ViewBag.MembershipFeeForeignKey = feeId;
+            //ViewBag.MembershipFeeForeignKey = feeId;
             return View();
         }
 
@@ -68,38 +68,38 @@ namespace Flaw.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Description,Discount,End,MembershipFeeForeignKey,Start")] Privilege privilege)
         {
-            if (ModelState.IsValid && privilege.Start.Date >= DateTime.Now.Date)
+            if (ModelState.IsValid)  //&& privilege.Start.Date >= DateTime.Now.Date
             {
                 privilege.Id = Guid.NewGuid().ToString();
                 privilege.PrivilegeNumber = privilege.GetHashCode();
                 _context.Add(privilege);
 
-                var fee = _context.MembershipFees.Where(f => f.Id == privilege.MembershipFeeForeignKey).SingleOrDefault();
-                fee.ActivePrivilegeNo = privilege.PrivilegeNumber;
+                //var fee = _context.MembershipFees.Where(f => f.Id == privilege.MembershipFeeForeignKey).SingleOrDefault();
+                //fee.ActivePrivilegeNo = privilege.PrivilegeNumber;
 
-                var fullDays = (fee.End - fee.Start).TotalDays;
-                var discountDays = (privilege.End - privilege.Start).TotalDays;
-                double PriceWithDiscount = fee.RealAmount - (fee.RealAmount * privilege.Discount / 100);
-                fee.AmountWithDiscount = ((fullDays - discountDays) * (fee.RealAmount / fullDays)) + (discountDays * PriceWithDiscount / fullDays);
-                fee.LeftOver = fee.AmountWithDiscount;
-                var transfers = await _context.TransferPayments.Where(t => t.MembershipFeeId == privilege.MembershipFeeForeignKey).ToListAsync();
-                var cashs = await _context.CashModel.Where(c => c.MembershipFeeId == privilege.MembershipFeeForeignKey).ToListAsync();
+                //var fullDays = (fee.End - fee.Start).TotalDays;
+                //var discountDays = (privilege.End - privilege.Start).TotalDays;
+                //double PriceWithDiscount = fee.RealAmount - (fee.RealAmount * privilege.Discount / 100);
+                //fee.AmountWithDiscount = ((fullDays - discountDays) * (fee.RealAmount / fullDays)) + (discountDays * PriceWithDiscount / fullDays);
+                //fee.LeftOver = fee.AmountWithDiscount;
+                //var transfers = await _context.TransferPayments.Where(t => t.MembershipFeeId == privilege.MembershipFeeForeignKey).ToListAsync();
+                //var cashs = await _context.CashModel.Where(c => c.MembershipFeeId == privilege.MembershipFeeForeignKey).ToListAsync();
 
-                foreach (var t in transfers)
-                {
-                    fee.LeftOver -= t.Amount;
-                }
-                foreach (var c in cashs)
-                {
-                    fee.LeftOver -= c.Amount;
-                }
+                //foreach (var t in transfers)
+                //{
+                //    fee.LeftOver -= t.Amount;
+                //}
+                //foreach (var c in cashs)
+                //{
+                //    fee.LeftOver -= c.Amount;
+                //}
 
-                _context.Update(fee);
+                //_context.Update(fee);
 
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["MembershipFeeForeignKey"] = new SelectList(_context.MembershipFees, "Id", "Id", privilege.MembershipFeeForeignKey);
+            //ViewData["MembershipFeeForeignKey"] = new SelectList(_context.MembershipFees, "Id", "Id", privilege.MembershipFeeForeignKey);
             return View(privilege);
         }
 
@@ -116,7 +116,7 @@ namespace Flaw.Controllers
             {
                 return NotFound();
             }
-            ViewData["MembershipFeeForeignKey"] = new SelectList(_context.MembershipFees, "Id", "Id", privilege.MembershipFeeForeignKey);
+            //ViewData["MembershipFeeForeignKey"] = new SelectList(_context.MembershipFees, "Id", "Id", privilege.MembershipFeeForeignKey);
             return View(privilege);
         }
 
@@ -135,27 +135,31 @@ namespace Flaw.Controllers
             if (ModelState.IsValid)
             {
                 var oldModel = _context.Privileges.Where(p => p.Id == privilege.Id).AsNoTracking().SingleOrDefault();
-                if (oldModel.Discount != privilege.Discount || oldModel.Start != privilege.Start || oldModel.End != privilege.End)
+                if (oldModel.Discount != privilege.Discount) //|| oldModel.Start != privilege.Start || oldModel.End != privilege.End
                 {
-                    var fee = _context.MembershipFees.Where(f => f.Id == privilege.MembershipFeeForeignKey).SingleOrDefault();
-                    var fullDays = (fee.End - fee.Start).TotalDays;
-                    var discountDays = (privilege.End - privilege.Start).TotalDays;
-                    double PriceWithDiscount = fee.RealAmount - (fee.RealAmount * privilege.Discount / 100);
-                    fee.AmountWithDiscount = ((fullDays - discountDays) * (fee.RealAmount / fullDays)) + (discountDays * PriceWithDiscount / fullDays);
-
-                    fee.LeftOver = fee.AmountWithDiscount;
-                    var transfers = await _context.TransferPayments.Where(t => t.MembershipFeeId == privilege.MembershipFeeForeignKey).ToListAsync();
-                    var cashs = await _context.CashModel.Where(c => c.MembershipFeeId == privilege.MembershipFeeForeignKey).ToListAsync();
-
-                    foreach (var t in transfers)
+                    var fees = await _context.MembershipFees.Where(f => f.PrivilegeType == privilege.Type).ToListAsync();
+                    foreach (var fee in fees)
                     {
-                        fee.LeftOver -= t.Amount;
+                        var fullDays = (fee.End - fee.Start).TotalDays;
+                        var discountDays = (fee.ActivePrivilegeEnd.Value - fee.ActivePrivilegeStart.Value).TotalDays;
+                        double PriceWithDiscount = fee.RealAmount - (fee.RealAmount * privilege.Discount / 100);
+                        fee.AmountWithDiscount = ((fullDays - discountDays) * (fee.RealAmount / fullDays)) + (discountDays * PriceWithDiscount / fullDays);
+
+                        fee.LeftOver = fee.AmountWithDiscount;
+                        var transfers = await _context.TransferPayments.Where(t => t.MembershipFeeId == fee.Id).ToListAsync();
+                        var cashs = await _context.CashModel.Where(c => c.MembershipFeeId == fee.Id).ToListAsync();
+
+                        foreach (var t in transfers)
+                        {
+                            fee.LeftOver -= t.Amount;
+                        }
+                        foreach (var c in cashs)
+                        {
+                            fee.LeftOver -= c.Amount;
+                        }
+                        _context.Update(fee);
                     }
-                    foreach (var c in cashs)
-                    {
-                        fee.LeftOver -= c.Amount;
-                    }
-                    _context.Update(fee);
+                   
                 }
 
 
@@ -177,7 +181,7 @@ namespace Flaw.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["MembershipFeeForeignKey"] = new SelectList(_context.MembershipFees, "Id", "Id", privilege.MembershipFeeForeignKey);
+            //ViewData["MembershipFeeForeignKey"] = new SelectList(_context.MembershipFees, "Id", "Id", privilege.MembershipFeeForeignKey);
             return View(privilege);
         }
 

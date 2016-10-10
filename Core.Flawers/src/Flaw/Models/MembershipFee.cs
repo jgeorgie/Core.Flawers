@@ -60,6 +60,14 @@ namespace Flaw.Models
 
         [Display(Name = "Արտոնագրի համար")]
         public int ActivePrivilegeNo { get; set; }
+
+        [Display(Name = "Արտոնագրի տեսակ")]
+        public string PrivilegeType { get; set; }
+
+        public DateTime? ActivePrivilegeStart { get; set; }
+
+        public DateTime? ActivePrivilegeEnd { get; set; }
+
         public List<Privilege> Privileges { get; set; }
 
 

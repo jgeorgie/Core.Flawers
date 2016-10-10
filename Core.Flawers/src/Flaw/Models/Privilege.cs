@@ -14,23 +14,20 @@ namespace Flaw.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Id { get; set; }
 
-
+        [Display(Name ="Արտոնության համար")]
         public int PrivilegeNumber { get; set; }
 
+        [Display(Name = "Արտոնության տեսակ")]
         public string Type { get; set; }
 
-        public DateTime Start { get; set; }
-
-        public DateTime End { get; set; }
-
+        [Display(Name = "Նկարագրություն")]
         public string Description { get; set; }
 
+        [Display(Name = "Զեղչ")]
         public int Discount { get; set; }
 
 
-
-        public string MembershipFeeForeignKey { get; set; }
-        public MembershipFee Fee { get; set; }
+        public List<MembershipFee> Fees { get; set; }
     }
 
 
