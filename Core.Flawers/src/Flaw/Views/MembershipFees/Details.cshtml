@@ -1,94 +1,181 @@
-@model Flaw.Models.MembershipFee
+﻿@model Flaw.Models.MembershipFee
 @{
     ViewData["Title"] = "Details";
 }
 <h2>Details</h2>
+<h4>MembershipFee</h4>
+<hr />
 <div>
-    <h4>MembershipFee</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.RealAmount)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.RealAmount)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.AmountWithDiscount)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.AmountWithDiscount)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.CurrentState)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.CurrentState)
-        </dd>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.RealAmount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AmountWithDiscount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CurrentState)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MiddleName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Start)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.End)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LeftOver)
+                </th>
+                @if (Model.Paused != null)
+                {
+                    <th>
+                        @Html.DisplayNameFor(model => model.Paused)
+                    </th>
+                }
+                @if (Model.Reactiveted != null)
+                {
+                    <th>
+                        @Html.DisplayNameFor(model => model.Reactiveted)
+                    </th>}
+            </tr>
+        </thead>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.MiddleName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.MiddleName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Start)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Start)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.End)
-        </dt>
-        <dd>
+        <tbody>
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => model.RealAmount)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.AmountWithDiscount)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.CurrentState)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.LastName)
+
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.MiddleName)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Start)
+        </td>
+        <td>
             @Html.DisplayFor(model => model.End)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.LeftOver)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.LeftOver)
-        </dd>
-        @if (Model.Paused != null)
-        {
-            <dt>
-                @Html.DisplayNameFor(model => model.Paused)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Paused)
-            </dd>
-        }
-        @if (Model.Reactiveted != null)
-        {
-            <dt>
-                @Html.DisplayNameFor(model => model.Reactiveted)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Reactiveted)
-            </dd>
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.LeftOver)
+</td>
+@if (Model.Paused != null)
+{
+    <td>
+        @Html.DisplayFor(model => model.Paused)
+    </td>}
+@if (Model.Reactiveted != null)
+{
+    <td>
+        @Html.DisplayFor(model => model.Reactiveted)
+    </td>
+}
 
-        }
 
-    </dl>
+</tr>
+</tbody>
+@*<dd>
+
+    </dd>
+    <dt>
+
+    </dt>
+    <dd>
+
+    </dd>
+    <dt>
+
+    </dt>
+    <dd>
+
+    </dd>
+
+    <dt>
+
+    </dt>
+    <dd>
+
+    </dd>
+    <dt>
+
+    </dt>
+    <dd>
+    </dd>
+    <dt>
+
+    </dt>
+    <dd>
+
+    </dd>
+    <dt>
+
+    </dt>
+    <dd>
+
+    </dd>
+    <dt>
+
+    </dt>
+    <dd>
+
+    </dd>
+    <dt>
+
+    </dt>
+    <dd>
+
+    </dd>
+
+    {
+    <dt>
+
+    </dt>
+    <dd>
+
+    </dd>
+    }
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Reactiveted)
+    </dt>
+    <dd>
+
+    </dd>
+
+    }*@
+
+</table>
 </div>
+<meta charset="utf-8" />
+<fieldset id="container_divs" class="container col-sm-12 col-md-12 col-lg-12">
+   <legend id="legendo">Այստեղ էլ կարող է լինել ձեր գովազդը</legend>
+    <div id="container_transfer">
+    </div>
+    <div id="container_cash">
+    </div>
+</fieldset>
 <div id="container_payments">
-</div>
-<div id="container_cash">
-</div>
-<div id="container_transfer">
 </div>
 <div id="for_dept"></div>
 <div>
