@@ -21,11 +21,13 @@ namespace Flaw.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
-            builder.Entity<Privilege>()
+            builder.Entity<PrivilegeModel>()
                  .HasOne(pt => pt.Fee)
-                 .WithMany(p => p.Privileges)
-                 .HasForeignKey(f => f.MembershipFeeForeignKey)
+                 .WithMany(p => p.PrivilegeModels)
+                 .HasForeignKey(f => f.MembershipFeeFoeignKey)
                  .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+
+          
 
             builder.Entity<TransferPayment>()
                 .HasOne(p => p.Fee)
@@ -51,6 +53,8 @@ namespace Flaw.Data
         public DbSet<PendingPaymentModel> Payments { get; set; }
 
         public DbSet<Privilege> Privileges { get; set; }
+
+        public DbSet<PrivilegeModel> PrivilegeModels { get; set; }
 
         public DbSet<MembershipFee> MembershipFees { get; set; }
 

@@ -1,17 +1,13 @@
 @model Flaw.Models.MembershipFee
-
 @{
     ViewData["Title"] = "Create";
 }
-
 <h2>Create</h2>
-
 <form asp-action="Create">
     <div class="form-horizontal">
         <h4>MembershipFee</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
         <div class="form-group">
             <label asp-for="RealAmount" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -19,22 +15,20 @@
                 <span asp-validation-for="RealAmount" class="text-danger" />
             </div>
         </div>
-
         @*<div class="form-group">
-        <label asp-for="AmountWithDiscount" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="AmountWithDiscount" class="form-control" />
-            <span asp-validation-for="AmountWithDiscount" class="text-danger" />
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="CurrentState" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <select asp-for="CurrentState" asp-items="Html.GetEnumSelectList<FeeState>()" class="form-control"></select>
-            <span asp-validation-for="CurrentState" class="text-danger" />
-        </div>
-    </div>*@
-
+                <label asp-for="AmountWithDiscount" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="AmountWithDiscount" class="form-control" />
+                    <span asp-validation-for="AmountWithDiscount" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="CurrentState" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <select asp-for="CurrentState" asp-items="Html.GetEnumSelectList<FeeState>()" class="form-control"></select>
+                    <span asp-validation-for="CurrentState" class="text-danger" />
+                </div>
+            </div>*@
         <div class="form-group">
             <label asp-for="FirstName" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -42,7 +36,6 @@
                 <span asp-validation-for="FirstName" class="text-danger" />
             </div>
         </div>
-
         <div class="form-group">
             <label asp-for="LastName" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -50,7 +43,6 @@
                 <span asp-validation-for="LastName" class="text-danger" />
             </div>
         </div>
-
         <div class="form-group">
             <label asp-for="MiddleName" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -58,7 +50,6 @@
                 <span asp-validation-for="MiddleName" class="text-danger" />
             </div>
         </div>
-
         <div class="form-group">
             <label asp-for="Start" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -67,21 +58,29 @@
             </div>
         </div>
 
-        @*<div class="form-group">
-            <label asp-for="End" class="col-md-2 control-label"></label>
+        <div class="form-group">
+            <label asp-for="PrivilegeType" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="End" class="form-control" />
-                <span asp-validation-for="End" class="text-danger" />
+                <select asp-for="PrivilegeType" asp-items="ViewBag.PrivilegeType" class="form-control"></select>
+                <span asp-validation-for="PrivilegeType" class="text-danger" />
             </div>
-        </div>*@
+        </div>
 
-        @*<div class="form-group">
-            <label asp-for="Deposit" class="col-md-2 control-label"></label>
+        <div class="form-group">
+            <label asp-for="ActivePrivilegeStart" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Deposit" class="form-control" />
-                <span asp-validation-for="Deposit" class="text-danger" />
+                <input asp-for="ActivePrivilegeStart" class="form-control" />
+                <span asp-validation-for="ActivePrivilegeStart" class="text-danger" />
             </div>
-        </div>*@
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ActivePrivilegeEnd" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="ActivePrivilegeEnd" class="form-control" />
+                <span asp-validation-for="ActivePrivilegeEnd" class="text-danger" />
+            </div>
+        </div>
 
         @if (Context.User.Identity.Name == "admin@admin.am")
         {
@@ -94,7 +93,6 @@
             </div>
         }
 
-
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />
@@ -102,11 +100,9 @@
         </div>
     </div>
 </form>
-
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

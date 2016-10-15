@@ -14,8 +14,7 @@ namespace Flaw.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Id { get; set; }
 
-        [Display(Name ="Արտոնության համար")]
-        public int PrivilegeNumber { get; set; }
+
 
         [Display(Name = "Արտոնության տեսակ")]
         public string Type { get; set; }

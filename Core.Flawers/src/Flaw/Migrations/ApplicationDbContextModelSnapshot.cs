@@ -144,7 +144,11 @@ namespace Flaw.Migrations
                 {
                     b.Property<string>("Id");
 
+                    b.Property<DateTime?>("ActivePrivilegeEnd");
+
                     b.Property<int>("ActivePrivilegeNo");
+
+                    b.Property<DateTime?>("ActivePrivilegeStart");
 
                     b.Property<double>("AmountWithDiscount");
 
@@ -168,6 +172,10 @@ namespace Flaw.Migrations
 
                     b.Property<int>("Periodicity");
 
+                    b.Property<string>("PrivilegeId");
+
+                    b.Property<string>("PrivilegeType");
+
                     b.Property<DateTime?>("Reactiveted");
 
                     b.Property<double>("RealAmount");
@@ -179,6 +187,8 @@ namespace Flaw.Migrations
                     b.Property<double>("currentDebt");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PrivilegeId");
 
                     b.ToTable("MembershipFees");
                 });
@@ -228,9 +238,20 @@ namespace Flaw.Migrations
 
                     b.Property<int>("Discount");
 
+                    b.Property<string>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Privileges");
+                });
+
+            modelBuilder.Entity("Flaw.Models.PrivilegeModel", b =>
+                {
+                    b.Property<string>("Id");
+
                     b.Property<DateTime>("End");
 
-                    b.Property<string>("MembershipFeeForeignKey");
+                    b.Property<string>("MembershipFeeFoeignKey");
 
                     b.Property<int>("PrivilegeNumber");
 
@@ -240,9 +261,9 @@ namespace Flaw.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MembershipFeeForeignKey");
+                    b.HasIndex("MembershipFeeFoeignKey");
 
-                    b.ToTable("Privileges");
+                    b.ToTable("PrivilegeModels");
                 });
 
             modelBuilder.Entity("Flaw.Models.TransferPayment", b =>
@@ -367,6 +388,13 @@ namespace Flaw.Migrations
                         .HasForeignKey("FeeId");
                 });
 
+            modelBuilder.Entity("Flaw.Models.MembershipFee", b =>
+                {
+                    b.HasOne("Flaw.Models.Privilege")
+                        .WithMany("Fees")
+                        .HasForeignKey("PrivilegeId");
+                });
+
             modelBuilder.Entity("Flaw.Models.PendingPaymentModel", b =>
                 {
                     b.HasOne("Flaw.Models.CashModel", "CashPayment")
@@ -382,11 +410,11 @@ namespace Flaw.Migrations
                         .HasForeignKey("TransferPaymentId");
                 });
 
-            modelBuilder.Entity("Flaw.Models.Privilege", b =>
+            modelBuilder.Entity("Flaw.Models.PrivilegeModel", b =>
                 {
                     b.HasOne("Flaw.Models.MembershipFee", "Fee")
-                        .WithMany("Privileges")
-                        .HasForeignKey("MembershipFeeForeignKey")
+                        .WithMany("PrivilegeModels")
+                        .HasForeignKey("MembershipFeeFoeignKey")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

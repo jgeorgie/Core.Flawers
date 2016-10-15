@@ -66,12 +66,12 @@ namespace Flaw.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Description,Discount,End,MembershipFeeForeignKey,Start")] Privilege privilege)
+        public async Task<IActionResult> Create([Bind("Id,Description,Discount,Type")] Privilege privilege)
         {
             if (ModelState.IsValid)  //&& privilege.Start.Date >= DateTime.Now.Date
             {
                 privilege.Id = Guid.NewGuid().ToString();
-                privilege.PrivilegeNumber = privilege.GetHashCode();
+                //privilege.PrivilegeNumber = privilege.GetHashCode();
                 _context.Add(privilege);
 
                 //var fee = _context.MembershipFees.Where(f => f.Id == privilege.MembershipFeeForeignKey).SingleOrDefault();

@@ -64,13 +64,14 @@ namespace Flaw.Models
         [Display(Name = "Արտոնագրի տեսակ")]
         public string PrivilegeType { get; set; }
 
+        [Display(Name = "Արտոնագրի սկիզբ")]
         public DateTime? ActivePrivilegeStart { get; set; }
 
+        [Display(Name = "Արտոնագրի ավարտ")]
         public DateTime? ActivePrivilegeEnd { get; set; }
 
-        public List<Privilege> Privileges { get; set; }
 
-
+        public List<PrivilegeModel> PrivilegeModels { get; set; }
         public List<FeeAmountChangeModel> AmountChanges { get; set; }
         public List<CashModel> CashPayments { get; set; }
         public List<TransferPayment> TransferPayments { get; set; }
