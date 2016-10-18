@@ -134,11 +134,15 @@ namespace Flaw.Controllers
                 membershipFee.Id = Guid.NewGuid().ToString();
                 membershipFee.AmountWithDiscount = membershipFee.RealAmount;
                 membershipFee.LeftOver = membershipFee.AmountWithDiscount;
-                membershipFee.MonthlyPay = Math.Floor(membershipFee.RealAmount / 12);
-
-                if (membershipFee.PrivilegeType != null)
+                membershipFee.End = membershipFee.Periodicity == FeePeriodicity.Year ? membershipFee.Start.AddMonths(12) : membershipFee.Start.AddMonths(1);
+                if (membershipFee.Periodicity != FeePeriodicity.Month)
                 {
-                    var privilige = _context.Privileges.Where(p => p.Type == membershipFee.PrivilegeType).FirstOrDefault();
+                    membershipFee.MonthlyPay = Math.Floor(membershipFee.RealAmount / 12);
+                }
+
+                if (!string.IsNullOrEmpty(membershipFee.PrivilegeType) && membershipFee.ActivePrivilegeStart != null && membershipFee.ActivePrivilegeEnd != null)
+                {
+                    var privilige = _context.Privileges.FirstOrDefault(p => p.Type == membershipFee.PrivilegeType);
 
                     var priviligeModel = new PrivilegeModel()
                     {
@@ -147,7 +151,7 @@ namespace Flaw.Controllers
                         End = (DateTime)membershipFee.ActivePrivilegeEnd,
                         Type = membershipFee.PrivilegeType + $"({privilige.Discount})",
                         MembershipFeeFoeignKey = membershipFee.Id,
-                        PrivilegeNumber = this.GetHashCode(),
+                        PrivilegeNumber = GetHashCode(),
                     };
                     _context.Add(priviligeModel);
 
@@ -159,23 +163,46 @@ namespace Flaw.Controllers
                     membershipFee.LeftOver = membershipFee.AmountWithDiscount;
                 }
 
+
                 if (membershipFee.Periodicity == FeePeriodicity.Year)
                 {
-                    membershipFee.End = membershipFee.Start.AddMonths(12);
                     int month = membershipFee.Start.Month;
                     for (int i = 1; i <= 12; i++)
                     {
-                        var payment = new PendingPaymentModel()
+                        PendingPaymentModel payment;
+                        if (i == 1 && membershipFee.Start.Day > 1)
                         {
-                            MembershipFeeForeignKey = membershipFee.Id,
-                            Amount = Math.Floor(membershipFee.RealAmount / 12),
-                            Id = Guid.NewGuid().ToString(),
-                            PaymentDeadline = month + i <= 12 ? new DateTime(DateTime.Now.Year, month + i, 15) : new DateTime(DateTime.Now.Year + 1, month + i - 12, 15),
-                            Status = PaymentStatus.Pending
-                        };
+                            int days = DateTime.DaysInMonth(membershipFee.Start.Year, membershipFee.Start.Month);
+                            double differense = Math.Floor((membershipFee.Start.Day - 1) * membershipFee.MonthlyPay / days);
+                            membershipFee.LeftOver -= differense;
+                            payment = new PendingPaymentModel()
+                            {
+                                MembershipFeeForeignKey = membershipFee.Id,
+                                Amount = membershipFee.MonthlyPay - differense,
+                                Id = Guid.NewGuid().ToString(),
+                                PaymentDeadline =
+                                   month + i <= 12
+                                       ? new DateTime(DateTime.Now.Year, month + i, 15)
+                                       : new DateTime(DateTime.Now.Year + 1, month + i - 12, 15),
+                                Status = PaymentStatus.Pending
+                            };
+                        }
+                        else
+                        {
+                            payment = new PendingPaymentModel()
+                            {
+                                MembershipFeeForeignKey = membershipFee.Id,
+                                Amount = membershipFee.MonthlyPay,
+                                Id = Guid.NewGuid().ToString(),
+                                PaymentDeadline = 
+                                    month + i <= 12 
+                                        ? new DateTime(DateTime.Now.Year, month + i, 15) 
+                                        : new DateTime(DateTime.Now.Year + 1, month + i - 12, 15),
+                                Status = PaymentStatus.Pending
+                            };
+                        }
 
                         _context.Payments.Add(payment);
-
 
                     }
                 }
@@ -253,106 +280,147 @@ namespace Flaw.Controllers
             return View(membershipFee);
         }
 
-        // POST: MembershipFees/Edit/5
+
+        public async Task<IActionResult> GetPriviliges(string id)
+        {
+            var priviliges = await _context.PrivilegeModels.Where(p => p.MembershipFeeFoeignKey == id).ToListAsync();
+            return PartialView("_PriviligeList", priviliges);
+        }
+
+
+
+        //POST: MembershipFees/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(string id, [Bind("Id,AmountWithDiscount,CurrentState,End,FullName,RealAmount,Start,LeftOver,Periodicity")] MembershipFee membershipFee)
-        //{
-        //    if (id != membershipFee.Id)
-        //    {
-        //        return NotFound();
-        //    }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(string id, [Bind("Id,AmountWithDiscount,CurrentState,FirstName,LastName,MiddleName,RealAmount,Start,LeftOver,Periodicity,ActivePrivilegeEnd,ActivePrivilegeStart,PrivilegeType,ActivePrivilegeNo")] MembershipFee membershipFee)
+        {
+            if (id != membershipFee.Id)
+            {
+                return NotFound();
+            }
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        var previousModel = _context.MembershipFees.Where(m => m.Id == membershipFee.Id).AsNoTracking().SingleOrDefault();
-        //        if (previousModel.RealAmount != membershipFee.RealAmount)
-        //        {
-        //            if (HttpContext.User.Identity.Name != "admin@admin.am")
-        //            {
-        //                membershipFee.RealAmount = previousModel.RealAmount;
-        //                membershipFee.AmountWithDiscount = previousModel.AmountWithDiscount;
-        //            }
-        //            else
-        //            {
-        //                var privelege = _context.Privileges.Where(p => p.MembershipFeeForeignKey == membershipFee.Id).SingleOrDefault();
-        //                if (privelege == null)
-        //                {
-        //                    membershipFee.RealAmount = membershipFee.AmountWithDiscount;
-        //                }
-        //                else
-        //                {
-        //                    var fullDays = (membershipFee.End - membershipFee.Start).TotalDays;
-        //                    var discountDays = (privelege.End - privelege.Start).TotalDays;
-        //                    double PriceWithDiscount = membershipFee.RealAmount - (membershipFee.RealAmount * privelege.Discount / 100);
-        //                    membershipFee.AmountWithDiscount = ((fullDays - discountDays) * (membershipFee.RealAmount / fullDays)) + (discountDays * PriceWithDiscount / fullDays);
+            if (ModelState.IsValid)
+            {
+                var previousModel = _context.MembershipFees.Where(m => m.Id == membershipFee.Id).AsNoTracking().SingleOrDefault();
+                //if (previousModel.RealAmount != membershipFee.RealAmount)
+                //{
+                //    if (HttpContext.User.Identity.Name != "admin@admin.am")
+                //    {
+                //        membershipFee.RealAmount = previousModel.RealAmount;
+                //        membershipFee.AmountWithDiscount = previousModel.AmountWithDiscount;
+                //    }
+                //    else
+                //    {
+                //        var privelege = _context.PrivilegeModels.Where(p => p.MembershipFeeFoeignKey == membershipFee.Id).SingleOrDefault();
+                //        if (privelege == null)
+                //        {
+                //            membershipFee.RealAmount = membershipFee.AmountWithDiscount;
+                //        }
+                //        else
+                //        {
+                //            var fullDays = (membershipFee.End - membershipFee.Start).TotalDays;
+                //            var discountDays = (privelege.End - privelege.Start).TotalDays;
+                //            double PriceWithDiscount = membershipFee.RealAmount - (membershipFee.RealAmount * privelege.Discount / 100);
+                //            membershipFee.AmountWithDiscount = ((fullDays - discountDays) * (membershipFee.RealAmount / fullDays)) + (discountDays * PriceWithDiscount / fullDays);
 
-        //                    membershipFee.LeftOver = membershipFee.AmountWithDiscount;
-        //                    var transfers = await _context.TransferPayments.Where(t => t.MembershipFeeId == privelege.MembershipFeeForeignKey).ToListAsync();
-        //                    var cashs = await _context.CashModel.Where(c => c.MembershipFeeId == privelege.MembershipFeeForeignKey).ToListAsync();
+                //            membershipFee.LeftOver = membershipFee.AmountWithDiscount;
+                //            var transfers = await _context.TransferPayments.Where(t => t.MembershipFeeId == privelege.MembershipFeeForeignKey).ToListAsync();
+                //            var cashs = await _context.CashModel.Where(c => c.MembershipFeeId == privelege.MembershipFeeForeignKey).ToListAsync();
 
-        //                    foreach (var t in transfers)
-        //                    {
-        //                        membershipFee.LeftOver -= t.Amount;
-        //                    }
-        //                    foreach (var c in cashs)
-        //                    {
-        //                        membershipFee.LeftOver -= c.Amount;
-        //                    }
-        //                    //_context.Update(membershipFee);
-        //                }
+                //            foreach (var t in transfers)
+                //            {
+                //                membershipFee.LeftOver -= t.Amount;
+                //            }
+                //            foreach (var c in cashs)
+                //            {
+                //                membershipFee.LeftOver -= c.Amount;
+                //            }
+                //            //_context.Update(membershipFee);
+                //        }
 
-        //                var feeAmountChange = new FeeAmountChangeModel()
-        //                {
-        //                    id = Guid.NewGuid().ToString(),
-        //                    ChangeDate = DateTime.Now.Date,
-        //                    MembershipFeeForeignKey = membershipFee.Id,
-        //                    NewAmount = membershipFee.RealAmount,
-        //                    OldAmount = previousModel.RealAmount
-        //                };
-        //                _context.Add(feeAmountChange);
-        //            }
-        //        }
-
-
-        //        if (membershipFee.CurrentState != previousModel.CurrentState)
-        //        {
-        //            if (membershipFee.CurrentState == FeeState.Pause)
-        //            {
-        //                membershipFee.Paused = DateTime.Now;
-        //                double howManyDays = (membershipFee.Paused.Value - membershipFee.Start).TotalDays;
-        //                double fullDays = (membershipFee.End - membershipFee.Start).TotalDays;
-        //                membershipFee.currentDebt = (membershipFee.AmountWithDiscount / fullDays) * howManyDays;
-        //            }
-        //            else if (previousModel.CurrentState == FeeState.Pause && membershipFee.CurrentState == FeeState.Active)
-        //            {
-        //                membershipFee.Reactiveted = DateTime.Now;
-        //            }
-        //        }
+                //        var feeAmountChange = new FeeAmountChangeModel()
+                //        {
+                //            id = Guid.NewGuid().ToString(),
+                //            ChangeDate = DateTime.Now.Date,
+                //            MembershipFeeForeignKey = membershipFee.Id,
+                //            NewAmount = membershipFee.RealAmount,
+                //            OldAmount = previousModel.RealAmount
+                //        };
+                //        _context.Add(feeAmountChange);
+                //    }
+                //}
 
 
-        //        try
-        //        {
-        //            _context.Update(membershipFee);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!MembershipFeeExists(membershipFee.Id))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction("Index");
-        //    }
-        //    return View(membershipFee);
-        //}
+                if (membershipFee.CurrentState != previousModel.CurrentState)
+                {
+                    if (membershipFee.CurrentState == FeeState.Pause)
+                    {
+                        membershipFee.Paused = DateTime.Now;
+                        double howManyDays = (membershipFee.Paused.Value - membershipFee.Start).TotalDays;
+                        double fullDays = (membershipFee.End - membershipFee.Start).TotalDays;
+                        double paymentsSum = 0;
+                        var cashPayments =
+                            await
+                              _context.CashModel.Where(c => c.MembershipFeeId == membershipFee.Id)
+                                .ToListAsync();
+                        var transferPayments =
+                            await
+                                _context.TransferPayments.Where(t => t.MembershipFeeId == membershipFee.Id)
+                                    .ToListAsync();
+
+                        foreach (var cash in cashPayments)
+                        {
+                            paymentsSum += cash.Amount;
+                        }
+
+                        foreach (var transfer in transferPayments)
+                        {
+                            paymentsSum += transfer.Amount;
+                        }
+                        membershipFee.currentDebt = (membershipFee.AmountWithDiscount / fullDays) * howManyDays - paymentsSum;
+                        int days = DateTime.DaysInMonth(membershipFee.Reactiveted.Value.Year, membershipFee.Reactiveted.Value.Month);
+                        var payment =
+                            await
+                                _context.Payments.SingleOrDefaultAsync(
+                                    p =>
+                                        p.MembershipFeeForeignKey == membershipFee.Id &&
+                                        p.PaymentDeadline.Month == membershipFee.Reactiveted.Value.Month + 1);
+                        payment.Amount = (membershipFee.MonthlyPay/days)*(DateTime.Now.Day-1);
+                    }
+                    else if (previousModel.CurrentState == FeeState.Pause && membershipFee.CurrentState == FeeState.Active)
+                    {
+                        membershipFee.Reactiveted = DateTime.Now;
+                        membershipFee.TotalDaysPaused += (int)(DateTime.Now - membershipFee.Paused.Value).TotalDays;
+                        int days = DateTime.DaysInMonth(membershipFee.Reactiveted.Value.Year, membershipFee.Reactiveted.Value.Month);
+                        double howManyDays = (membershipFee.Paused.Value - membershipFee.Start).TotalDays;
+                        double fullDays = (membershipFee.End - membershipFee.Start).TotalDays;
+                        membershipFee.currentDebt = (membershipFee.AmountWithDiscount/fullDays);
+                    }
+                }
+
+
+                try
+                {
+                    _context.Update(membershipFee);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!MembershipFeeExists(membershipFee.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Index");
+            }
+            return View(membershipFee);
+        }
 
 
         // GET: MembershipFees/Delete/5

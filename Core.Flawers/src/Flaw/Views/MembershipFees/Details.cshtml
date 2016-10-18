@@ -169,14 +169,19 @@
 </div>
 <meta charset="utf-8" />
 <fieldset id="container_divs" class="container col-sm-12 col-md-12 col-lg-12">
-   <legend id="legendo">Այստեղ էլ կարող է լինել ձեր գովազդը</legend>
+    <legend id="legendo">Այստեղ էլ կարող է լինել ձեր գովազդը</legend>
     <div id="container_transfer">
     </div>
     <div id="container_cash">
     </div>
 </fieldset>
+
+<div id="privilige_container">
+</div>
+
 <div id="container_payments">
 </div>
+
 <div id="for_dept"></div>
 <div>
     <a asp-action="Edit" asp-route-Id="@Model.Id">Edit</a> |
@@ -217,6 +222,15 @@
                 data: { id: id },
                 success: function (result) {
                     $("#container_transfer").html(result);
+                }
+            });
+
+            $.ajax({
+                method: "GET",
+                url: '@Url.Action("GetPriviliges", "MembershipFees")',
+                data: { id: id },
+                success: function (result) {
+                    $("#privilige_container").html(result);
                 }
             });
 

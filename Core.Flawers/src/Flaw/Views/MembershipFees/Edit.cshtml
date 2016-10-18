@@ -1,60 +1,55 @@
 @model Flaw.Models.MembershipFee
-
 @{
     ViewData["Title"] = "Edit";
 }
-
 <h2>Edit</h2>
-
 <form asp-action="Edit">
     <div class="form-horizontal">
         <h4>MembershipFee</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="Id" />
-
-        @if (Context.User.Identity.Name == "admin@admin.am")
-        {
-            <div class="form-group">
-                <label asp-for="RealAmount" class="col-md-2 control-label"></label>
-                <div class="col-md-10">
-                    <input asp-for="RealAmount" class="form-control" />
-                    <span asp-validation-for="RealAmount" class="text-danger" />
+        @*@if (Context.User.Identity.Name == "admin@admin.am")
+            {
+                <div class="form-group">
+                    <label asp-for="RealAmount" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="RealAmount" class="form-control" />
+                        <span asp-validation-for="RealAmount" class="text-danger" />
+                    </div>
                 </div>
+            }
+            else
+            { }*@
+        <div class="form-group">
+            <label asp-for="RealAmount" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="RealAmount" class="form-control" readonly />
+                <span asp-validation-for="RealAmount" class="text-danger" />
             </div>
-        }
-        else
-        {
-            <div class="form-group">
-                <label asp-for="RealAmount" class="col-md-2 control-label"></label>
-                <div class="col-md-10">
-                    <input asp-for="RealAmount" class="form-control" readonly />
-                    <span asp-validation-for="RealAmount" class="text-danger" />
-                </div>
-            </div>
-        }
+        </div>
 
 
-        @if (Context.User.Identity.Name == "admin@admin.am")
-        {
-            <div class="form-group">
-                <label asp-for="AmountWithDiscount" class="col-md-2 control-label"></label>
-                <div class="col-md-10">
-                    <input asp-for="AmountWithDiscount" class="form-control" />
-                    <span asp-validation-for="AmountWithDiscount" class="text-danger" />
+        @*@if (Context.User.Identity.Name == "admin@admin.am")
+            {
+                <div class="form-group">
+                    <label asp-for="AmountWithDiscount" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <input asp-for="AmountWithDiscount" class="form-control" />
+                        <span asp-validation-for="AmountWithDiscount" class="text-danger" />
+                    </div>
                 </div>
+            }
+            else
+            { }*@
+        <div class="form-group">
+            <label asp-for="AmountWithDiscount" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="AmountWithDiscount" class="form-control" readonly />
+                <span asp-validation-for="AmountWithDiscount" class="text-danger" />
             </div>
-        }
-        else
-        {
-            <div class="form-group">
-                <label asp-for="AmountWithDiscount" class="col-md-2 control-label"></label>
-                <div class="col-md-10">
-                    <input asp-for="AmountWithDiscount" class="form-control" readonly />
-                    <span asp-validation-for="AmountWithDiscount" class="text-danger" />
-                </div>
-            </div>
-        }
+        </div>
+
         <div class="form-group">
             <label asp-for="CurrentState" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -62,15 +57,29 @@
                 <span asp-validation-for="CurrentState" class="text-danger" />
             </div>
         </div>
-
         <div class="form-group">
-            <label asp-for="FullName" class="col-md-2 control-label"></label>
+            <label asp-for="FirstName" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="FullName" class="form-control" />
-                <span asp-validation-for="FullName" class="text-danger" />
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger" />
             </div>
         </div>
 
+        <div class="form-group">
+            <label asp-for="LastName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="MiddleName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="MiddleName" class="form-control" />
+                <span asp-validation-for="MiddleName" class="text-danger" />
+            </div>
+        </div>
         <div class="form-group">
             <label asp-for="Start" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -78,7 +87,6 @@
                 <span asp-validation-for="Start" class="text-danger" />
             </div>
         </div>
-
         <div class="form-group">
             <label asp-for="End" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -86,8 +94,7 @@
                 <span asp-validation-for="End" class="text-danger" />
             </div>
         </div>
-
-        @if (Context.User.Identity.Name == "admin@admin.am")
+        @*@if (Context.User.Identity.Name == "admin@admin.am")
         {
             <div class="form-group">
                 <label asp-for="LeftOver" class="col-md-2 control-label"></label>
@@ -96,8 +103,7 @@
                     <span asp-validation-for="LeftOver" class="text-danger" />
                 </div>
             </div>
-        }
-
+        }*@
         @if (Context.User.Identity.Name == "admin@admin.am")
         {
             <div class="form-group">
@@ -108,7 +114,6 @@
                 </div>
             </div>
         }
-
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-default" />
@@ -116,12 +121,10 @@
         </div>
     </div>
 </form>
-
 <div>
-    <a asp-controller="Privileges" asp-action="Create" asp-route-feeId="@Model.Id"> Stexcel Artonutyun</a>
+    <a asp-controller="Privileges" asp-action="Create" asp-route-feeId="@Model.Id"> Avelacnel Artonutyun</a>
     <a asp-action="Index">Back to List</a>
 </div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

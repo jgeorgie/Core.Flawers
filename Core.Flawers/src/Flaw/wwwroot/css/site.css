@@ -64,3 +64,13 @@ table{
         display: none;
     }
 }
+
+.paused {
+    background-color: lightgrey;
+    color: white;
+}
+
+.finished {
+    background-color: grey;
+    color: white;
+}
