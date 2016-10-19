@@ -154,9 +154,9 @@ namespace Flaw.Controllers
                 cashModel.Id = Guid.NewGuid().ToString();
                 _context.Add(cashModel);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index","MembershipFee");
+                return RedirectToAction("Index","MembershipFees");
             }
-            return View(cashModel);
+            return View("_CreateForFee",cashModel);
         }
 
 

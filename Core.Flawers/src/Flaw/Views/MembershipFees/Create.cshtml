@@ -87,7 +87,21 @@
             <div class="form-group">
                 <label asp-for="Periodicity" class="col-md-2 control-label"></label>
                 <div class="col-md-10">
-                    <select asp-for="Periodicity" asp-items="Html.GetEnumSelectList<FeePeriodicity>()" class="form-control"></select>
+                    <select asp-for="Periodicity" asp-items="Html.GetEnumSelectList<FeePeriodicity>()" class="form-control">
+                        <option> </option>
+                    </select>
+                    <span asp-validation-for="Periodicity" class="text-danger" />
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-group" style="display: none">
+                <label asp-for="Periodicity" class="col-md-2 control-label"></label>
+                <div class="col-md-10" style="display: none">
+                    <select asp-for="Periodicity" asp-items="Html.GetEnumSelectList<FeePeriodicity>()" class="form-control">
+                        <option value="@FeePeriodicity.Year" selected="selected"></option>
+                    </select>
                     <span asp-validation-for="Periodicity" class="text-danger" />
                 </div>
             </div>

@@ -45,11 +45,11 @@ namespace Flaw.Controllers
             return View(privilege);
         }
 
-        //public async Task<IActionResult> Notifications()
-        //{
-        //    var priv = await _context.Privileges.Where(p => p.End.Date >= DateTime.Now.Date && (p.End - DateTime.Now).TotalDays <= 3).ToListAsync();
-        //    return View(priv);
-        //}
+        public async Task<IActionResult> Notifications()
+        {
+            var priv = await _context.PrivilegeModels.Where(p => p.End.Date >= DateTime.Now.Date && (p.End - DateTime.Now).TotalDays <= 3).ToListAsync();
+            return View(priv);
+        }
 
         // GET: Privileges/Create
         public IActionResult Create()
