@@ -43,19 +43,22 @@ textarea {
 
 #bell-wraper {
     font-size: 1.2em;
-    top:18px;
+    top: 18px;
 }
-table{
-    border:solid;
-    border-style:ridge;
+
+table {
+    border: solid;
+    border-style: ridge;
 }
-#legendo{
-    font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
-    border:none;
-    width:auto;
+
+#legendo {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    border: none;
+    width: auto;
 }
-#container_divs{
-    border:groove;
+
+#container_divs {
+    border: groove;
 }
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
@@ -73,4 +76,35 @@ table{
 .finished {
     background-color: grey;
     color: white;
+}
+
+.actions {
+    display: none;
+    font-size: 17px;
+    font-weight: bold;
+    position: absolute;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 10px;
+    opacity: 0.9;
+}
+
+    .actions > a {
+        display: block;
+    }
+
+.actionsOpener {
+    color: #23527c;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+p {
+    font-size: 18px;
+}
+
+.table > tbody > tr > td {
+    vertical-align: inherit;
+    font-size: 18px;
 }
