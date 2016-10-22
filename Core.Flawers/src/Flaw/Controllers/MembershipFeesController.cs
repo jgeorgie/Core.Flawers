@@ -25,8 +25,6 @@ namespace Flaw.Controllers
         // GET: MembershipFees
         public async Task<IActionResult> Index()
         {
-            var privileges = _context.Privileges.ToList();
-            ViewBag.PrivilegeType = new SelectList(privileges, "Type", "Type");
             return View(await _context.MembershipFees.ToListAsync());
         }
 
@@ -54,7 +52,15 @@ namespace Flaw.Controllers
         public async Task<IActionResult> GetPauseReactivateInfo(string id)
         {
             var stateChanges = await _context.FeeStateChanges.Where(f => f.MembershipFeeForeignKey == id).ToListAsync();
-            return PartialView("_FeeStateChanges", stateChanges);
+            if (stateChanges.Count != 0)
+            {
+                return PartialView("_FeeStateChanges", stateChanges);
+            }
+            else
+            {
+                return NotFound();
+            }
+
 
         }
 
@@ -74,50 +80,6 @@ namespace Flaw.Controllers
             }
 
             return View(membershipFee);
-        }
-        public ActionResult Filter(string State, string Privilegee, bool Returned, DateTime StartDate, DateTime EndDate, string Penalty)
-        {
-            var model = _context.MembershipFees.ToList();
-            if (State != "-1")
-            {
-                switch (int.Parse(State))
-                {
-                    case (int)FeeState.Active:
-                        model = model.Where(m => m.CurrentState == FeeState.Active).ToList();
-                        break;
-                    case (int)FeeState.Pause:
-                        model = model.Where(m => m.CurrentState == FeeState.Pause).ToList();
-                        break;
-                    case (int)FeeState.Finish:
-                        model = model.Where(m => m.CurrentState == FeeState.Finish).ToList();
-                        break;
-                    default:
-                        break;
-                }
-            }
-            if (Privilegee!="-1")
-            {
-                model = model.Where(m => m.PrivilegeType == Privilegee).ToList();
-            }
-            //if (Returned)
-            //{
-            //    model =model.Where(m=>m.FeeStateChanges.Contains()
-            //}
-            if (StartDate!=new DateTime())
-            {
-                model = model.Where(m => m.Start > StartDate).ToList();
-            }
-
-            if (EndDate != new DateTime())
-            {
-                model = model.Where(m => m.End < EndDate).ToList();
-            }
-
-            if (Penalty!=null)
-            {
-                //TODO:Something
-            }
-            return PartialView("_FiltredList", model);
         }
 
         //public IActionResult CountDebt(string id)
@@ -172,6 +134,12 @@ namespace Flaw.Controllers
         public IActionResult Create()
         {
             var privileges = _context.Privileges.ToList();
+            //List<string> privilegeTypes = new List<string>();
+
+            //foreach (var priv in privileges)
+            //{
+            //    privilegeTypes.Add(priv.Type);
+            //}
             ViewBag.PrivilegeType = new SelectList(privileges, "Type", "Type");
             return View();
         }
@@ -401,11 +369,18 @@ namespace Flaw.Controllers
                         }
                         else
                         {
-                            var privelege = _context.Privileges.FirstOrDefault(p => p.Type == privelegeModel.Type);
+                            var privelege =
+                                await
+                                    _context.Privileges.FirstOrDefaultAsync(
+                                        p =>
+                                            p.Type ==
+                                            privelegeModel.Type.Substring(0, privelegeModel.Type.IndexOf('(')));
                             var fullDays = (membershipFee.End - membershipFee.Start).TotalDays;
                             var discountDays = (privelegeModel.End - privelegeModel.Start).TotalDays;
-                            double PriceWithDiscount = membershipFee.RealAmount - (membershipFee.RealAmount * privelege.Discount / 100);
-                            membershipFee.AmountWithDiscount = ((fullDays - discountDays) * (membershipFee.RealAmount / fullDays)) + (discountDays * PriceWithDiscount / fullDays);
+                            double priceWithDiscount = membershipFee.RealAmount - (membershipFee.RealAmount * privelege.Discount / 100);
+                            membershipFee.AmountWithDiscount = ((fullDays - discountDays) *
+                                                                (membershipFee.RealAmount / fullDays)) +
+                                                               (discountDays * priceWithDiscount / fullDays);
 
                             membershipFee.LeftOver = membershipFee.AmountWithDiscount;
                             var transfers = await _context.TransferPayments.Where(t => t.MembershipFeeId == privelegeModel.MembershipFeeFoeignKey).ToListAsync();
@@ -475,8 +450,7 @@ namespace Flaw.Controllers
 
                     if (membershipFee.CurrentState == FeeState.Pause)
                     {
-
-                        membershipFee.Paused = DateTime.Now;
+                        membershipFee.Paused = new DateTime(2016,8,22);
                         int howManyDays = (int)(membershipFee.Paused.Value - membershipFee.Start).TotalDays;
                         int fullDays = (int)(membershipFee.End - membershipFee.Start).TotalDays;
                         double paymentsSum = 0;
@@ -505,8 +479,21 @@ namespace Flaw.Controllers
                                 _context.Payments.SingleOrDefaultAsync(
                                     p =>
                                         p.MembershipFeeForeignKey == membershipFee.Id &&
-                                        p.PaymentDeadline.Month == membershipFee.Paused.Value.Month + 1);
-                        payment.Amount = Math.Floor((previousModel.MonthlyPay / days) * (DateTime.Now.Day));
+                                        p.PaymentDeadline.Month == membershipFee.Paused.Value.AddMonths(1).Month);
+                        var payments =
+                            await
+                                _context.Payments.Where(
+                                    p =>
+                                        p.MembershipFeeForeignKey == membershipFee.Id &&
+                                        p.PaymentDeadline >= membershipFee.Paused.Value.AddMonths(1)).ToListAsync();
+
+                        foreach (var p in payments)
+                        {
+                            p.Status = PaymentStatus.Paused;
+                            _context.Update(p);
+                        }
+
+                        payment.Amount = Math.Floor((membershipFee.MonthlyPay / days) * (DateTime.Now.Day));
                         _context.Update(payment);
                     }
                     else if (previousModel.CurrentState == FeeState.Pause && membershipFee.CurrentState == FeeState.Active)
@@ -517,15 +504,30 @@ namespace Flaw.Controllers
                         int days = DateTime.DaysInMonth(membershipFee.Reactiveted.Value.Year, membershipFee.Reactiveted.Value.Month);
                         int howManyDays = (int)(membershipFee.Paused.Value - membershipFee.Start).TotalDays;
                         int fullDays = (int)(membershipFee.End - membershipFee.Start).TotalDays;
-                        //membershipFee.currentDebt = (membershipFee.AmountWithDiscount / fullDays);
+
                         var payment =
                            await
                                _context.Payments.SingleOrDefaultAsync(
                                    p =>
                                        p.MembershipFeeForeignKey == membershipFee.Id &&
                                        p.PaymentDeadline.Month == membershipFee.Reactiveted.Value.Month + 1);
-                        payment.Amount = Math.Floor((previousModel.MonthlyPay / days) * (days - DateTime.Now.Day));
-                        membershipFee.LeftOver -= previousModel.MonthlyPay - payment.Amount;
+
+                        var payments =
+                            await
+                                _context.Payments.Where(
+                                    p =>
+                                        p.MembershipFeeForeignKey == membershipFee.Id &&
+                                        p.PaymentDeadline >= membershipFee.Reactiveted.Value &&
+                                        p.Status == PaymentStatus.Paused).ToListAsync();
+
+                        foreach (var p in payments)
+                        {
+                            p.Status = PaymentStatus.Pending;
+                            _context.Update(p);
+                        }
+
+                        payment.Amount = Math.Floor((membershipFee.MonthlyPay / days) * (days - DateTime.Now.Day));
+                        membershipFee.LeftOver -= membershipFee.MonthlyPay - payment.Amount;
                         _context.Update(payment);
                     }
                     else if (membershipFee.CurrentState == FeeState.Finish)
@@ -620,12 +622,12 @@ namespace Flaw.Controllers
                 sb.Append("\n");
             }
 
-            //var bytes = Encoding.GetEncoding(1252).GetBytes(sb.ToString());
-            //string csv = Encoding.UTF8.GetString(bytes);
+            var bytes = Encoding.GetEncoding(1252).GetBytes(sb.ToString());
+            string csv = Encoding.UTF8.GetString(bytes);
             Response.Clear();
             Response.Headers.Add("content-disposition", "attachment;filename=MembershipFeesList.csv");
             Response.ContentType = "text/csv";
-            await Response.WriteAsync(sb.ToString());
+            await Response.WriteAsync(csv, Encoding.UTF8);
         }
 
 

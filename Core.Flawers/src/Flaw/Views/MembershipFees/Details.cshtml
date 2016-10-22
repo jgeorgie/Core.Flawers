@@ -100,100 +100,106 @@
 
 
 <meta charset="utf-8" />
-<fieldset id="container_divs" class="container col-sm-12 col-md-12 col-lg-12">
-    <legend id="legendo">Կանխիկ և անկանխիկ վճարումներ</legend>
+<fieldset class="container_divs container col-sm-12 col-md-12 col-lg-12">
+    <legend class="legendo">Կանխիկ և անկանխիկ վճարումներ</legend>
+    <h3>Կանխիկ</h3>
+    <hr />
     <div id="container_transfer">
     </div>
+    <h3> Անկանխիկ</h3>
+    <hr />
     <div id="container_cash">
     </div>
+   
+
 </fieldset>
-
-
-
-<div id="container_payments">
-</div>
-
-<fieldset id="container_divs2" class="container col-sm-12 col-md-12 col-lg-12">
-    <legend id="legendo2">Լրացուցիչ նշումներ</legend>
-    <div id="privilige_container">
+<fieldset class="container_divs container col-sm-12 col-md-12 col-lg-12">
+    <legend class="legendo">Վճարումներ</legend>
+    <div id="container_payments">
     </div>
-    <div id="container_PauseReactivate">
+    </fieldset>
+
+    <fieldset class="container_divs container col-sm-12 col-md-12 col-lg-12">
+        <legend class="legendo">Լրացուցիչ նշումներ</legend>
+        <div id="privilige_container">
+        </div>
+        <div id="container_PauseReactivate">
+        </div>
+        <div id="container_FeeAmountChanges">
+        </div>
+    </fieldset>
+
+    <div>
+        <a asp-action="Edit" asp-route-Id="@Model.Id">Edit</a> |
+        @*@if (Context.User.Identity.Name == "admin@admin.am")
+            {
+                <a asp-action="AmountChangeModels" asp-route-id="@Model.Id">Andamavchari chapi popoxutyunner</a> @:|
+            }*@
+        <a id="countDebt">Hashvel partqy orva drutyamb</a> |
+        <a asp-action="Index">Back to List</a>
     </div>
-    <div id="container_FeeAmountChanges">
-    </div>
-</fieldset>
+    @section scripts{
+        <script>
+            $(function () {
+                var index = window.location.href.lastIndexOf('/');
+                var id = window.location.href.substring(index + 1);
 
-<div>
-    <a asp-action="Edit" asp-route-Id="@Model.Id">Edit</a> |
-    @*@if (Context.User.Identity.Name == "admin@admin.am")
-    {
-        <a asp-action="AmountChangeModels" asp-route-id="@Model.Id">Andamavchari chapi popoxutyunner</a> @:|
-    }*@
-    <a id="countDebt">Hashvel partqy orva drutyamb</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
-@section scripts{
-    <script>
-        $(function () {
-            var index = window.location.href.lastIndexOf('/');
-            var id = window.location.href.substring(index + 1);
+                $.ajax({
+                    method: "GET",
+                    url: '@Url.Action("AmountChangeModels", "MembershipFees")',
+                    data: { id: id },
+                    success: function (result) {
+                        $("#container_FeeAmountChanges").html(result);
+                    }
+                });
 
-            $.ajax({
-                method: "GET",
-                url: '@Url.Action("AmountChangeModels", "MembershipFees")',
-                data: { id: id },
-                success: function (result) {
-                    $("#container_FeeAmountChanges").html(result);
-                }
-            });
+                $.ajax({
+                    method: "GET",
+                    url: '@Url.Action("GetPauseReactivateInfo", "MembershipFees")',
+                    data: { id: id },
+                    success: function (result) {
+                        $("#container_PauseReactivate").html(result);
+                    }
+                });
 
-            $.ajax({
-                method: "GET",
-                url: '@Url.Action("GetPauseReactivateInfo", "MembershipFees")',
-                data: { id: id },
-                success: function (result) {
-                    $("#container_PauseReactivate").html(result);
-                }
-            });
+                $.ajax({
+                    method: "GET",
+                    url: '@Url.Action("GetPendingPayments", "MembershipFees")',
+                    data: { id: id },
+                    success: function (result) {
+                        $("#container_payments").html(result);
+                    }
+                });
 
-            $.ajax({
-                method: "GET",
-                url: '@Url.Action("GetPendingPayments", "MembershipFees")',
-                data: { id: id },
-                success: function (result) {
-                    $("#container_payments").html(result);
-                }
-            });
+                $.ajax({
+                    method: "GET",
+                    url: '@Url.Action("GetCashPayments", "MembershipFees")',
+                    data: { id: id },
+                    success: function (result) {
+                        $("#container_cash").html(result);
+                    }
+                });
 
-            $.ajax({
-                method: "GET",
-                url: '@Url.Action("GetCashPayments", "MembershipFees")',
-                data: { id: id },
-                success: function (result) {
-                    $("#container_cash").html(result);
-                }
-            });
+                $.ajax({
+                    method: "GET",
+                    url: '@Url.Action("GetTransferPayments", "MembershipFees")',
+                    data: { id: id },
+                    success: function (result) {
+                        $("#container_transfer").html(result);
+                    }
+                });
 
-            $.ajax({
-                method: "GET",
-                url: '@Url.Action("GetTransferPayments", "MembershipFees")',
-                data: { id: id },
-                success: function (result) {
-                    $("#container_transfer").html(result);
-                }
-            });
-
-            $.ajax({
-                method: "GET",
-                url: '@Url.Action("GetPriviliges", "MembershipFees")',
-                data: { id: id },
-                success: function (result) {
-                    $("#privilige_container").html(result);
-                }
-            });
+                $.ajax({
+                    method: "GET",
+                    url: '@Url.Action("GetPriviliges", "MembershipFees")',
+                    data: { id: id },
+                    success: function (result) {
+                        $("#privilige_container").html(result);
+                    }
+                });
 
 
-            @*$("#countDebt").click(function () {
+                @*$("#countDebt").click(function () {
                 $.ajax({
                     method: "GET",
                     url: '@Url.Action("CountDebt","MembershipFees")',
@@ -203,6 +209,6 @@
                     }
                 });
             });*@
-        })
-    </script>
-}
+            })
+        </script>
+    }
