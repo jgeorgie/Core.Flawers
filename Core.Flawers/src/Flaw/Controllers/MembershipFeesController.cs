@@ -25,6 +25,8 @@ namespace Flaw.Controllers
         // GET: MembershipFees
         public async Task<IActionResult> Index()
         {
+            var privileges = _context.Privileges.ToList();
+            ViewBag.PrivilegeType = new SelectList(privileges, "Type", "Type");
             return View(await _context.MembershipFees.ToListAsync());
         }
 
@@ -72,6 +74,50 @@ namespace Flaw.Controllers
             }
 
             return View(membershipFee);
+        }
+        public ActionResult Filter(string State, string Privilegee, bool Returned, DateTime StartDate, DateTime EndDate, string Penalty)
+        {
+            var model = _context.MembershipFees.ToList();
+            if (State != "-1")
+            {
+                switch (int.Parse(State))
+                {
+                    case (int)FeeState.Active:
+                        model = model.Where(m => m.CurrentState == FeeState.Active).ToList();
+                        break;
+                    case (int)FeeState.Pause:
+                        model = model.Where(m => m.CurrentState == FeeState.Pause).ToList();
+                        break;
+                    case (int)FeeState.Finish:
+                        model = model.Where(m => m.CurrentState == FeeState.Finish).ToList();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (Privilegee!="-1")
+            {
+                model = model.Where(m => m.PrivilegeType == Privilegee).ToList();
+            }
+            //if (Returned)
+            //{
+            //    model =model.Where(m=>m.FeeStateChanges.Contains()
+            //}
+            if (StartDate!=new DateTime())
+            {
+                model = model.Where(m => m.Start > StartDate).ToList();
+            }
+
+            if (EndDate != new DateTime())
+            {
+                model = model.Where(m => m.End < EndDate).ToList();
+            }
+
+            if (Penalty!=null)
+            {
+                //TODO:Something
+            }
+            return PartialView("_FiltredList", model);
         }
 
         //public IActionResult CountDebt(string id)
@@ -126,12 +172,6 @@ namespace Flaw.Controllers
         public IActionResult Create()
         {
             var privileges = _context.Privileges.ToList();
-            //List<string> privilegeTypes = new List<string>();
-
-            //foreach (var priv in privileges)
-            //{
-            //    privilegeTypes.Add(priv.Type);
-            //}
             ViewBag.PrivilegeType = new SelectList(privileges, "Type", "Type");
             return View();
         }
@@ -580,12 +620,12 @@ namespace Flaw.Controllers
                 sb.Append("\n");
             }
 
-            var bytes = Encoding.GetEncoding(1252).GetBytes(sb.ToString());
-            string csv = Encoding.UTF8.GetString(bytes);
+            //var bytes = Encoding.GetEncoding(1252).GetBytes(sb.ToString());
+            //string csv = Encoding.UTF8.GetString(bytes);
             Response.Clear();
             Response.Headers.Add("content-disposition", "attachment;filename=MembershipFeesList.csv");
             Response.ContentType = "text/csv";
-            await Response.WriteAsync(csv, Encoding.UTF8);
+            await Response.WriteAsync(sb.ToString());
         }
 
 
