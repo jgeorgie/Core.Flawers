@@ -1,4 +1,4 @@
-@model Flaw.Models.PaymentModel
+﻿@model Flaw.Models.PaymentModel
 
 @{
     ViewData["Title"] = "AddPayment";
@@ -9,18 +9,18 @@
         max-width: 900px;
     }
 </style>
-
-<h2>AddPayment</h2>
+<meta charset="utf-8"/>
+<h2>Ավելացնել Վճարում</h2>
 
 <div class="form-group">
     <div class="col-md-10">
         <select id="typeSelectList" class="form-control">
-            <option value="Transfer" selected>Transfer</option>
-            <option value="Cash">Cash</option>
+            <option value="Transfer" selected>Փոխանցումով</option>
+            <option value="Cash">Կանխիկ</option>
         </select>
     </div>
 </div>
-<a href="#"><span id="selectType">Add</span></a>
+<a href="#"><span id="selectType">Ավելացնել</span></a>
 
 <div id="container">
 
