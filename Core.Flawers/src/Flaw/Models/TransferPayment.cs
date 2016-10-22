@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace Flaw.Models
 {
-    public class TransferPayment : IPayments
+    public class TransferPayment
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Id { get; set; }
 
         [Display(Name = "Ամսաթիվ")]
+        [DataType(DataType.Date)]
         public DateTime Date { get; set; }
 
         [Display(Name = "Գումարի չափ")]

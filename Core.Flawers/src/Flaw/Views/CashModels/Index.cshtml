@@ -1,85 +1,94 @@
 @model IEnumerable<Flaw.Models.CashModel>
-
 @{
     ViewData["Title"] = "Index";
 }
-
 <h2>Մուտքի և ելքի օրդերներ</h2>
-
 <p>
     <a asp-action="Create">Ավելացնել</a>
 </p>
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.OrdersNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Аccount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AccountingPass)
-            </th>
-
-            <th>
-                @Html.DisplayNameFor(model => model.Amount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Destination)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.OrdersNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Аccount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AccountingPass)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Destination)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FullName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Type)
+        </th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OrdersNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Аccount)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Date.Date)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AccountingPass)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Amount)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Destination)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Type)
-                </td>
-
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrdersNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Аccount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccountingPass)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Destination)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                <a><span class="actionsOpener">Actions</span></a>
+                <div class="actions">
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                     @if (Context.User.Identity.Name == "admin@admin.am")
                     {
                         <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
 
                     }
-
-                </td>
-            </tr>
-        }
+                </div>
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
+
+@section scripts{
+    <script>
+        $(function () {
+            $(".actionsOpener").on('click', function () {
+                var tr = $(this).parent().parent();
+                var div = tr.find('div.actions');
+                div.slideToggle();
+            });
+        });
+    </script>
+}

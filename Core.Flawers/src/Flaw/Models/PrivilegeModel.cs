@@ -10,10 +10,13 @@ namespace Flaw.Models
     {
         public string Id { get; set; }
 
-        [Display(Name = "Ավարտ")]
+        [Display(Name = "Սկիզբ")]
+        [DataType(DataType.Date)]
         public DateTime Start { get; set; }
 
-        [Display(Name = "Սկիզբ")]
+
+        [Display(Name = "Ավարտ")]
+        [DataType(DataType.Date)]
         public DateTime End { get; set; }
 
         [Display(Name = "Արտոնության տեսակ")]

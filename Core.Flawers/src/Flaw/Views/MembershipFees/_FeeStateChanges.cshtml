@@ -1,0 +1,33 @@
+@model IEnumerable<Flaw.Models.FeeStateChangeModel>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ChangeDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NewState)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PreviousState)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChangeDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NewState)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PreviousState)
+            </td>
+
+        </tr>
+}
+    </tbody>
+</table>

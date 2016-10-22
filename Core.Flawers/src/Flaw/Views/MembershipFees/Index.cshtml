@@ -1,13 +1,15 @@
-@using Microsoft.CodeAnalysis.CSharp.Syntax
+@*@using Microsoft.CodeAnalysis.CSharp.Syntax*@
+@using Microsoft.CodeAnalysis
 @model IEnumerable<Flaw.Models.MembershipFee>
 @{
     ViewData["Title"] = "Index";
 }
+<meta charset="utf-8" />
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">?????????</a>
 </p>
 <p>
-    <a asp-action="ExportToExcel">Export To Excel</a>
+    <a asp-action="ExportToExcel">????????? Excel</a>
 </p>
 <table class="table">
     <thead>
@@ -128,7 +130,6 @@
     <script>
         $(function () {
             $(".actionsOpener").on('click', function () {
-                //$(this).css("display", "none");
                 var tr = $(this).parent().parent();
                 var div = tr.find('div.actions');
                 div.slideToggle();

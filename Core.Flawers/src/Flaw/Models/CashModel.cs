@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Flaw.Models
 {
-    public class CashModel : IPayments
+    public class CashModel
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Id { get; set; }
@@ -16,6 +16,7 @@ namespace Flaw.Models
         public string OrdersNumber { get; set; }
 
         [Display(Name = "Կազմման ամսաթիվը")]
+        [DataType(DataType.Date)]
         public DateTime Date { get; set; }
 
         [Display(Name = "Թղթակցող հաշիվը")]

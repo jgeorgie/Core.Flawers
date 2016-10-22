@@ -14,7 +14,9 @@ namespace Flaw.Models
         public string Id { get; set; }
 
         [Display(Name = "Վերջնաժամկետ")]
+        [DataType(DataType.Date)]
         public DateTime PaymentDeadline { get; set; }
+
         public DateTime PayedOn { get; set; }
 
         [Display(Name = "Վճարի չափ")]

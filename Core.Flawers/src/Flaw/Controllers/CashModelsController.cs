@@ -49,7 +49,7 @@ namespace Flaw.Controllers
 
         public void ExportToXML(string id)
         {
-            var cashModel = _context.CashModel.Where(c => c.Id == id).SingleOrDefault();
+            var cashModel = _context.CashModel.SingleOrDefault(c => c.Id == id);
 
             var xs = new XmlSerializer(cashModel.GetType());
             HttpContext.Response.ContentType = "text/xml";

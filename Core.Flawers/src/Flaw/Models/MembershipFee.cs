@@ -22,9 +22,11 @@ namespace Flaw.Models
         public string MiddleName { get; set; }
 
         [Display(Name = "Սկիզբ")]
+        [DataType(DataType.Date)]
         public DateTime Start { get; set; }
 
         [Display(Name = "Ավարտ")]
+        [DataType(DataType.Date)]
         public DateTime End { get; set; }
 
         [Display(Name = "Անդամավճարի ամսական վճար")]
@@ -65,9 +67,11 @@ namespace Flaw.Models
         public string PrivilegeType { get; set; }
 
         [Display(Name = "Արտոնագրի սկիզբ")]
+        [DataType(DataType.Date)]
         public DateTime? ActivePrivilegeStart { get; set; }
 
         [Display(Name = "Արտոնագրի ավարտ")]
+        [DataType(DataType.Date)]
         public DateTime? ActivePrivilegeEnd { get; set; }
 
 
@@ -75,14 +79,18 @@ namespace Flaw.Models
         public List<FeeAmountChangeModel> AmountChanges { get; set; }
         public List<CashModel> CashPayments { get; set; }
         public List<TransferPayment> TransferPayments { get; set; }
+        public List<FeeStateChangeModel> FeeStateChanges { get; set; }
 
     }
 
 
     public enum FeeState
     {
+        [Display(Name = "Ակտիվ")]
         Active,
+        [Display(Name = "Սառեցված")]
         Pause,
+        [Display(Name = "Դադարեցված")]
         Finish
     }
 

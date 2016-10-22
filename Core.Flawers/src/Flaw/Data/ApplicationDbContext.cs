@@ -27,8 +27,6 @@ namespace Flaw.Data
                  .HasForeignKey(f => f.MembershipFeeFoeignKey)
                  .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
 
-          
-
             builder.Entity<TransferPayment>()
                 .HasOne(p => p.Fee)
                 .WithMany(i => i.TransferPayments)
@@ -38,6 +36,12 @@ namespace Flaw.Data
                 .HasOne(pt => pt.Fee)
                 .WithMany(p => p.CashPayments)
                 .HasForeignKey(pt => pt.MembershipFeeId)
+                .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
+
+            builder.Entity<FeeStateChangeModel>()
+                .HasOne(pt => pt.Fee)
+                .WithMany(p => p.FeeStateChanges)
+                .HasForeignKey(pt => pt.MembershipFeeForeignKey)
                 .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
 
             base.OnModelCreating(builder);
@@ -60,6 +64,7 @@ namespace Flaw.Data
 
         public DbSet<FeeAmountChangeModel> FeeAmountChangeModels { get; set; }
 
+        public DbSet<FeeStateChangeModel> FeeStateChanges { get; set; }
 
     }
 }

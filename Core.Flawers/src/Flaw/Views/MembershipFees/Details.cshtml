@@ -2,193 +2,133 @@
 @{
     ViewData["Title"] = "Details";
 }
-<h2>Details</h2>
-<h4>MembershipFee</h4>
+<h2>Մանրամասներ</h2>
+<h4>Անդամավճար</h4>
 <hr />
 <div>
     <table class="table">
         <thead>
-            <tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RealAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AmountWithDiscount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentState)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MiddleName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Start)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.End)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LeftOver)
+            </th>
+            @if (Model.Paused != null)
+            {
                 <th>
-                    @Html.DisplayNameFor(model => model.RealAmount)
+                    @Html.DisplayNameFor(model => model.Paused)
                 </th>
+            }
+            @if (Model.Reactiveted != null)
+            {
                 <th>
-                    @Html.DisplayNameFor(model => model.AmountWithDiscount)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CurrentState)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.FirstName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LastName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MiddleName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Start)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.End)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LeftOver)
-                </th>
-                @if (Model.Paused != null)
-                {
-                    <th>
-                        @Html.DisplayNameFor(model => model.Paused)
-                    </th>
-                }
-                @if (Model.Reactiveted != null)
-                {
-                    <th>
-                        @Html.DisplayNameFor(model => model.Reactiveted)
-                    </th>}
-            </tr>
+                    @Html.DisplayNameFor(model => model.Reactiveted)
+                </th>}
+        </tr>
         </thead>
 
         <tbody>
-            <tr>
-                <td>
-                    @Html.DisplayFor(model => model.RealAmount)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => model.AmountWithDiscount)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => model.CurrentState)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => model.FirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => model.LastName)
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.RealAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.AmountWithDiscount)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.CurrentState)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.LastName)
 
-                </td>
-                <td>
-                    @Html.DisplayFor(model => model.MiddleName)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.MiddleName)
             </td>
             <td>
                 @Html.DisplayFor(model => model.Start)
-        </td>
-        <td>
-            @Html.DisplayFor(model => model.End)
-    </td>
-    <td>
-        @Html.DisplayFor(model => model.LeftOver)
-</td>
-@if (Model.Paused != null)
-{
-    <td>
-        @Html.DisplayFor(model => model.Paused)
-    </td>}
-@if (Model.Reactiveted != null)
-{
-    <td>
-        @Html.DisplayFor(model => model.Reactiveted)
-    </td>
-}
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.End)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.LeftOver)
+            </td>
+            @if (Model.Paused != null)
+            {
+                <td>
+                    @Html.DisplayFor(model => model.Paused)
+                </td>}
+            @if (Model.Reactiveted != null)
+            {
+                <td>
+                    @Html.DisplayFor(model => model.Reactiveted)
+                </td>
+            }
 
 
-</tr>
-</tbody>
-@*<dd>
-
-    </dd>
-    <dt>
-
-    </dt>
-    <dd>
-
-    </dd>
-    <dt>
-
-    </dt>
-    <dd>
-
-    </dd>
-
-    <dt>
-
-    </dt>
-    <dd>
-
-    </dd>
-    <dt>
-
-    </dt>
-    <dd>
-    </dd>
-    <dt>
-
-    </dt>
-    <dd>
-
-    </dd>
-    <dt>
-
-    </dt>
-    <dd>
-
-    </dd>
-    <dt>
-
-    </dt>
-    <dd>
-
-    </dd>
-    <dt>
-
-    </dt>
-    <dd>
-
-    </dd>
-
-    {
-    <dt>
-
-    </dt>
-    <dd>
-
-    </dd>
-    }
-
-    <dt>
-        @Html.DisplayNameFor(model => model.Reactiveted)
-    </dt>
-    <dd>
-
-    </dd>
-
-    }*@
-
-</table>
+        </tr>
+        </tbody>
+    </table>
 </div>
+
+
 <meta charset="utf-8" />
 <fieldset id="container_divs" class="container col-sm-12 col-md-12 col-lg-12">
-    <legend id="legendo">Այստեղ էլ կարող է լինել ձեր գովազդը</legend>
+    <legend id="legendo">Կանխիկ և անկանխիկ վճարումներ</legend>
     <div id="container_transfer">
     </div>
     <div id="container_cash">
     </div>
 </fieldset>
 
-<div id="privilige_container">
-</div>
+
 
 <div id="container_payments">
 </div>
 
-<div id="for_dept"></div>
+<fieldset id="container_divs2" class="container col-sm-12 col-md-12 col-lg-12">
+    <legend id="legendo2">Լրացուցիչ նշումներ</legend>
+    <div id="privilige_container">
+    </div>
+    <div id="container_PauseReactivate">
+    </div>
+    <div id="container_FeeAmountChanges">
+    </div>
+</fieldset>
+
 <div>
     <a asp-action="Edit" asp-route-Id="@Model.Id">Edit</a> |
-    @if (Context.User.Identity.Name == "admin@admin.am")
+    @*@if (Context.User.Identity.Name == "admin@admin.am")
     {
         <a asp-action="AmountChangeModels" asp-route-id="@Model.Id">Andamavchari chapi popoxutyunner</a> @:|
-    }
+    }*@
     <a id="countDebt">Hashvel partqy orva drutyamb</a> |
     <a asp-action="Index">Back to List</a>
 </div>
@@ -197,6 +137,24 @@
         $(function () {
             var index = window.location.href.lastIndexOf('/');
             var id = window.location.href.substring(index + 1);
+
+            $.ajax({
+                method: "GET",
+                url: '@Url.Action("AmountChangeModels", "MembershipFees")',
+                data: { id: id },
+                success: function (result) {
+                    $("#container_FeeAmountChanges").html(result);
+                }
+            });
+
+            $.ajax({
+                method: "GET",
+                url: '@Url.Action("GetPauseReactivateInfo", "MembershipFees")',
+                data: { id: id },
+                success: function (result) {
+                    $("#container_PauseReactivate").html(result);
+                }
+            });
 
             $.ajax({
                 method: "GET",
@@ -235,7 +193,7 @@
             });
 
 
-            $("#countDebt").click(function () {
+            @*$("#countDebt").click(function () {
                 $.ajax({
                     method: "GET",
                     url: '@Url.Action("CountDebt","MembershipFees")',
@@ -244,7 +202,7 @@
                         $("#for_dept").html(result);
                     }
                 });
-            });
+            });*@
         })
     </script>
 }
