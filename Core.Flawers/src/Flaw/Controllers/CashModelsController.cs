@@ -169,19 +169,6 @@ namespace Flaw.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (cashModel.Type == BargainType.CashIn)
-                {
-                    //TODO: MembershipFeeFoerignKey
-                    //var payment = new PaymentModel()
-                    //{
-                    //    Id = Guid.NewGuid().ToString(),
-                    //    Amount = cashModel.Amount,
-                    //    Date = cashModel.Date,
-                    //    Type = PaymentType.Cash,
-                    //    CashPaymentId = cashModel.Id,
-                    //    //MembershipFeeForeignKey=cashModel.
-                    //};
-                }
                 cashModel.Id = Guid.NewGuid().ToString();
                 _context.Add(cashModel);
                 await _context.SaveChangesAsync();

@@ -52,7 +52,15 @@ namespace Flaw.Controllers
         public async Task<IActionResult> GetPauseReactivateInfo(string id)
         {
             var stateChanges = await _context.FeeStateChanges.Where(f => f.MembershipFeeForeignKey == id).ToListAsync();
-            return PartialView("_FeeStateChanges", stateChanges);
+            if (stateChanges.Count != 0)
+            {
+                return PartialView("_FeeStateChanges", stateChanges);
+            }
+            else
+            {
+                return NotFound();
+            }
+            
 
         }
 
