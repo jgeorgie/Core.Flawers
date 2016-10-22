@@ -60,7 +60,7 @@ namespace Flaw.Controllers
             {
                 return NotFound();
             }
-            
+
 
         }
 
@@ -369,11 +369,18 @@ namespace Flaw.Controllers
                         }
                         else
                         {
-                            var privelege = _context.Privileges.FirstOrDefault(p => p.Type == privelegeModel.Type);
+                            var privelege =
+                                await
+                                    _context.Privileges.FirstOrDefaultAsync(
+                                        p =>
+                                            p.Type ==
+                                            privelegeModel.Type.Substring(0, privelegeModel.Type.IndexOf('(')));
                             var fullDays = (membershipFee.End - membershipFee.Start).TotalDays;
                             var discountDays = (privelegeModel.End - privelegeModel.Start).TotalDays;
-                            double PriceWithDiscount = membershipFee.RealAmount - (membershipFee.RealAmount * privelege.Discount / 100);
-                            membershipFee.AmountWithDiscount = ((fullDays - discountDays) * (membershipFee.RealAmount / fullDays)) + (discountDays * PriceWithDiscount / fullDays);
+                            double priceWithDiscount = membershipFee.RealAmount - (membershipFee.RealAmount * privelege.Discount / 100);
+                            membershipFee.AmountWithDiscount = ((fullDays - discountDays) *
+                                                                (membershipFee.RealAmount / fullDays)) +
+                                                               (discountDays * priceWithDiscount / fullDays);
 
                             membershipFee.LeftOver = membershipFee.AmountWithDiscount;
                             var transfers = await _context.TransferPayments.Where(t => t.MembershipFeeId == privelegeModel.MembershipFeeFoeignKey).ToListAsync();
