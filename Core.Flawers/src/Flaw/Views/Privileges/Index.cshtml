@@ -7,7 +7,7 @@
 @*<h2>Index</h2>*@
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">?????????</a>
 </p>
 <table class="table">
     <thead>
@@ -26,23 +26,13 @@
                 @Html.DisplayNameFor(model => model.Description)
             </th>
                         
-            
-            @*<th>
-                    @Html.DisplayNameFor(model => model.End)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Start)
-                </th>
-                <th></th>*@
+           
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
-                @*<td>
-                    @Html.DisplayFor(modelItem=>item.PrivilegeNumber)
-                </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.Type)
                 </td>
@@ -53,13 +43,6 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 
-                
-                @*<td>
-                        @Html.DisplayFor(modelItem => item.End)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Start)
-                    </td>*@
                 <td>
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     @if (Context.User.Identity.Name == "admin@admin.am")

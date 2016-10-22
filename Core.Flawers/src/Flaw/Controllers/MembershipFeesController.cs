@@ -450,7 +450,6 @@ namespace Flaw.Controllers
 
                     if (membershipFee.CurrentState == FeeState.Pause)
                     {
-
                         membershipFee.Paused = DateTime.Now;
                         int howManyDays = (int)(membershipFee.Paused.Value - membershipFee.Start).TotalDays;
                         int fullDays = (int)(membershipFee.End - membershipFee.Start).TotalDays;
@@ -473,6 +472,7 @@ namespace Flaw.Controllers
                         {
                             paymentsSum += transfer.Amount;
                         }
+                        membershipFee.TotalDaysPaused += howManyDays;
                         membershipFee.currentDebt = (membershipFee.AmountWithDiscount / fullDays) * howManyDays - paymentsSum;
                         int days = DateTime.DaysInMonth(membershipFee.Paused.Value.Year, membershipFee.Paused.Value.Month);
                         var payment =
@@ -481,7 +481,7 @@ namespace Flaw.Controllers
                                     p =>
                                         p.MembershipFeeForeignKey == membershipFee.Id &&
                                         p.PaymentDeadline.Month == membershipFee.Paused.Value.Month + 1);
-                        payment.Amount = Math.Floor((previousModel.MonthlyPay / days) * (DateTime.Now.Day));
+                        payment.Amount = Math.Floor((membershipFee.MonthlyPay / days) * (DateTime.Now.Day));
                         _context.Update(payment);
                     }
                     else if (previousModel.CurrentState == FeeState.Pause && membershipFee.CurrentState == FeeState.Active)
@@ -492,15 +492,14 @@ namespace Flaw.Controllers
                         int days = DateTime.DaysInMonth(membershipFee.Reactiveted.Value.Year, membershipFee.Reactiveted.Value.Month);
                         int howManyDays = (int)(membershipFee.Paused.Value - membershipFee.Start).TotalDays;
                         int fullDays = (int)(membershipFee.End - membershipFee.Start).TotalDays;
-                        //membershipFee.currentDebt = (membershipFee.AmountWithDiscount / fullDays);
                         var payment =
                            await
                                _context.Payments.SingleOrDefaultAsync(
                                    p =>
                                        p.MembershipFeeForeignKey == membershipFee.Id &&
                                        p.PaymentDeadline.Month == membershipFee.Reactiveted.Value.Month + 1);
-                        payment.Amount = Math.Floor((previousModel.MonthlyPay / days) * (days - DateTime.Now.Day));
-                        membershipFee.LeftOver -= previousModel.MonthlyPay - payment.Amount;
+                        payment.Amount = Math.Floor((membershipFee.MonthlyPay / days) * (days - DateTime.Now.Day));
+                        membershipFee.LeftOver -= membershipFee.MonthlyPay - payment.Amount;
                         _context.Update(payment);
                     }
                     else if (membershipFee.CurrentState == FeeState.Finish)
