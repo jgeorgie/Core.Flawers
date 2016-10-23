@@ -20,7 +20,7 @@ namespace Flaw.Models
         public DateTime Date { get; set; }
 
         [Display(Name = "Թղթակցող հաշիվը")]
-        public string Аccount { get; set; }
+        public string Account { get; set; }
 
         [Display(Name = "Վերլուծական հաշվառման ծածկագիրը")]
         public string AccountingPass { get; set; }

@@ -125,7 +125,7 @@ namespace Flaw.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Description,Discount,End,MembershipFeeForeignKey,Start")] Privilege privilege)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Type,Description,Discount")] Privilege privilege)
         {
             if (id != privilege.Id)
             {
@@ -134,33 +134,33 @@ namespace Flaw.Controllers
 
             if (ModelState.IsValid)
             {
-                var oldModel = _context.Privileges.Where(p => p.Id == privilege.Id).AsNoTracking().SingleOrDefault();
-                if (oldModel.Discount != privilege.Discount) //|| oldModel.Start != privilege.Start || oldModel.End != privilege.End
-                {
-                    var fees = await _context.MembershipFees.Where(f => f.PrivilegeType == privilege.Type).ToListAsync();
-                    foreach (var fee in fees)
-                    {
-                        var fullDays = (fee.End - fee.Start).TotalDays;
-                        var discountDays = (fee.ActivePrivilegeEnd.Value - fee.ActivePrivilegeStart.Value).TotalDays;
-                        double PriceWithDiscount = fee.RealAmount - (fee.RealAmount * privilege.Discount / 100);
-                        fee.AmountWithDiscount = ((fullDays - discountDays) * (fee.RealAmount / fullDays)) + (discountDays * PriceWithDiscount / fullDays);
+                //var oldModel = _context.Privileges.Where(p => p.Id == privilege.Id).AsNoTracking().SingleOrDefault();
+                //if (oldModel.Discount != privilege.Discount) //|| oldModel.Start != privilege.Start || oldModel.End != privilege.End
+                //{
+                //    var fees = await _context.MembershipFees.Where(f => f.PrivilegeType == privilege.Type).ToListAsync();
+                //    foreach (var fee in fees)
+                //    {
+                //        var fullDays = (fee.End - fee.Start).TotalDays;
+                //        var discountDays = (fee.ActivePrivilegeEnd.Value - fee.ActivePrivilegeStart.Value).TotalDays;
+                //        double PriceWithDiscount = fee.RealAmount - (fee.RealAmount * privilege.Discount / 100);
+                //        fee.AmountWithDiscount = ((fullDays - discountDays) * (fee.RealAmount / fullDays)) + (discountDays * PriceWithDiscount / fullDays);
 
-                        fee.LeftOver = fee.AmountWithDiscount;
-                        var transfers = await _context.TransferPayments.Where(t => t.MembershipFeeId == fee.Id).ToListAsync();
-                        var cashs = await _context.CashModel.Where(c => c.MembershipFeeId == fee.Id).ToListAsync();
+                //        fee.LeftOver = fee.AmountWithDiscount;
+                //        var transfers = await _context.TransferPayments.Where(t => t.MembershipFeeId == fee.Id).ToListAsync();
+                //        var cashs = await _context.CashModel.Where(c => c.MembershipFeeId == fee.Id).ToListAsync();
 
-                        foreach (var t in transfers)
-                        {
-                            fee.LeftOver -= t.Amount;
-                        }
-                        foreach (var c in cashs)
-                        {
-                            fee.LeftOver -= c.Amount;
-                        }
-                        _context.Update(fee);
-                    }
-                   
-                }
+                //        foreach (var t in transfers)
+                //        {
+                //            fee.LeftOver -= t.Amount;
+                //        }
+                //        foreach (var c in cashs)
+                //        {
+                //            fee.LeftOver -= c.Amount;
+                //        }
+                //        _context.Update(fee);
+                //    }
+
+                //}
 
 
                 try

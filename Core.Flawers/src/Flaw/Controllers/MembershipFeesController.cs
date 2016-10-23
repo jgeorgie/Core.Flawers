@@ -33,6 +33,13 @@ namespace Flaw.Controllers
             return View();
         }
 
+        public IActionResult CheckPrivileges()
+        {
+            var privileges =
+                 _context.PrivilegeModels.Where(p => (p.End - DateTime.Now).TotalDays <= 3).ToList();
+            return Json((privileges.Count != 0).ToString());
+        }
+
 
         //[Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> AmountChangeModels(string id)
