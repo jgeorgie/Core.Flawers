@@ -73,7 +73,7 @@ namespace Flaw.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateForFee([Bind("Id,OrdersNumber,Date,AccountingPass,Amount,Destination,FullName,Type,Аccount,MembershipFeeId")] CashModel cashModel)
+        public async Task<IActionResult> CreateForFee([Bind("Id,OrdersNumber,Date,AccountingPass,Amount,Destination,FullName,Type,A�ccount,MembershipFeeId")] CashModel cashModel)
         {
             if (ModelState.IsValid)
             {
@@ -154,9 +154,9 @@ namespace Flaw.Controllers
                 cashModel.Id = Guid.NewGuid().ToString();
                 _context.Add(cashModel);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index","MembershipFees");
+                return RedirectToAction("Index", "MembershipFees");
             }
-            return View("_CreateForFee",cashModel);
+            return View("_CreateForFee", cashModel);
         }
 
 
@@ -165,7 +165,7 @@ namespace Flaw.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,OrdersNumber,Date,AccountingPass,Amount,Destination,FullName,Type,Аccount")] CashModel cashModel)
+        public async Task<IActionResult> Create([Bind("Id,OrdersNumber,Date,AccountingPass,Amount,Destination,FullName,Type,Account")] CashModel cashModel)
         {
             if (ModelState.IsValid)
             {
@@ -198,7 +198,7 @@ namespace Flaw.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,AccountingPass,Amount,Destination,FullName,Type,Аccount")] CashModel cashModel)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,AccountingPass,OrdersNumber,Amount,Destination,Date,FullName,Account")] CashModel cashModel)
         {
             if (id != cashModel.Id)
             {
@@ -207,6 +207,9 @@ namespace Flaw.Controllers
 
             if (ModelState.IsValid)
             {
+                var previousModel = await _context.CashModel.AsNoTracking().SingleOrDefaultAsync(c => c.Id == id);
+                cashModel.MembershipFeeId = previousModel.MembershipFeeId;
+
                 try
                 {
                     _context.Update(cashModel);

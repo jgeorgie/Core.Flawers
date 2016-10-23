@@ -1,13 +1,13 @@
-@model Flaw.Models.CashModel
+﻿@model Flaw.Models.CashModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+<h2>Մանրամասներ</h2>
 
 <div>
-    <h4>CashModel</h4>
+    <h4>Կանխիկ դրամարկղաին օրդեր</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -41,17 +41,17 @@
             @Html.DisplayFor(model => model.Type)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Аccount)
+            @Html.DisplayNameFor(model => model.Account)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Аccount)
+            @Html.DisplayFor(model => model.Account)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a> |
-    <a asp-action="ExportToXML" asp-route-id="@Model.Id" download="true">Export</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Խմբագրել</a> |
+    <a asp-action="Index">Վերադառնալ ցուցակ</a> |
+    <a asp-action="ExportToXML" asp-route-id="@Model.Id" download="true">Արտահանել XML ֆորմատով</a>
 </div>
 
 

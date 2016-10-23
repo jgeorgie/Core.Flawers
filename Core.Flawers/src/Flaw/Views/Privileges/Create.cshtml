@@ -1,10 +1,10 @@
-@model Flaw.Models.Privilege
+﻿@model Flaw.Models.Privilege
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h2>?????????</h2>
+<h2>Ավելացնել</h2>
 
 <form asp-action="Create">
     <div class="form-horizontal">
@@ -35,30 +35,6 @@
                 <span asp-validation-for="Discount" class="text-danger" />
             </div>
         </div>
-
-        @*<div class="form-group">
-            @*<label asp-for="MembershipFeeForeignKey" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input type="hidden" asp-for="MembershipFeeForeignKey" class ="form-control" value="@ViewBag.MembershipFeeForeignKey" readonly></input>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Start" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Start" class="form-control" />
-                <span asp-validation-for="Start" class="text-danger" />
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="End" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="End" class="form-control" />
-                <span asp-validation-for="End" class="text-danger" />
-            </div>
-        </div>
-    *@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />
@@ -68,7 +44,7 @@
 </form>
 
 <div>
-    <a asp-action="Index">?????????? ??????</a>
+    <a asp-action="Index">Վերադառնալ ցուցակ</a>
 </div>
 
 @section Scripts {

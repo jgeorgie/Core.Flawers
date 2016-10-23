@@ -1,14 +1,14 @@
-@model Flaw.Models.CashModel
+﻿@model Flaw.Models.CashModel
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h2>Edit</h2>
+<h2>Խմբագրել</h2>
 
 <form asp-action="Edit">
     <div class="form-horizontal">
-        <h4>CashModel</h4>
+        <h4>Կանխիկ դրամարկղային օրդեր</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="Id" />
@@ -21,10 +21,10 @@
         </div>
 
         <div class="form-group">
-            <label asp-for="Аccount" class="col-md-2 control-label"></label>
+            <label asp-for="Account" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Аccount" class="form-control" />
-                <span asp-validation-for="Аccount" class="text-danger" />
+                <input asp-for="Account" class="form-control" />
+                <span asp-validation-for="Account" class="text-danger" />
             </div>
         </div>
 
@@ -64,24 +64,18 @@
                 <span asp-validation-for="FullName" class="text-danger" />
             </div>
         </div>
-        <div class="form-group">
-            <label asp-for="Type" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <select asp-for="Type" class="form-control"></select>
-                <span asp-validation-for="Type" class="text-danger" />
-            </div>
-        </div>
+
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Հիշել" class="btn btn-default" />
             </div>
         </div>
     </div>
 </form>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Վերադառնալ ցուցակ</a>
 </div>
 
 @section Scripts {

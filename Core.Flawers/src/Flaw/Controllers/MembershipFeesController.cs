@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +37,13 @@ namespace Flaw.Controllers
         public IActionResult AddPayment(string id)
         {
             return View();
+        }
+
+        public IActionResult CheckPrivileges()
+        {
+            var privileges =
+                 _context.PrivilegeModels.Where(p => (p.End - DateTime.Now).TotalDays <= 3).ToList();
+            return Json((privileges.Count != 0).ToString());
         }
 
 
@@ -563,7 +570,7 @@ namespace Flaw.Controllers
 
                     if (membershipFee.CurrentState == FeeState.Pause)
                     {
-                        membershipFee.Paused = new DateTime(2016, 8, 22);
+                        membershipFee.Paused = DateTime.Now;
                         int howManyDays = (int)(membershipFee.Paused.Value - membershipFee.Start).TotalDays;
                         int fullDays = (int)(membershipFee.End - membershipFee.Start).TotalDays;
                         double paymentsSum = 0;
@@ -719,14 +726,14 @@ namespace Flaw.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task ExportToExcel()
+        public async Task<IActionResult> ExportToExcel()
         {
             var membershipFees = await _context.MembershipFees.ToListAsync();
             var sb = new StringBuilder();
             //Type t = membershipFees[0].GetType();
             //PropertyInfo[] pi = t.GetProperties();
 
-            sb.Append("?????,????????,?????????,??????????? ???,??????? ???,?????,?????,?????,??????? ?????\n");
+            sb.Append("Անուն,Ազգանուն,Հայրանուն,Անդամավճարի չափ,Զեղչված չափ,Սկիզբ,Ավարտ,Պարտք,Ընթացիկ վիճակ\n");
 
             foreach (var fee in membershipFees)
             {
@@ -735,12 +742,16 @@ namespace Flaw.Controllers
                 sb.Append("\n");
             }
 
-            var bytes = Encoding.GetEncoding(1252).GetBytes(sb.ToString());
-            string csv = Encoding.UTF8.GetString(bytes);
-            Response.Clear();
-            Response.Headers.Add("content-disposition", "attachment;filename=MembershipFeesList.csv");
-            Response.ContentType = "text/csv";
-            await Response.WriteAsync(csv, Encoding.UTF8);
+            //var bytes = Encoding.GetEncoding(1252).GetBytes(sb.ToString());
+            //string csv = Encoding.UTF8.GetString(bytes);
+            var data = Encoding.UTF8.GetBytes(sb.ToString());
+            var result = Encoding.UTF8.GetPreamble().Concat(data).ToArray();
+            //string res = Encoding.GetEncoding(1251).GetString(result);
+            //Response.Clear();
+            //Response.Headers.Add("content-disposition", "attachment;filename=MembershipFeesList.csv");
+            //Response.ContentType = "text/csv";
+            //await Response.WriteAsync(res);
+            return File(result, "application/csv", "MembershipFeesList.csv");
         }
 
 

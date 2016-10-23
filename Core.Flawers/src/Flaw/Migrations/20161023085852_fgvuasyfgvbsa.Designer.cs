@@ -8,9 +8,10 @@ using Flaw.Data;
 namespace Flaw.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161023085852_fgvuasyfgvbsa")]
+    partial class fgvuasyfgvbsa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
@@ -294,8 +295,6 @@ namespace Flaw.Migrations
                     b.Property<DateTime>("Date");
 
                     b.Property<string>("Destination");
-
-                    b.Property<string>("FullName");
 
                     b.Property<string>("MembershipFeeId");
 

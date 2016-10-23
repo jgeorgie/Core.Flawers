@@ -1,4 +1,4 @@
-@model IEnumerable<Flaw.Models.MembershipFee>
+﻿@model IEnumerable<Flaw.Models.MembershipFee>
 
 <table class="table">
 
@@ -41,12 +41,12 @@
             <td>
                 <a><span class="actionsOpener">Actions</span></a>
                 <div class="actions">
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <a asp-action="AddPayment" asp-route-id="@item.Id">Add Payment</a>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Խմբագրել</a>
+                    <a asp-action="AddPayment" asp-route-id="@item.Id">Ավելացնել վճարում</a>
+                    <a asp-action="Details" asp-route-id="@item.Id">Մանրամասներ</a>
                     @if (Context.User.Identity.Name == "admin@admin.am")
                     {
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Ջնջել</a>
                     }
                 </div>
 

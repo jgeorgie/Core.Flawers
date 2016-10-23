@@ -1,4 +1,4 @@
-@model IEnumerable<Flaw.Models.CashModel>
+﻿@model IEnumerable<Flaw.Models.CashModel>
 @{
     ViewData["Title"] = "Index";
 }
@@ -13,7 +13,7 @@
             @Html.DisplayNameFor(model => model.OrdersNumber)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Аccount)
+            @Html.DisplayNameFor(model => model.Account)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Date)
@@ -44,7 +44,7 @@
                 @Html.DisplayFor(modelItem => item.OrdersNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Аccount)
+                @Html.DisplayFor(modelItem => item.Account)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Date)
@@ -67,11 +67,11 @@
             <td>
                 <a><span class="actionsOpener">Actions</span></a>
                 <div class="actions">
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Խմբագրել</a>
+                    <a asp-action="Details" asp-route-id="@item.Id">Մանրամասներ</a>
                     @if (Context.User.Identity.Name == "admin@admin.am")
                     {
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Ջնջել</a>
 
                     }
                 </div>

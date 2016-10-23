@@ -130,13 +130,13 @@
     </fieldset>
 
     <div>
-        <a asp-action="Edit" asp-route-Id="@Model.Id">Edit</a> |
+        <a asp-action="Edit" asp-route-Id="@Model.Id">Խմբագրել</a> |
         @*@if (Context.User.Identity.Name == "admin@admin.am")
             {
                 <a asp-action="AmountChangeModels" asp-route-id="@Model.Id">Andamavchari chapi popoxutyunner</a> @:|
             }*@
-        <a id="countDebt">Hashvel partqy orva drutyamb</a> |
-        <a asp-action="Index">Back to List</a>
+       
+        <a asp-action="Index">Վերադառնալ ցանկ</a>
     </div>
     @section scripts{
         <script>

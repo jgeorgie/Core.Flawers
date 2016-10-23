@@ -1,8 +1,8 @@
-@model Flaw.Models.CashModel
+﻿@model Flaw.Models.CashModel
 
 <form asp-action="CreateForFee">
     <div class="form-horizontal">
-        <h4>CashModel</h4>
+        <h4>Կանխիկ մուտքի օրդեր</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
@@ -57,8 +57,8 @@
             <label asp-for="Type" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <select asp-for="Type" disabled class="form-control">
-                    <option value="CashIn" selected>Cash In</option>
-                    <option value="CashOut">Cash Out</option>
+                    <option value="CashIn" selected>Մուտք</option>
+                    <option value="CashOut">Ելք</option>
                 </select>
                 <span asp-validation-for="Type" class="text-danger" />
             </div>
