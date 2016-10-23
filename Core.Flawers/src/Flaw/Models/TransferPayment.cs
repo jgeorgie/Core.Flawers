@@ -19,6 +19,9 @@ namespace Flaw.Models
         [Display(Name = "Գումարի չափ")]
         public double Amount { get; set; }
 
+        [Display(Name = "Անուն Ազգանուն")]
+        public string FullName { get; set; }
+
         [Display(Name ="Հանձնարարագրի համար")]
         public string PaymentNo { get; set; }
 

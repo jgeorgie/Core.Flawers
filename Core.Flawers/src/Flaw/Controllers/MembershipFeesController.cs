@@ -9,6 +9,7 @@ using Flaw.Data;
 using Flaw.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 
 namespace Flaw.Controllers
 {
@@ -25,8 +26,13 @@ namespace Flaw.Controllers
         // GET: MembershipFees
         public async Task<IActionResult> Index()
         {
+           
+
             return View(await _context.MembershipFees.ToListAsync());
         }
+
+
+
 
         public IActionResult AddPayment(string id)
         {
@@ -151,110 +157,174 @@ namespace Flaw.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,AmountWithDiscount,CurrentState,FirstName,LastName,MiddleName,RealAmount,Start,LeftOver,Periodicity,ActivePrivilegeEnd,ActivePrivilegeStart,PrivilegeType,ActivePrivilegeNo")] MembershipFee membershipFee)
         {
-            if (ModelState.IsValid)
+            var rand = new Random();
+            var privileges = await _context.Privileges.ToListAsync();
+            //for (int i = 0; i < 500; i++)
+            //{
+            //    var start = DateTime.Now.AddDays(rand.Next(1, 29)).AddMonths(rand.Next(1, 12));
+            //    var fee = new MembershipFee()
+            //    {
+            //        Id = Guid.NewGuid().ToString(),
+            //        RealAmount = i * 10000,
+            //        AmountWithDiscount = i * 5000,
+            //        CurrentState = rand.Next(2) == 1 ? FeeState.Active : FeeState.Pause,
+            //        FirstName = ",
+            //        LastName = "LastName" + i,
+            //        MiddleName = "MiddleName" + i,
+            //        Start = start,
+            //        End = start.AddMonths(12),
+            //        LeftOver = i * 10000,
+            //        MonthlyPay = i * 10000 / 12,
+            //        Periodicity = FeePeriodicity.Year,
+            //        PrivilegeType = rand.Next(0, 2) == 1 ? privileges[1].Type : privileges[0].Type,
+            //        ActivePrivilegeStart = start,
+            //        ActivePrivilegeEnd = start.AddMonths(12),
+            //        ActivePrivilegeNo = rand.Next(),
+            //    };
+            //    _context.Add(fee);
+            //}
+
+            for (int i = 0; i < 50; i++)
             {
-                membershipFee.Id = Guid.NewGuid().ToString();
-                membershipFee.AmountWithDiscount = membershipFee.RealAmount;
-                membershipFee.LeftOver = membershipFee.AmountWithDiscount;
-
-                membershipFee.End = membershipFee.Periodicity == FeePeriodicity.Year ? membershipFee.Start.AddMonths(12) : membershipFee.Start.AddMonths(1);
-                if (membershipFee.Periodicity != FeePeriodicity.Month)
+                var start = DateTime.Now.AddDays(rand.Next(1, 29)).AddMonths(rand.Next(1, 12));
+                var payments = new TransferPayment()
                 {
-                    membershipFee.MonthlyPay = Math.Floor(membershipFee.RealAmount / 12);
-                }
+                    Id = Guid.NewGuid().ToString(),
+                    Amount = i * 5100,
+                    Date = DateTime.Now.AddDays(i * 3),
+                    FullName = "FirstName" + i * 10 + " LastName" + i * 10,
+                    Destination = "chem manum",
+                    PaymentNo = (i * 1000).ToString(),
+                };
+                _context.Add(payments);
+            }
 
-                if (!string.IsNullOrEmpty(membershipFee.PrivilegeType) && membershipFee.ActivePrivilegeStart != null && membershipFee.ActivePrivilegeEnd != null)
+
+            for (int i = 0; i < 100; i++)
+            {
+                var cashes = new CashModel()
                 {
-                    var privilige = _context.Privileges.FirstOrDefault(p => p.Type == membershipFee.PrivilegeType);
+                    Id = Guid.NewGuid().ToString(),
+                    FullName = "FirstName" + i * 10 + " LastName" + i * 10,
+                    AccountingPass = (i * 123).ToString(),
+                    Amount = i * 4320,
+                    Date = DateTime.Now.AddDays(i * 2),
+                    Destination = "chem manum asi",
+                    OrdersNumber = (i * 10000 + i * 378).ToString(),
+                    Type = rand.Next(0, 2) == 1 ? BargainType.CashIn : BargainType.CashOut,
+                    //?ccount ="asfasfasfasfas"
+                };
+                _context.Add(cashes);
+            }
 
-                    var priviligeModel = new PrivilegeModel()
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        Start = (DateTime)membershipFee.ActivePrivilegeStart,
-                        End = (DateTime)membershipFee.ActivePrivilegeEnd,
-                        Type = membershipFee.PrivilegeType + $"({privilige.Discount})",
-                        MembershipFeeFoeignKey = membershipFee.Id,
-                        PrivilegeNumber = GetHashCode(),
-                    };
-                    _context.Add(priviligeModel);
+            await _context.SaveChangesAsync();
 
-                    var fullDays = (int)(membershipFee.End - membershipFee.Start).TotalDays;
-                    var discountDays = (int)(priviligeModel.End - priviligeModel.Start).TotalDays;
-
-                    double priceWithDiscount =
-                        Math.Floor(membershipFee.RealAmount - (membershipFee.RealAmount * privilige.Discount / 100));
-
-                    membershipFee.AmountWithDiscount =
-                        Math.Floor(((fullDays - discountDays) * (membershipFee.RealAmount / fullDays)) +
-                                   (discountDays * priceWithDiscount / fullDays));
-
-                    membershipFee.MonthlyPay = Math.Floor(membershipFee.AmountWithDiscount / 12);
+            if (ModelState.IsValid)
+                {
+                    membershipFee.Id = Guid.NewGuid().ToString();
+                    membershipFee.AmountWithDiscount = membershipFee.RealAmount;
                     membershipFee.LeftOver = membershipFee.AmountWithDiscount;
-                }
-
-
-                if (membershipFee.Periodicity == FeePeriodicity.Year)
-                {
-                    int month = membershipFee.Start.Month;
-                    for (int i = 1; i <= 12; i++)
+                    
+                    membershipFee.End = membershipFee.Periodicity == FeePeriodicity.Year ? membershipFee.Start.AddMonths(12) : membershipFee.Start.AddMonths(1);
+                    if (membershipFee.Periodicity != FeePeriodicity.Month)
                     {
-                        PendingPaymentModel payment;
-                        if (i == 1 && membershipFee.Start.Day > 1)
+                        membershipFee.MonthlyPay = Math.Floor(membershipFee.RealAmount / 12);
+                    }
+
+                    if (!string.IsNullOrEmpty(membershipFee.PrivilegeType) && membershipFee.ActivePrivilegeStart != null && membershipFee.ActivePrivilegeEnd != null)
+                    {
+                        var privilige = _context.Privileges.FirstOrDefault(p => p.Type == membershipFee.PrivilegeType);
+
+                        var priviligeModel = new PrivilegeModel()
                         {
-                            int days = DateTime.DaysInMonth(membershipFee.Start.Year, membershipFee.Start.Month);
-                            double differense = Math.Floor((membershipFee.Start.Day - 1) * membershipFee.MonthlyPay / days);
-                            membershipFee.LeftOver -= differense;
-                            payment = new PendingPaymentModel()
-                            {
-                                MembershipFeeForeignKey = membershipFee.Id,
-                                Amount = membershipFee.MonthlyPay - differense,
-                                Id = Guid.NewGuid().ToString(),
-                                PaymentDeadline =
-                                   month + i <= 12
-                                       ? new DateTime(DateTime.Now.Year, month + i, 15)
-                                       : new DateTime(DateTime.Now.Year + 1, month + i - 12, 15),
-                                Status = PaymentStatus.Pending
-                            };
-                        }
-                        else
+                            Id = Guid.NewGuid().ToString(),
+                            Start = (DateTime)membershipFee.ActivePrivilegeStart,
+                            
+                            End = (DateTime)membershipFee.ActivePrivilegeEnd,
+                            Type = membershipFee.PrivilegeType + $"({privilige.Discount})",
+                            MembershipFeeFoeignKey = membershipFee.Id,
+                            PrivilegeNumber = GetHashCode(),
+                        };
+                        _context.Add(priviligeModel);
+
+                        var fullDays = (int)(membershipFee.End - membershipFee.Start).TotalDays;
+                        var discountDays = (int)(priviligeModel.End - priviligeModel.Start).TotalDays;
+
+                        double priceWithDiscount =
+                            Math.Floor(membershipFee.RealAmount - (membershipFee.RealAmount * privilige.Discount / 100));
+
+                        membershipFee.AmountWithDiscount =
+                            Math.Floor(((fullDays - discountDays) * (membershipFee.RealAmount / fullDays)) +
+                                       (discountDays * priceWithDiscount / fullDays));
+
+                        membershipFee.MonthlyPay = Math.Floor(membershipFee.AmountWithDiscount / 12);
+                        membershipFee.LeftOver = membershipFee.AmountWithDiscount;
+                    }
+
+
+                    if (membershipFee.Periodicity == FeePeriodicity.Year)
+                    {
+                        int month = membershipFee.Start.Month;
+                        for (int i = 1; i <= 12; i++)
                         {
-                            payment = new PendingPaymentModel()
+                            PendingPaymentModel payment;
+                            if (i == 1 && membershipFee.Start.Day > 1)
                             {
-                                MembershipFeeForeignKey = membershipFee.Id,
-                                Amount = membershipFee.MonthlyPay,
-                                Id = Guid.NewGuid().ToString(),
-                                PaymentDeadline =
-                                    month + i <= 12
-                                        ? new DateTime(DateTime.Now.Year, month + i, 15)
-                                        : new DateTime(DateTime.Now.Year + 1, month + i - 12, 15),
-                                Status = PaymentStatus.Pending
-                            };
+                                int days = DateTime.DaysInMonth(membershipFee.Start.Year, membershipFee.Start.Month);
+                                double differense = Math.Floor((membershipFee.Start.Day - 1) * membershipFee.MonthlyPay / days);
+                                membershipFee.LeftOver -= differense;
+                                payment = new PendingPaymentModel()
+                                {
+                                    MembershipFeeForeignKey = membershipFee.Id,
+                                    Amount = membershipFee.MonthlyPay - differense,
+                                    Id = Guid.NewGuid().ToString(),
+                                    PaymentDeadline =
+                                       month + i <= 12
+                                           ? new DateTime(DateTime.Now.Year, month + i, 15)
+                                           : new DateTime(DateTime.Now.Year + 1, month + i - 12, 15),
+                                    Status = PaymentStatus.Pending
+                                };
+                            }
+                            else
+                            {
+                                payment = new PendingPaymentModel()
+                                {
+                                    MembershipFeeForeignKey = membershipFee.Id,
+                                    Amount = membershipFee.MonthlyPay,
+                                    Id = Guid.NewGuid().ToString(),
+                                    PaymentDeadline =
+                                        month + i <= 12
+                                            ? new DateTime(DateTime.Now.Year, month + i, 15)
+                                            : new DateTime(DateTime.Now.Year + 1, month + i - 12, 15),
+                                    Status = PaymentStatus.Pending
+                                };
+                            }
+
+                            _context.Payments.Add(payment);
+
                         }
+                    }
+                    else
+                    {
+                        membershipFee.End = membershipFee.Start.AddMonths(1);
+                        int month = membershipFee.Start.AddMonths(1).Month;
+                        var payment = new PendingPaymentModel()
+                        {
+                            MembershipFeeForeignKey = membershipFee.Id,
+                            Amount = Math.Floor(membershipFee.RealAmount / 12),
+                            Id = Guid.NewGuid().ToString(),
+                            PaymentDeadline = new DateTime(DateTime.Now.Year, month, 15),
+                            Status = PaymentStatus.Pending
+                        };
 
                         _context.Payments.Add(payment);
-
                     }
-                }
-                else
-                {
-                    membershipFee.End = membershipFee.Start.AddMonths(1);
-                    int month = membershipFee.Start.AddMonths(1).Month;
-                    var payment = new PendingPaymentModel()
-                    {
-                        MembershipFeeForeignKey = membershipFee.Id,
-                        Amount = Math.Floor(membershipFee.RealAmount / 12),
-                        Id = Guid.NewGuid().ToString(),
-                        PaymentDeadline = new DateTime(DateTime.Now.Year, month, 15),
-                        Status = PaymentStatus.Pending
-                    };
 
-                    _context.Payments.Add(payment);
+                    _context.Add(membershipFee);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index");
                 }
-
-                _context.Add(membershipFee);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
+            
             return View(membershipFee);
         }
 
@@ -291,7 +361,50 @@ namespace Flaw.Controllers
             return BadRequest();
         }
 
+        public ActionResult Filter(string State, string Privilegee, bool Returned, DateTime StartDate, DateTime EndDate, string Penalty)
+        {
+            var model = _context.MembershipFees.ToList();
+            if (State != "-1")
+            {
+                switch (int.Parse(State))
+                {
+                    case (int)FeeState.Active:
+                        model = model.Where(m => m.CurrentState == FeeState.Active).ToList();
+                        break;
+                    case (int)FeeState.Pause:
+                        model = model.Where(m => m.CurrentState == FeeState.Pause).ToList();
+                        break;
+                    case (int)FeeState.Finish:
+                        model = model.Where(m => m.CurrentState == FeeState.Finish).ToList();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (Privilegee != "-1")
+            {
+                model = model.Where(m => m.PrivilegeType == Privilegee).ToList();
+            }
+            //if (Returned)
+            //{
+            //    model =model.Where(m=>m.FeeStateChanges.Contains()
+            //}
+            if (StartDate != new DateTime())
+            {
+                model = model.Where(m => m.Start > StartDate).ToList();
+            }
 
+            if (EndDate != new DateTime())
+            {
+                model = model.Where(m => m.End < EndDate).ToList();
+            }
+
+            if (Penalty != null)
+            {
+                //TODO:Something
+            }
+            return PartialView("_FiltredList", model);
+        }
         // GET: MembershipFees/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
@@ -450,7 +563,7 @@ namespace Flaw.Controllers
 
                     if (membershipFee.CurrentState == FeeState.Pause)
                     {
-                        membershipFee.Paused = new DateTime(2016,8,22);
+                        membershipFee.Paused = new DateTime(2016, 8, 22);
                         int howManyDays = (int)(membershipFee.Paused.Value - membershipFee.Start).TotalDays;
                         int fullDays = (int)(membershipFee.End - membershipFee.Start).TotalDays;
                         double paymentsSum = 0;

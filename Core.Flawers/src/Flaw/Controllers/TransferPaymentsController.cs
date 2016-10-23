@@ -57,7 +57,7 @@ namespace Flaw.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Amount,Date,PaymentNo,Destination,MembershipFeeId")] TransferPayment transferPayment)
+        public async Task<IActionResult> Create([Bind("Id,Amount,Date,PaymentNo,Destination,FullName,MembershipFeeId")] TransferPayment transferPayment)
         {
             if (ModelState.IsValid)
             {
@@ -77,7 +77,7 @@ namespace Flaw.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateForFee([Bind("Amount,Date,PaymentNo,Destination,MembershipFeeId")] TransferPayment transferPayment)
+        public async Task<IActionResult> CreateForFee([Bind("Amount,Date,PaymentNo,Destination,FullName,MembershipFeeId")] TransferPayment transferPayment)
         {
             if (ModelState.IsValid)
             {
@@ -188,7 +188,7 @@ namespace Flaw.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Amount,Date,PaymentNo,Destination,MembershipFeeId")] TransferPayment transferPayment)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Amount,Date,PaymentNo,Destination,FullName,MembershipFeeId")] TransferPayment transferPayment)
         {
             if (id != transferPayment.Id)
             {
