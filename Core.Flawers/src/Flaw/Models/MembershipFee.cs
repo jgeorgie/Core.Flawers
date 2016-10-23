@@ -43,9 +43,9 @@ namespace Flaw.Models
 
         [Display(Name = "Պարբերականություն")]
         public FeePeriodicity Periodicity { get; set; }
-
+        [Display(Name = "Կասեցված")]
         public DateTime? Paused { get; set; }
-
+        [Display(Name = "Վերականգնված")]
         public DateTime? Reactiveted { get; set; }
 
         public int? TotalDaysPaused { get; set; }

@@ -118,14 +118,14 @@
         }
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Հիշել" class="btn btn-default" />
             </div>
         </div>
     </div>
 </form>
 <div>
-    <a asp-controller="Privileges" asp-action="Create" asp-route-feeId="@Model.Id"> Avelacnel Artonutyun</a>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Privileges" asp-action="Create" asp-route-feeId="@Model.Id"> Ավելացնել Արտոնություն</a>
+    <a asp-action="Index">Վերադառնալ ցանկ</a>
 </div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
