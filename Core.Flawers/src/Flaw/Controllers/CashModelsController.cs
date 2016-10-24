@@ -73,7 +73,7 @@ namespace Flaw.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateForFee([Bind("Id,OrdersNumber,Date,AccountingPass,Amount,Destination,FullName,Type,Aêccount,MembershipFeeId")] CashModel cashModel)
+        public async Task<IActionResult> CreateForFee([Bind("Id,OrdersNumber,Date,AccountingPass,Amount,Destination,FullName,Type,Account,MembershipFeeId")] CashModel cashModel)
         {
             if (ModelState.IsValid)
             {
@@ -186,6 +186,7 @@ namespace Flaw.Controllers
             }
 
             var cashModel = await _context.CashModel.SingleOrDefaultAsync(m => m.Id == id);
+            @ViewBag.FeeId = cashModel.MembershipFeeId;
             if (cashModel == null)
             {
                 return NotFound();
@@ -209,6 +210,24 @@ namespace Flaw.Controllers
             {
                 var previousModel = await _context.CashModel.AsNoTracking().SingleOrDefaultAsync(c => c.Id == id);
                 cashModel.MembershipFeeId = previousModel.MembershipFeeId;
+
+                if (previousModel.Amount != cashModel.Amount)
+                {
+                    var fee = await _context.MembershipFees.SingleOrDefaultAsync(f => f.Id == cashModel.MembershipFeeId);
+                    double difference = previousModel.Amount - cashModel.Amount;
+                    fee.LeftOver += difference;
+                    var payments =
+                        await
+                            _context.Payments.Where(p => p.MembershipFeeForeignKey == cashModel.MembershipFeeId)
+                                .OrderBy(d => d.PaymentDeadline)
+                                    .ToListAsync();
+
+                    var lastPay = payments.SingleOrDefault(p => p.DepositOrDebt != 0 && Math.Abs((double)p.DepositOrDebt) < Math.Abs(p.Amount));
+                    if (lastPay == null)
+                    {
+                        //lastPay=payments.(p=>)
+                    }
+                }
 
                 try
                 {

@@ -179,17 +179,11 @@
             $("#submit")
                 .on('click',
                     function () {
-                        //var st = $("#state");
                         state = $("#state option:selected").val();
-                        //st = $("#privilege");
                         privilege = $("#privilege option:selected").val();
-                        //st = $("#returned");
                         reactivated = $("#returned option:selected").text();
-                        //st = $("#startDate");
                         startDate = $("#startDate option:selected").text();
-                        //st = $("#endDate");
                         endDate = $("#endDate option:selected").text();
-                        //st = $("#penalty");
                         penalty = $("#penalty option:selected").text();
 
                         $.ajax({
@@ -260,19 +254,6 @@
                     var querystr = $.param(myObject);
                     var actionUrl = '@Url.Action("ExportToExcel")';
                     window.location.href = actionUrl +"?"+ querystr;
-
-                    @*$.ajax({
-                        method: "GET",
-                        url: '@Url.Action("ExportToExcel")',
-                        data: {
-                            State: state,
-                            Privilegee: privilege,
-                            Returned: reactivated,
-                            StartDate: startDate,
-                            EndDate: endDate,
-                            Penalty: penalty
-                        }
-                    });*@
                 });
         });
     </script>

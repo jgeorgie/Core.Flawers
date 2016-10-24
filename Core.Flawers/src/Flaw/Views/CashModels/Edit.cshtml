@@ -1,17 +1,14 @@
 ﻿@model Flaw.Models.CashModel
-
 @{
     ViewData["Title"] = "Edit";
 }
-
 <h2>Խմբագրել</h2>
-
 <form asp-action="Edit">
     <div class="form-horizontal">
         <h4>Կանխիկ դրամարկղային օրդեր</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Id" />
         <div class="form-group">
             <label asp-for="OrdersNumber" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -19,7 +16,6 @@
                 <span asp-validation-for="OrdersNumber" class="text-danger" />
             </div>
         </div>
-
         <div class="form-group">
             <label asp-for="Account" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -27,7 +23,6 @@
                 <span asp-validation-for="Account" class="text-danger" />
             </div>
         </div>
-
         <div class="form-group">
             <label asp-for="Date" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -35,7 +30,6 @@
                 <span asp-validation-for="Date" class="text-danger" />
             </div>
         </div>
-
         <div class="form-group">
             <label asp-for="AccountingPass" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -65,6 +59,7 @@
             </div>
         </div>
 
+        <input type="hidden" asp-for="MembershipFeeId" value="@ViewBag.FeeId" readonly  class="form-control" />
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
@@ -73,11 +68,9 @@
         </div>
     </div>
 </form>
-
 <div>
     <a asp-action="Index">Վերադառնալ ցուցակ</a>
 </div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
