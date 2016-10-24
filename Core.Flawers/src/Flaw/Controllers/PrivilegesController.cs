@@ -45,6 +45,8 @@ namespace Flaw.Controllers
             return View(privilege);
         }
 
+        [AllowAnonymous]
+        //[Authorize(Roles = )]
         public async Task<IActionResult> Notifications()
         {
             var priv = await _context.PrivilegeModels.Where(p => p.End.Date >= DateTime.Now.Date && (p.End - DateTime.Now).TotalDays <= 3).ToListAsync();

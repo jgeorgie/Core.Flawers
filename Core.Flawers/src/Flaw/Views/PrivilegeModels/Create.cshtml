@@ -1,0 +1,69 @@
+@model Flaw.Models.PrivilegeModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>PrivilegeModel</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        
+
+        <div class="form-group">
+            <label asp-for="Type" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="Type" asp-items="@ViewBag.PrivilegeType" class="form-control"><option> </option></select>
+                <span asp-validation-for="Type" class="text-danger" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PrivilegeNumber" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="PrivilegeNumber" class="form-control" />
+                <span asp-validation-for="PrivilegeNumber" class="text-danger" />
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label asp-for="Start" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Start" class="form-control" />
+                <span asp-validation-for="Start" class="text-danger" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="End" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="End" class="form-control" />
+                <span asp-validation-for="End" class="text-danger" />
+            </div>
+        </div>
+
+        <div class="form-group" style="display: none">
+            <div class="col-md-10">
+                <input value="@ViewBag.FeeId" name="MembershipFeeFoeignKey" readonly class="form-control"  />
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

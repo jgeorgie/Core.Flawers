@@ -1,8 +1,7 @@
-@model IEnumerable<Flaw.Models.CashModel>
+﻿@model IEnumerable<Flaw.Models.CashModel>
 
-@*<p>
-    <a asp-action="Create">Create New</a>
-</p>*@
+
+<h3>Կանխիկ</h3>
 <table class="table">
     <thead>
         <tr>
@@ -28,9 +27,9 @@
                 @Html.DisplayNameFor(model => model.Type)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Аccount)
+                @Html.DisplayNameFor(model => model.Account)
             </th>
-            <th></th>
+            @*<th></th>*@
         </tr>
     </thead>
     <tbody>
@@ -58,13 +57,13 @@
                 @Html.DisplayFor(modelItem => item.Type)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Аccount)
+                @Html.DisplayFor(modelItem => item.Account)
             </td>
-            <td>
-                @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |*@
-                @*<a asp-action="Details" asp-route-id="@item.Id">Details</a> |*@
-                @*<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
-            </td>
+            @*<td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+               <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>*@
         </tr>
 }
     </tbody>

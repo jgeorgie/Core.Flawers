@@ -272,7 +272,7 @@ namespace Flaw.Migrations
 
                     b.Property<string>("MembershipFeeFoeignKey");
 
-                    b.Property<int>("PrivilegeNumber");
+                    b.Property<long>("PrivilegeNumber");
 
                     b.Property<DateTime>("Start");
 

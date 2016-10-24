@@ -22,6 +22,7 @@ namespace Flaw.Controllers
         {
             return View();
         }
+
         public async Task<IActionResult> SearchFees(string FirstName, string LastName, string MiddleName)
         {
             List<MembershipFee> fees = new List<MembershipFee>();
@@ -34,8 +35,17 @@ namespace Flaw.Controllers
                 fees = await _context.MembershipFees.Where(m => m.MiddleName.Contains(MiddleName)).ToListAsync();
             }
 
-            return PartialView("_searchFees",fees);
+            if (fees.Count != 0)
+            {
+                return PartialView("_searchFees", fees);
+            }
+            else
+            {
+                return NotFound();
+            }
+            
         }
+
         public async Task<IActionResult> SearchCashes(string FirstName, string LastName, string MiddleName)
         {
             List<CashModel> cashes = new List<CashModel>();
@@ -43,8 +53,19 @@ namespace Flaw.Controllers
             {
                 cashes = await _context.CashModel.Where(m => m.FullName.Contains(FirstName)&&m.FullName.Contains(LastName)).ToListAsync();
             }
-            return PartialView("_searchCashes",cashes);
+
+            if (cashes.Count != 0)
+            {
+                return PartialView("_searchCashes", cashes);
+            }
+            else
+            {
+               return NotFound();
+            }
+            
         }
+
+
         public async Task<IActionResult> SearchPayments(string FirstName, string LastName, string MiddleName)
         {
             List<TransferPayment> payments = new List<TransferPayment>();
@@ -56,24 +77,18 @@ namespace Flaw.Controllers
             {
                 payments = await _context.TransferPayments.Where(m => m.FullName.Contains(MiddleName)).ToListAsync();
             }
-            return PartialView("_searchPayments",payments);
+
+            if (payments.Count != 0)
+            {
+                return PartialView("_searchPayments", payments);
+            }
+            else
+            {
+                return NotFound();
+            }
+            
         }
 
-
-
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
 
         public IActionResult Error()
         {

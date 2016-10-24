@@ -1,8 +1,6 @@
-@model IEnumerable<Flaw.Models.CashModel>
+﻿@model IEnumerable<Flaw.Models.CashModel>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<h3>Կանխիկ վճարումներ</h3>
 <table class="table">
     <thead>
         <tr>
@@ -28,7 +26,7 @@
                 @Html.DisplayNameFor(model => model.Type)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Аccount)
+                @Html.DisplayNameFor(model => model.Account)
             </th>
         </tr>
     </thead>
@@ -57,7 +55,7 @@
                 @Html.DisplayFor(modelItem => item.Type)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Аccount)
+                @Html.DisplayFor(modelItem => item.Account)
             </td>
         </tr>
 }

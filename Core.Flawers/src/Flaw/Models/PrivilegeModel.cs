@@ -23,7 +23,7 @@ namespace Flaw.Models
         public string Type { get; set; }
 
         [Display(Name = "Արտոնության համար")]
-        public int PrivilegeNumber { get; set; }
+        public long PrivilegeNumber { get; set; }
 
 
         public string MembershipFeeFoeignKey { get; set; }

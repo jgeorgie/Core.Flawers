@@ -9,26 +9,26 @@
     <a asp-action="Create">Ավելացնել</a>
 </p>
 <p>
-    <a asp-action="ExportToExcel">Արտահանել Excel</a>
+    <a><span id="exportToExcel">Արտահանել Excel</span></a>
 </p>
 <a><span id="filterText" style="font-size:18px">Filters</span></a>
 <div id="Filters" style="display:none">
     <div class="table-bordered"><label>Ընթացիկ վիճակ<select asp-items="@Html.GetEnumSelectList<FeeState>()" id="state" class="form-control"><option value="-1"> </option></select></label></div>
     <div class="table-bordered">
         <label>Ըստ արտոնությունների<select asp-items="@ViewBag.PrivilegeType" id="privilege" class="form-control"><option value="-1"> </option></select></label>
-        <label>Ըստ վերականգման<input type="checkbox" id="returned"/></label>
+        <label>Ըստ վերականգման<input type="checkbox" id="returned" /></label>
     </div>
     <div class="table-bordered">
         <label>
             Ըստ պարտքի միջակայքի <br />
             Սկսած<input id="startDate" type="date" name="FormLeftOver" /> <br />
             Մինչև<input id="endDate" type="date" name="ToLeftOver" />
-        </label> 
+        </label>
     </div><br />
     <div class="table-bordered">
         <label>Ըստ կարգապահական տույժերի <input id="penalty" /></label>
     </div>
-    <input type="button" id="submit" value="OK"/>
+    <input type="button" id="submit" value="OK" />
 </div>
 <table class="table">
 
@@ -94,8 +94,8 @@
                         return string.Empty;
                     }
                 }
-
             }
+
             <tr class="@GetClass(item)">
                 <td>
                     @Html.DisplayFor(modelItem => item.RealAmount)
@@ -121,9 +121,6 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Start)
                 </td>
-                @*<td>
-                        @Html.DisplayFor(modelItem => item.End)
-                    </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.LeftOver)
                 </td>
@@ -156,50 +153,127 @@
 @section scripts{
     <script>
         $(function () {
-            $("#filterText").on('click', function () {
-                var div = $('#Filters');
-                div.slideToggle();
-            });
-            $(".actionsOpener").on('click', function () {
-                var tr = $(this).parent().parent();
-                var div = tr.find('div.actions');
-                div.slideToggle();
-            });
-            $("#submit").on('click', function () {
-                var st = document.getElementById("state");
-                var state = st.options[st.selectedIndex].value;
-                st = document.getElementById("privilege");
-                var privilege = st.options[st.selectedIndex].value;
-                st = document.getElementById("returned");
-                var returned = st.checked;
-                st = document.getElementById("startDate");
-                var startDate = st.value;
-                st = document.getElementById("endDate");
-                var endDate = st.value;
-                st = document.getElementById("penalty");
-                var penalty = st.value;
-                $.ajax({
-                    url:'@Url.Action("Filter", "MembershipFees")',
-                    data: {
-                        State: state,
-                        Privilegee: privilege,
-                        Returned: returned,
-                        StartDate: startDate,
-                        EndDate: endDate,
-                        Penalty: penalty
-                    },
-                    success: function(result) {
-                        $("#tbody").html("").html(result);
-                        $(".actionsOpener").on('click', function () {
-                            var tr = $(this).parent().parent();
-                            var div = tr.find('div.actions');
-                            div.slideToggle();
-                        });
-                    },
-                })
+            var state,
+                privilege,
+                reactivated,
+                startDate,
+                endDate,
+                penalty;
 
-                
-            })
+
+            $("#filterText")
+                .on('click',
+                    function () {
+                        var div = $('#Filters');
+                        div.slideToggle();
+                    });
+
+            $(".actionsOpener")
+                .on('click',
+                    function () {
+                        var tr = $(this).parent().parent();
+                        var div = tr.find('div.actions');
+                        div.slideToggle();
+                    });
+
+            $("#submit")
+                .on('click',
+                    function () {
+                        //var st = $("#state");
+                        state = $("#state option:selected").val();
+                        //st = $("#privilege");
+                        privilege = $("#privilege option:selected").val();
+                        //st = $("#returned");
+                        reactivated = $("#returned option:selected").text();
+                        //st = $("#startDate");
+                        startDate = $("#startDate option:selected").text();
+                        //st = $("#endDate");
+                        endDate = $("#endDate option:selected").text();
+                        //st = $("#penalty");
+                        penalty = $("#penalty option:selected").text();
+
+                        $.ajax({
+                            method: "GET",
+                            url: '@Url.Action("Filter", "MembershipFees")',
+                            data: {
+                                State: state,
+                                Privilegee: privilege,
+                                Returned: reactivated,
+                                StartDate: startDate,
+                                EndDate: endDate,
+                                Penalty: penalty
+                            },
+                            success: function (result) {
+                                $("#tbody").html("").html(result);
+                                $(".actionsOpener")
+                                    .on('click',
+                                        function () {
+                                            var tr = $(this).parent().parent();
+                                            var div = tr.find('div.actions');
+                                            div.slideToggle();
+                                        });
+                            }
+                        });
+                    });
+
+
+            $("#exportToExcel")
+                .click(function () {
+                    var myObject = {};
+
+                    if (state != null && state != "") {
+                        myObject["State"] = state;
+                    } else {
+                        myObject["State"] = "null";
+                    }
+
+                    if (privilege != null && privilege != "") {
+                        myObject["Privilegee"] = privilege;
+                    } else {
+                        myObject["Privilegee"] = "null";
+                    }
+
+                    if (reactivated != null && reactivated != "") {
+                        myObject["Returned"] = reactivated;
+                    } else {
+                        myObject["Returned"] = "null";
+                    }
+
+                    if (startDate != null && startDate != "") {
+                        myObject["StartDate"] = startDate;
+                    } else {
+                        myObject["StartDate"] = "null";
+                    }
+
+                    if (endDate != null && endDate != "") {
+                        myObject["EndDate"] = endDate;
+                    } else {
+                        myObject["EndDate"] = "null";
+                    }
+
+                    if (penalty != null && penalty != "") {
+                        myObject["Penalty"] = penalty;
+                    } else {
+                        myObject["Penalty"] = "null";
+                    }
+
+                    var querystr = $.param(myObject);
+                    var actionUrl = '@Url.Action("ExportToExcel")';
+                    window.location.href = actionUrl +"?"+ querystr;
+
+                    @*$.ajax({
+                        method: "GET",
+                        url: '@Url.Action("ExportToExcel")',
+                        data: {
+                            State: state,
+                            Privilegee: privilege,
+                            Returned: reactivated,
+                            StartDate: startDate,
+                            EndDate: endDate,
+                            Penalty: penalty
+                        }
+                    });*@
+                });
         });
     </script>
 }

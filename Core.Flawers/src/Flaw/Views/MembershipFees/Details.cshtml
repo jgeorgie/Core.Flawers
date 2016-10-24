@@ -8,92 +8,92 @@
 <div>
     <table class="table">
         <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.RealAmount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AmountWithDiscount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CurrentState)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MiddleName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Start)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.End)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LeftOver)
-            </th>
-            @if (Model.Paused != null)
-            {
+            <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Paused)
+                    @Html.DisplayNameFor(model => model.RealAmount)
                 </th>
-            }
-            @if (Model.Reactiveted != null)
-            {
                 <th>
-                    @Html.DisplayNameFor(model => model.Reactiveted)
-                </th>}
-        </tr>
+                    @Html.DisplayNameFor(model => model.AmountWithDiscount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CurrentState)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MiddleName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Start)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.End)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LeftOver)
+                </th>
+                @if (Model.Paused != null)
+            {
+                    <th>
+                        @Html.DisplayNameFor(model => model.Paused)
+                    </th>
+                }
+                @if (Model.Reactiveted != null)
+            {
+                    <th>
+                        @Html.DisplayNameFor(model => model.Reactiveted)
+                    </th>}
+            </tr>
         </thead>
 
         <tbody>
-        <tr>
-            <td>
-                @Html.DisplayFor(model => model.RealAmount)
-            </td>
-            <td>
-                @Html.DisplayFor(model => model.AmountWithDiscount)
-            </td>
-            <td>
-                @Html.DisplayFor(model => model.CurrentState)
-            </td>
-            <td>
-                @Html.DisplayFor(model => model.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(model => model.LastName)
-
-            </td>
-            <td>
-                @Html.DisplayFor(model => model.MiddleName)
-            </td>
-            <td>
-                @Html.DisplayFor(model => model.Start)
-            </td>
-            <td>
-                @Html.DisplayFor(model => model.End)
-            </td>
-            <td>
-                @Html.DisplayFor(model => model.LeftOver)
-            </td>
-            @if (Model.Paused != null)
-            {
+            <tr>
                 <td>
-                    @Html.DisplayFor(model => model.Paused)
-                </td>}
-            @if (Model.Reactiveted != null)
-            {
-                <td>
-                    @Html.DisplayFor(model => model.Reactiveted)
+                    @Html.DisplayFor(model => model.RealAmount)
                 </td>
-            }
+                <td>
+                    @Html.DisplayFor(model => model.AmountWithDiscount)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.CurrentState)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.LastName)
+
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.MiddleName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.Start)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.End)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.LeftOver)
+                </td>
+                @if (Model.Paused != null)
+            {
+                    <td>
+                        @Html.DisplayFor(model => model.Paused)
+                    </td>}
+                @if (Model.Reactiveted != null)
+            {
+                    <td>
+                        @Html.DisplayFor(model => model.Reactiveted)
+                    </td>
+                }
 
 
-        </tr>
+            </tr>
         </tbody>
     </table>
 </div>
@@ -102,104 +102,101 @@
 <meta charset="utf-8" />
 <fieldset class="container_divs container col-sm-12 col-md-12 col-lg-12">
     <legend class="legendo">Կանխիկ և անկանխիկ վճարումներ</legend>
-    <h3>Կանխիկ</h3>
-    <hr />
+
     <div id="container_transfer">
     </div>
-    <h3> Անկանխիկ</h3>
-    <hr />
+
     <div id="container_cash">
     </div>
-   
-
 </fieldset>
+
 <fieldset class="container_divs container col-sm-12 col-md-12 col-lg-12">
     <legend class="legendo">Վճարումներ</legend>
     <div id="container_payments">
     </div>
-    </fieldset>
+</fieldset>
 
-    <fieldset class="container_divs container col-sm-12 col-md-12 col-lg-12">
-        <legend class="legendo">Լրացուցիչ նշումներ</legend>
-        <div id="privilige_container">
-        </div>
-        <div id="container_PauseReactivate">
-        </div>
-        <div id="container_FeeAmountChanges">
-        </div>
-    </fieldset>
-
-    <div>
-        <a asp-action="Edit" asp-route-Id="@Model.Id">Խմբագրել</a> |
-        @*@if (Context.User.Identity.Name == "admin@admin.am")
-            {
-                <a asp-action="AmountChangeModels" asp-route-id="@Model.Id">Andamavchari chapi popoxutyunner</a> @:|
-            }*@
-       
-        <a asp-action="Index">Վերադառնալ ցանկ</a>
+<fieldset class="container_divs container col-sm-12 col-md-12 col-lg-12">
+    <legend class="legendo">Լրացուցիչ նշումներ</legend>
+    <div id="privilige_container">
     </div>
-    @section scripts{
-        <script>
-            $(function () {
-                var index = window.location.href.lastIndexOf('/');
-                var id = window.location.href.substring(index + 1);
+    <div id="container_PauseReactivate">
+    </div>
+    <div id="container_FeeAmountChanges">
+    </div>
+</fieldset>
 
-                $.ajax({
-                    method: "GET",
-                    url: '@Url.Action("AmountChangeModels", "MembershipFees")',
-                    data: { id: id },
-                    success: function (result) {
-                        $("#container_FeeAmountChanges").html(result);
-                    }
-                });
+<div>
+    <a asp-action="Edit" asp-route-Id="@Model.Id">Խմբագրել</a> |
+    @*@if (Context.User.Identity.Name == "admin@admin.am")
+        {
+            <a asp-action="AmountChangeModels" asp-route-id="@Model.Id">Andamavchari chapi popoxutyunner</a> @:|
+        }*@
 
-                $.ajax({
-                    method: "GET",
-                    url: '@Url.Action("GetPauseReactivateInfo", "MembershipFees")',
-                    data: { id: id },
-                    success: function (result) {
-                        $("#container_PauseReactivate").html(result);
-                    }
-                });
+    <a asp-action="Index">Վերադառնալ ցանկ</a>
+</div>
+@section scripts{
+    <script>
+        $(function () {
+            var index = window.location.href.lastIndexOf('/');
+            var id = window.location.href.substring(index + 1);
 
-                $.ajax({
-                    method: "GET",
-                    url: '@Url.Action("GetPendingPayments", "MembershipFees")',
-                    data: { id: id },
-                    success: function (result) {
-                        $("#container_payments").html(result);
-                    }
-                });
+            $.ajax({
+                method: "GET",
+                url: '@Url.Action("AmountChangeModels", "MembershipFees")',
+                data: { id: id },
+                success: function (result) {
+                    $("#container_FeeAmountChanges").html(result);
+                }
+            });
 
-                $.ajax({
-                    method: "GET",
-                    url: '@Url.Action("GetCashPayments", "MembershipFees")',
-                    data: { id: id },
-                    success: function (result) {
-                        $("#container_cash").html(result);
-                    }
-                });
+            $.ajax({
+                method: "GET",
+                url: '@Url.Action("GetPauseReactivateInfo", "MembershipFees")',
+                data: { id: id },
+                success: function (result) {
+                    $("#container_PauseReactivate").html(result);
+                }
+            });
 
-                $.ajax({
-                    method: "GET",
-                    url: '@Url.Action("GetTransferPayments", "MembershipFees")',
-                    data: { id: id },
-                    success: function (result) {
-                        $("#container_transfer").html(result);
-                    }
-                });
+            $.ajax({
+                method: "GET",
+                url: '@Url.Action("GetPendingPayments", "MembershipFees")',
+                data: { id: id },
+                success: function (result) {
+                    $("#container_payments").html(result);
+                }
+            });
 
-                $.ajax({
-                    method: "GET",
-                    url: '@Url.Action("GetPriviliges", "MembershipFees")',
-                    data: { id: id },
-                    success: function (result) {
-                        $("#privilige_container").html(result);
-                    }
-                });
+            $.ajax({
+                method: "GET",
+                url: '@Url.Action("GetCashPayments", "MembershipFees")',
+                data: { id: id },
+                success: function (result) {
+                    $("#container_cash").html(result);
+                }
+            });
+
+            $.ajax({
+                method: "GET",
+                url: '@Url.Action("GetTransferPayments", "MembershipFees")',
+                data: { id: id },
+                success: function (result) {
+                    $("#container_transfer").html(result);
+                }
+            });
+
+            $.ajax({
+                method: "GET",
+                url: '@Url.Action("GetPriviliges", "MembershipFees")',
+                data: { id: id },
+                success: function (result) {
+                    $("#privilige_container").html(result);
+                }
+            });
 
 
-                @*$("#countDebt").click(function () {
+            @*$("#countDebt").click(function () {
                 $.ajax({
                     method: "GET",
                     url: '@Url.Action("CountDebt","MembershipFees")',
@@ -209,6 +206,6 @@
                     }
                 });
             });*@
-            })
-        </script>
-    }
+        })
+    </script>
+}
