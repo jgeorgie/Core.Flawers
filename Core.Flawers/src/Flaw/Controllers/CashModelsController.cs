@@ -225,6 +225,7 @@ namespace Flaw.Controllers
                     var lastPay = payments.SingleOrDefault(p => p.DepositOrDebt != 0 && Math.Abs((double)p.DepositOrDebt) < Math.Abs(p.Amount));
                     if (lastPay == null)
                     {
+                        //TODO: realize edit pay amount
                         //lastPay=payments.(p=>)
                     }
                 }

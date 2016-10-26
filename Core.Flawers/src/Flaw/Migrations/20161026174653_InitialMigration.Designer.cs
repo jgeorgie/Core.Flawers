@@ -8,8 +8,8 @@ using Flaw.Data;
 namespace Flaw.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20161001114446_all")]
-    partial class all
+    [Migration("20161026174653_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -95,6 +95,8 @@ namespace Flaw.Migrations
                 {
                     b.Property<string>("Id");
 
+                    b.Property<string>("Account");
+
                     b.Property<string>("AccountingPass");
 
                     b.Property<double>("Amount");
@@ -105,18 +107,15 @@ namespace Flaw.Migrations
 
                     b.Property<string>("FullName");
 
-                    b.Property<string>("OrdersNumber");
+                    b.Property<string>("MembershipFeeId");
 
-                    b.Property<string>("PaymentModelId");
+                    b.Property<string>("OrdersNumber");
 
                     b.Property<int>("Type");
 
-                    b.Property<string>("Аccount");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("PaymentModelId")
-                        .IsUnique();
+                    b.HasIndex("MembershipFeeId");
 
                     b.ToTable("CashModel");
                 });
@@ -142,23 +141,60 @@ namespace Flaw.Migrations
                     b.ToTable("FeeAmountChangeModels");
                 });
 
+            modelBuilder.Entity("Flaw.Models.FeeStateChangeModel", b =>
+                {
+                    b.Property<string>("Id");
+
+                    b.Property<DateTime>("ChangeDate");
+
+                    b.Property<string>("MembershipFeeForeignKey");
+
+                    b.Property<int>("NewState");
+
+                    b.Property<int>("PreviousState");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MembershipFeeForeignKey");
+
+                    b.ToTable("FeeStateChanges");
+                });
+
             modelBuilder.Entity("Flaw.Models.MembershipFee", b =>
                 {
                     b.Property<string>("Id");
+
+                    b.Property<DateTime?>("ActivePrivilegeEnd");
+
+                    b.Property<int>("ActivePrivilegeNo");
+
+                    b.Property<DateTime?>("ActivePrivilegeStart");
 
                     b.Property<double>("AmountWithDiscount");
 
                     b.Property<int>("CurrentState");
 
+                    b.Property<double?>("Deposit");
+
                     b.Property<DateTime>("End");
 
-                    b.Property<string>("FullName");
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("LastName");
 
                     b.Property<double>("LeftOver");
+
+                    b.Property<string>("MiddleName");
+
+                    b.Property<double>("MonthlyPay");
 
                     b.Property<DateTime?>("Paused");
 
                     b.Property<int>("Periodicity");
+
+                    b.Property<string>("PrivilegeId");
+
+                    b.Property<string>("PrivilegeType");
 
                     b.Property<DateTime?>("Reactiveted");
 
@@ -172,34 +208,9 @@ namespace Flaw.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PrivilegeId");
+
                     b.ToTable("MembershipFees");
-                });
-
-            modelBuilder.Entity("Flaw.Models.PaymentModel", b =>
-                {
-                    b.Property<string>("Id");
-
-                    b.Property<double>("Amount");
-
-                    b.Property<string>("CashPaymentId");
-
-                    b.Property<DateTime>("Date");
-
-                    b.Property<string>("FeeId");
-
-                    b.Property<string>("MembershipFeeForeignKey");
-
-                    b.Property<string>("PendingPaymentModelId");
-
-                    b.Property<int>("Type");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FeeId");
-
-                    b.HasIndex("PendingPaymentModelId");
-
-                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("Flaw.Models.PendingPaymentModel", b =>
@@ -208,17 +219,35 @@ namespace Flaw.Migrations
 
                     b.Property<double>("Amount");
 
+                    b.Property<string>("CashPaymentForeignKey");
+
+                    b.Property<string>("CashPaymentId");
+
+                    b.Property<double?>("DepositOrDebt");
+
+                    b.Property<string>("FeeId");
+
                     b.Property<string>("MembershipFeeForeignKey");
+
+                    b.Property<DateTime>("PayedOn");
 
                     b.Property<DateTime>("PaymentDeadline");
 
                     b.Property<int>("Status");
 
+                    b.Property<string>("TransferPaymentForeignKey");
+
+                    b.Property<string>("TransferPaymentId");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("MembershipFeeForeignKey");
+                    b.HasIndex("CashPaymentId");
 
-                    b.ToTable("PendingPayments");
+                    b.HasIndex("FeeId");
+
+                    b.HasIndex("TransferPaymentId");
+
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("Flaw.Models.Privilege", b =>
@@ -229,18 +258,55 @@ namespace Flaw.Migrations
 
                     b.Property<int>("Discount");
 
-                    b.Property<DateTime>("End");
-
-                    b.Property<string>("MembershipFeeForeignKey");
-
-                    b.Property<DateTime>("Start");
+                    b.Property<string>("Type");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MembershipFeeForeignKey")
-                        .IsUnique();
-
                     b.ToTable("Privileges");
+                });
+
+            modelBuilder.Entity("Flaw.Models.PrivilegeModel", b =>
+                {
+                    b.Property<string>("Id");
+
+                    b.Property<DateTime>("End");
+
+                    b.Property<string>("MembershipFeeFoeignKey");
+
+                    b.Property<long>("PrivilegeNumber");
+
+                    b.Property<DateTime>("Start");
+
+                    b.Property<string>("Type");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MembershipFeeFoeignKey");
+
+                    b.ToTable("PrivilegeModels");
+                });
+
+            modelBuilder.Entity("Flaw.Models.TransferPayment", b =>
+                {
+                    b.Property<string>("Id");
+
+                    b.Property<double>("Amount");
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<string>("Destination");
+
+                    b.Property<string>("FullName");
+
+                    b.Property<string>("MembershipFeeId");
+
+                    b.Property<string>("PaymentNo");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MembershipFeeId");
+
+                    b.ToTable("TransferPayments");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
@@ -331,9 +397,9 @@ namespace Flaw.Migrations
 
             modelBuilder.Entity("Flaw.Models.CashModel", b =>
                 {
-                    b.HasOne("Flaw.Models.PaymentModel", "Payment")
-                        .WithOne("CashPayment")
-                        .HasForeignKey("Flaw.Models.CashModel", "PaymentModelId")
+                    b.HasOne("Flaw.Models.MembershipFee", "Fee")
+                        .WithMany("CashPayments")
+                        .HasForeignKey("MembershipFeeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -344,30 +410,49 @@ namespace Flaw.Migrations
                         .HasForeignKey("FeeId");
                 });
 
-            modelBuilder.Entity("Flaw.Models.PaymentModel", b =>
+            modelBuilder.Entity("Flaw.Models.FeeStateChangeModel", b =>
                 {
                     b.HasOne("Flaw.Models.MembershipFee", "Fee")
-                        .WithMany()
-                        .HasForeignKey("FeeId");
-
-                    b.HasOne("Flaw.Models.PendingPaymentModel")
-                        .WithMany("MyProperty")
-                        .HasForeignKey("PendingPaymentModelId");
-                });
-
-            modelBuilder.Entity("Flaw.Models.PendingPaymentModel", b =>
-                {
-                    b.HasOne("Flaw.Models.MembershipFee", "Fee")
-                        .WithMany("Payments")
+                        .WithMany("FeeStateChanges")
                         .HasForeignKey("MembershipFeeForeignKey")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Flaw.Models.Privilege", b =>
+            modelBuilder.Entity("Flaw.Models.MembershipFee", b =>
+                {
+                    b.HasOne("Flaw.Models.Privilege")
+                        .WithMany("Fees")
+                        .HasForeignKey("PrivilegeId");
+                });
+
+            modelBuilder.Entity("Flaw.Models.PendingPaymentModel", b =>
+                {
+                    b.HasOne("Flaw.Models.CashModel", "CashPayment")
+                        .WithMany()
+                        .HasForeignKey("CashPaymentId");
+
+                    b.HasOne("Flaw.Models.MembershipFee", "Fee")
+                        .WithMany()
+                        .HasForeignKey("FeeId");
+
+                    b.HasOne("Flaw.Models.TransferPayment", "TransferPayment")
+                        .WithMany()
+                        .HasForeignKey("TransferPaymentId");
+                });
+
+            modelBuilder.Entity("Flaw.Models.PrivilegeModel", b =>
                 {
                     b.HasOne("Flaw.Models.MembershipFee", "Fee")
-                        .WithOne("Privilege")
-                        .HasForeignKey("Flaw.Models.Privilege", "MembershipFeeForeignKey")
+                        .WithMany("PrivilegeModels")
+                        .HasForeignKey("MembershipFeeFoeignKey")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Flaw.Models.TransferPayment", b =>
+                {
+                    b.HasOne("Flaw.Models.MembershipFee", "Fee")
+                        .WithMany("TransferPayments")
+                        .HasForeignKey("MembershipFeeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
