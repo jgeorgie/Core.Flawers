@@ -92,8 +92,8 @@ namespace Flaw.Controllers
         //
         // GET: /Account/Register
         [HttpGet]
-        //[Authorize(Roles = "SuperAdmin")]
-        [AllowAnonymous]
+        [Authorize(Roles = "SuperAdmin")]
+        //[AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -103,8 +103,8 @@ namespace Flaw.Controllers
         //
         // POST: /Account/Register
         [HttpPost]
-        //[Authorize(Roles = "SuperAdmin")]
-        [AllowAnonymous]
+        [Authorize(Roles = "SuperAdmin")]
+        //[AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
         {
@@ -136,10 +136,10 @@ namespace Flaw.Controllers
                         }
                         _userManager.AddToRoleAsync(user, "SuperAdmin").Wait();
                     }
-                    if (model.Email != "admin@admin.am")
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                    }
+                    //if (model.Email != "admin@admin.am")
+                    //{
+                    //    await _signInManager.SignInAsync(user, isPersistent: false);
+                    //}
                     _logger.LogInformation(3, "User created a new account with password.");
                     return RedirectToLocal(returnUrl);
                 }
