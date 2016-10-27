@@ -162,7 +162,7 @@ namespace Flaw.Controllers
                 return RedirectToAction("Index","MembershipFees");
             }
             ViewData["MembershipFeeId"] = new SelectList(_context.MembershipFees, "Id", "Id", transferPayment.MembershipFeeId);
-            return View(transferPayment);
+            return PartialView("_CreateTransferForFee",transferPayment);
         }
 
 

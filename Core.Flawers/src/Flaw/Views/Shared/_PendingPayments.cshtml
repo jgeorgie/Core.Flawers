@@ -31,7 +31,15 @@
                 </td>
 
                 <td>
-                    @if (item.DepositOrDebt == null)
+                    @if (item.DepositOrDebt > 0)
+                    {
+                        @:+@item.DepositOrDebt.Value
+                    }
+                    else
+                    {
+                        @item.DepositOrDebt.Value
+                    }
+                    @*@if (item.DepositOrDebt == null)
                     {
                        @:- @item.Amount
                     }
@@ -42,7 +50,7 @@
                     else
                     {
                         @:0
-                    }
+                    }*@
                 </td>
 
                 <td>
