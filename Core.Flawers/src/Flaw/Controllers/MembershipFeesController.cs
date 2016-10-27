@@ -365,7 +365,7 @@ namespace Flaw.Controllers
             return BadRequest();
         }
 
-        public ActionResult Filter(string State, string Privilegee, bool Returned, DateTime StartDate, DateTime EndDate, string Penalty)
+        public ActionResult Filter(string State, string Privilegee, bool Returned, double from, double to, string Penalty)
         {
             var model = _context.MembershipFees.ToList();
             if (State != "-1")
@@ -393,14 +393,14 @@ namespace Flaw.Controllers
             //{
             //    model =model.Where(m=>m.FeeStateChanges.Contains()
             //}
-            if (StartDate != new DateTime())
+            if (from != 0)
             {
-                model = model.Where(m => m.Start > StartDate).ToList();
+                model = model.Where(m => m.LeftOver >= from).ToList();
             }
 
-            if (EndDate != new DateTime())
+            if (to != 0)
             {
-                model = model.Where(m => m.End < EndDate).ToList();
+                model = model.Where(m => m.LeftOver <= to).ToList();
             }
 
             if (Penalty != null)
@@ -782,7 +782,7 @@ namespace Flaw.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> ExportToExcel(string State, string Privilegee, bool? Returned, DateTime? StartDate, DateTime? EndDate, string Penalty)
+        public async Task<IActionResult> ExportToExcel(string State, string Privilegee, bool? Returned, double from, double to, string Penalty)
         {
             var membershipFees = await _context.MembershipFees.ToListAsync();
 
@@ -811,14 +811,14 @@ namespace Flaw.Controllers
             //{
             //    model =model.Where(m=>m.FeeStateChanges.Contains()
             //}
-            if (StartDate != null && StartDate.Value != new DateTime())
+            if (from != 0)
             {
-                membershipFees = membershipFees.Where(m => m.Start > StartDate).ToList();
+                membershipFees = membershipFees.Where(m => m.LeftOver >= from).ToList();
             }
 
-            if (StartDate != null && EndDate.Value != new DateTime())
+            if (to != 0)
             {
-                membershipFees = membershipFees.Where(m => m.End < EndDate).ToList();
+                membershipFees = membershipFees.Where(m => m.LeftOver <= to).ToList();
             }
 
             if (Penalty != null)
@@ -954,7 +954,7 @@ namespace Flaw.Controllers
                         payments[i].DepositOrDebt = 0;
 
                         _context.Update(payments[i]);
-                        
+
 
                         if (amount == 0)
                         {

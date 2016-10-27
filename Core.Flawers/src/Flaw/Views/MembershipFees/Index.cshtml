@@ -21,8 +21,8 @@
     <div class="table-bordered">
         <label>
             Ըստ պարտքի միջակայքի <br />
-            Սկսած<input id="startDate" type="date" name="FormLeftOver" /> <br />
-            Մինչև<input id="endDate" type="date" name="ToLeftOver" />
+            Սկսած<input id="startDate" type="number" name="from" value="0" /> <br />
+            Մինչև<input id="endDate" type="number" name="to" value="0" />
         </label>
     </div><br />
     <div class="table-bordered">
@@ -182,8 +182,8 @@
                         state = $("#state option:selected").val();
                         privilege = $("#privilege option:selected").val();
                         reactivated = $("#returned option:selected").text();
-                        startDate = $("#startDate option:selected").text();
-                        endDate = $("#endDate option:selected").text();
+                        startDate = $("#startDate").val();
+                        endDate = $("#endDate").val();
                         penalty = $("#penalty option:selected").text();
 
                         $.ajax({
@@ -193,8 +193,8 @@
                                 State: state,
                                 Privilegee: privilege,
                                 Returned: reactivated,
-                                StartDate: startDate,
-                                EndDate: endDate,
+                                from: startDate,
+                                to: endDate,
                                 Penalty: penalty
                             },
                             success: function (result) {
@@ -234,15 +234,15 @@
                     }
 
                     if (startDate != null && startDate != "") {
-                        myObject["StartDate"] = startDate;
+                        myObject["from"] = startDate;
                     } else {
-                        myObject["StartDate"] = "null";
+                        myObject["from"] = 0;
                     }
 
                     if (endDate != null && endDate != "") {
-                        myObject["EndDate"] = endDate;
+                        myObject["to"] = endDate;
                     } else {
-                        myObject["EndDate"] = "null";
+                        myObject["to"] = 0;
                     }
 
                     if (penalty != null && penalty != "") {

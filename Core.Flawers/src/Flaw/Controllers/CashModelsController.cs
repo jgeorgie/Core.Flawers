@@ -87,66 +87,62 @@ namespace Flaw.Controllers
                 {
                     for (int i = 0; i < payments.Count; i++)
                     {
-                        double depOrDebt = payments[i].DepositOrDebt == null ? 0 : (double)payments[i].DepositOrDebt;
-                        if (depOrDebt <= 0)
+                        //double depOrDebt = payments[i].DepositOrDebt == null ? 0 : (double)payments[i].DepositOrDebt;
+                        //if (depOrDebt <= 0)
+                        //{
+                        if (amount >= payments[i].Amount)
                         {
-                            if (amount >= payments[i].Amount)
+                            payments[i].Status = PaymentStatus.Payed;
+                            payments[i].CashPaymentForeignKey = cashModel.Id;
+                            payments[i].PayedOn = cashModel.Date;
+                            amount -= Math.Abs(payments[i].DepositOrDebt.Value);
+                            payments[i].DepositOrDebt = 0;
+                            _context.Update(payments[i]);
+                            if (amount == 0)
                             {
-                                payments[i].Status = PaymentStatus.Payed;
-                                payments[i].CashPaymentForeignKey = cashModel.Id;
-                                payments[i].PayedOn = cashModel.Date;
-                                payments[i].DepositOrDebt = 0;
-
-
-                                _context.Update(payments[i]);
-
-                                amount -= payments[i].Amount;
-
-                                if (amount == 0)
-                                {
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                if (payments[i].DepositOrDebt == null)
-                                {
-                                    payments[i].DepositOrDebt = amount;
-                                }
-                                else
-                                {
-                                    payments[i].DepositOrDebt += amount;
-                                }
-                                _context.Update(payments[i]);
                                 break;
                             }
                         }
                         else
                         {
-                            if (amount >= payments[i].Amount - depOrDebt)
-                            {
-                                payments[i].Status = PaymentStatus.Payed;
-                                payments[i].CashPaymentForeignKey = cashModel.Id;
-                                payments[i].PayedOn = cashModel.Date;
+                            //if (payments[i].DepositOrDebt == null)
+                            //{
+                            //    payments[i].DepositOrDebt = amount;
+                            //}
+                            //else
+                            //{ }
+                            payments[i].DepositOrDebt += amount;
 
-                                amount -= payments[i].Amount - (double)payments[i].DepositOrDebt;
-                                payments[i].DepositOrDebt = 0;
-
-                                _context.Update(payments[i]);
-
-                                if (amount == 0)
-                                {
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                payments[i].DepositOrDebt += amount;
-
-                                _context.Update(payments[i]);
-                                break;
-                            }
+                            _context.Update(payments[i]);
+                            break;
                         }
+                        //}
+                        //else
+                        //{
+                        //    if (amount >= payments[i].Amount - depOrDebt)
+                        //    {
+                        //        payments[i].Status = PaymentStatus.Payed;
+                        //        payments[i].CashPaymentForeignKey = cashModel.Id;
+                        //        payments[i].PayedOn = cashModel.Date;
+
+                        //        amount -= payments[i].Amount - (double)payments[i].DepositOrDebt;
+                        //        payments[i].DepositOrDebt = 0;
+
+                        //        _context.Update(payments[i]);
+
+                        //        if (amount == 0)
+                        //        {
+                        //            break;
+                        //        }
+                        //    }
+                        //    else
+                        //    {
+                        //        payments[i].DepositOrDebt += amount;
+
+                        //        _context.Update(payments[i]);
+                        //        break;
+                        //    }
+                        //}
                     }
                 }
 
@@ -218,16 +214,14 @@ namespace Flaw.Controllers
                     fee.LeftOver += difference;
                     var payments =
                         await
-                            _context.Payments.Where(p => p.MembershipFeeForeignKey == cashModel.MembershipFeeId)
+                            _context.Payments.Where
+                            (p => p.MembershipFeeForeignKey == cashModel.MembershipFeeId &&
+                               p.Status == PaymentStatus.Pending)
                                 .OrderBy(d => d.PaymentDeadline)
                                     .ToListAsync();
-
-                    var lastPay = payments.SingleOrDefault(p => p.DepositOrDebt != 0 && Math.Abs((double)p.DepositOrDebt) < Math.Abs(p.Amount));
-                    if (lastPay == null)
-                    {
-                        //TODO: realize edit pay amount
-                        //lastPay=payments.(p=>)
-                    }
+                    payments[0].DepositOrDebt += difference;
+                    _context.Update(fee);
+                    _context.Update(payments[0]);
                 }
 
                 try
