@@ -40,12 +40,13 @@ namespace Flaw.Controllers
             return View();
         }
 
-        //public IActionResult CheckPrivileges()
-        //{
-        //    var privileges =
-        //         _context.PrivilegeModels.Where(p => (p.End - DateTime.Now).TotalDays <= 3).ToList();
-        //    return Json((privileges.Count != 0).ToString());
-        //}
+
+        public IActionResult CheckPrivileges()
+        {
+            var privileges =
+                _context.PrivilegeModels.Where(p => (p.End - DateTime.Now).TotalDays <= 3).ToList();
+            return Json((privileges.Count != 0).ToString());
+        }
 
 
         //[Authorize(Roles = "SuperAdmin")]
@@ -233,7 +234,7 @@ namespace Flaw.Controllers
                     membershipFee.MonthlyPay = Math.Floor(membershipFee.RealAmount / 12);
                 }
 
-                if (!string.IsNullOrEmpty(membershipFee.PrivilegeType) && membershipFee.ActivePrivilegeStart != null && membershipFee.ActivePrivilegeEnd != null)
+                if (!string.IsNullOrEmpty(membershipFee.PrivilegeType) && membershipFee.ActivePrivilegeStart != null && membershipFee.ActivePrivilegeEnd != null && membershipFee.ActivePrivilegeEnd > membershipFee.ActivePrivilegeStart)
                 {
                     var privilige = _context.Privileges.FirstOrDefault(p => p.Type == membershipFee.PrivilegeType);
 

@@ -219,7 +219,7 @@ namespace Flaw.Controllers
                                p.Status == PaymentStatus.Pending)
                                 .OrderBy(d => d.PaymentDeadline)
                                     .ToListAsync();
-                    payments[0].DepositOrDebt += difference;
+                    payments[0].DepositOrDebt -= difference;
                     _context.Update(fee);
                     _context.Update(payments[0]);
                 }
