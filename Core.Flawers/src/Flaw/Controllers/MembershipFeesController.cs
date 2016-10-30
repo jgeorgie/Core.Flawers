@@ -26,13 +26,63 @@ namespace Flaw.Controllers
         // GET: MembershipFees
         public async Task<IActionResult> Index()
         {
+            var model = await _context.MembershipFees.ToListAsync();
+            ViewBag.pages = (model.Count / 20) + 2;
+            model = model.Take(20).ToList();
             var privileges = _context.Privileges.ToList();
             ViewBag.PrivilegeType = new SelectList(privileges, "Type", "Type");
 
-            return View(await _context.MembershipFees.ToListAsync());
+            return View(model);
         }
 
+        public ActionResult Filter(string State, string Privilegee, bool Returned, double from, double to, string Penalty,int page=0)
+        {
+            var model = _context.MembershipFees.ToList();
+            if (State != "-1")
+            {
+                switch (int.Parse(State))
+                {
+                    case (int)FeeState.Active:
+                        model = model.Where(m => m.CurrentState == FeeState.Active).ToList();
+                        break;
+                    case (int)FeeState.Pause:
+                        model = model.Where(m => m.CurrentState == FeeState.Pause).ToList();
+                        break;
+                    case (int)FeeState.Finish:
+                        model = model.Where(m => m.CurrentState == FeeState.Finish).ToList();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (Privilegee != "-1")
+            {
+                model = model.Where(m => m.PrivilegeType == Privilegee).ToList();
+            }
+            //if (Returned)
+            //{
+            //    model =model.Where(m=>m.FeeStateChanges.Contains()
+            //}
+            if (from != 0)
+            {
+                model = model.Where(m => m.LeftOver >= from).ToList();
+            }
 
+            if (to != 0)
+            {
+                model = model.Where(m => m.LeftOver <= to).ToList();
+            }
+
+            if (Penalty != null)
+            {
+                //TODO:Something
+            }
+            ViewBag.pages = (model.Count / 20) + 2;
+
+            model = model.Skip(20 * page).Take(20).ToList();
+
+            return PartialView("_FiltredList", model);
+        }
 
 
         public IActionResult AddPayment(string id)
@@ -171,7 +221,7 @@ namespace Flaw.Controllers
             //        RealAmount = i * 10000,
             //        AmountWithDiscount = i * 5000,
             //        CurrentState = rand.Next(2) == 1 ? FeeState.Active : FeeState.Pause,
-            //        FirstName = ",
+            //        FirstName = "Firstname"+i,
             //        LastName = "LastName" + i,
             //        MiddleName = "MiddleName" + i,
             //        Start = start,
@@ -366,50 +416,7 @@ namespace Flaw.Controllers
             return BadRequest();
         }
 
-        public ActionResult Filter(string State, string Privilegee, bool Returned, double from, double to, string Penalty)
-        {
-            var model = _context.MembershipFees.ToList();
-            if (State != "-1")
-            {
-                switch (int.Parse(State))
-                {
-                    case (int)FeeState.Active:
-                        model = model.Where(m => m.CurrentState == FeeState.Active).ToList();
-                        break;
-                    case (int)FeeState.Pause:
-                        model = model.Where(m => m.CurrentState == FeeState.Pause).ToList();
-                        break;
-                    case (int)FeeState.Finish:
-                        model = model.Where(m => m.CurrentState == FeeState.Finish).ToList();
-                        break;
-                    default:
-                        break;
-                }
-            }
-            if (Privilegee != "-1")
-            {
-                model = model.Where(m => m.PrivilegeType == Privilegee).ToList();
-            }
-            //if (Returned)
-            //{
-            //    model =model.Where(m=>m.FeeStateChanges.Contains()
-            //}
-            if (from != 0)
-            {
-                model = model.Where(m => m.LeftOver >= from).ToList();
-            }
 
-            if (to != 0)
-            {
-                model = model.Where(m => m.LeftOver <= to).ToList();
-            }
-
-            if (Penalty != null)
-            {
-                //TODO:Something
-            }
-            return PartialView("_FiltredList", model);
-        }
         // GET: MembershipFees/Edit/5
         public async Task<IActionResult> Edit(string id)
         {

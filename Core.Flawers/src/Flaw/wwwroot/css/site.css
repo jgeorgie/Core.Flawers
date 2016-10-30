@@ -129,3 +129,7 @@ p {
     font-size: 18px;
 }
 
+.paging{
+    cursor:pointer;
+    display:inline-block;
+}

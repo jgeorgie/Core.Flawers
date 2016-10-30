@@ -150,6 +150,7 @@
     </tbody>
 
 </table>
+<div id="pager"></div>
 
 @section scripts{
     <script>
@@ -159,8 +160,26 @@
                 reactivated,
                 startDate,
                 endDate,
+                id,
                 penalty;
+            function attachClickEvent(){
+                $(".paging")
+                    .on('click',
+                        function(){
+                            id = parseInt($(event.target).attr('id'));
+                            GetResult();
+                        });
+            }
 
+            count = @ViewBag.pages;
+            for (var i = 1; i < count; i++) {
+                var a = $('<a>');
+                a.attr('id',i);
+                a.attr('class','paging');
+                a.html(i);
+                a.appendTo($("#pager" ));
+            }
+            attachClickEvent();
 
             $("#filterText")
                 .on('click',
@@ -178,40 +197,53 @@
                     });
 
             $("#submit")
-                .on('click',
-                    function () {
-                        state = $("#state option:selected").val();
-                        privilege = $("#privilege option:selected").val();
-                        reactivated = $("#returned option:selected").text();
-                        startDate = $("#startDate").val();
-                        endDate = $("#endDate").val();
-                        penalty = $("#penalty option:selected").text();
+                .on('click',function(){
+                    GetResult();
+                });
 
-                        $.ajax({
-                            method: "GET",
-                            url: '@Url.Action("Filter", "MembershipFees")',
-                            data: {
-                                State: state,
-                                Privilegee: privilege,
-                                Returned: reactivated,
-                                from: startDate,
-                                to: endDate,
-                                Penalty: penalty
-                            },
-                            success: function (result) {
-                                $("#tbody").html("").html(result);
-                                $(".actionsOpener")
-                                    .on('click',
-                                        function () {
-                                            var tr = $(this).parent().parent();
-                                            var div = tr.find('div.actions');
-                                            div.slideToggle();
-                                        });
-                            }
-                        });
-                    });
+            function GetResult() {
+                state = $("#state option:selected").val();
+                privilege = $("#privilege option:selected").val();
+                reactivated = $("#returned option:selected").text();
+                startDate = $("#startDate").val();
+                endDate = $("#endDate").val();
+                penalty = $("#penalty option:selected").text();
+                $('.paging').remove();
 
+                count = @ViewBag.pages;
+                for (var i = 1; i < count; i++) {
+                    var a = $('<a>');
+                    a.attr('id',i);
+                    a.attr('class','paging');
+                    a.html(i);
+                    a.appendTo($("#pager" ));
+                }
 
+                attachClickEvent();
+                $.ajax({
+                    method: "GET",
+                    url: '@Url.Action("Filter", "MembershipFees")',
+                    data: {
+                        State: state,
+                        Privilegee: privilege,
+                        Returned: reactivated,
+                        from: startDate,
+                        to: endDate,
+                        Penalty: penalty,
+                        page:id
+                    },
+                    success: function (result) {
+                        $("#tbody").html("").html(result);
+                        $(".actionsOpener")
+                            .on('click',
+                                function () {
+                                    var tr = $(this).parent().parent();
+                                    var div = tr.find('div.actions');
+                                    div.slideToggle();
+                                });
+                    }
+                });
+            }
             $("#exportToExcel")
                 .click(function () {
                     var myObject = {};
@@ -254,7 +286,7 @@
 
                     var querystr = $.param(myObject);
                     var actionUrl = '@Url.Action("ExportToExcel")';
-                    window.location.href = actionUrl +"?"+ querystr;
+                    window.location.href = actionUrl + "?" + querystr;
                 });
         });
     </script>
