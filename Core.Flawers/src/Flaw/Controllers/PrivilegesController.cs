@@ -24,6 +24,7 @@ namespace Flaw.Controllers
         // GET: Privileges
         public async Task<IActionResult> Index()
         {
+
             var applicationDbContext = _context.Privileges;
             return View(await applicationDbContext.ToListAsync());
         }

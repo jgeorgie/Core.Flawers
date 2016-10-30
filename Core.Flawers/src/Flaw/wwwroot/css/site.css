@@ -112,3 +112,8 @@ p {
     vertical-align: inherit;
     font-size: 18px;
 }
+
+.paging{
+    cursor:pointer;
+    display:inline-block;
+}
