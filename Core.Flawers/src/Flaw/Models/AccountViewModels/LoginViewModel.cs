@@ -10,13 +10,15 @@ namespace Flaw.Models.AccountViewModels
     {
         [Required]
         [EmailAddress]
+        [Display(Name = "Էլ. փոստ")]
         public string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
+        [Display(Name = "Գաղտնաբառ")]
         public string Password { get; set; }
 
-        [Display(Name = "Remember me?")]
+        [Display(Name = "Հիշե՞լ")]
         public bool RememberMe { get; set; }
     }
 }
