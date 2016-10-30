@@ -23,6 +23,10 @@ textarea {
     line-height: 1.4;
 }
 
+.table {
+    margin-top: 10px;
+}
+
 .orange {
     color:#ff3d00;
 }
@@ -61,8 +65,20 @@ table {
     width: auto;
 }
 
+.registerUser {
+    font-size: 25px;
+    display: block;
+    text-align: right;
+}
+
 .container_divs {
     border: groove;
+    padding: 10px;
+}
+
+.container_divs>input {
+    margin-top: 5px;
+    margin-left: 5px;
 }
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {

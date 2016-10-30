@@ -89,21 +89,20 @@ namespace Flaw.Controllers
                 {
                     for (int i = 0; i < payments.Count; i++)
                     {
-                        double depOrDebt = payments[i].DepositOrDebt == null ? 0 : (double)payments[i].DepositOrDebt;
-                        if (depOrDebt <= 0)
+                        double depositOrDebt = payments[i].DepositOrDebt.Value < 0
+                            ? payments[i].DepositOrDebt.Value * -1
+                            : -1;
+
+                        if (depositOrDebt != -1)
                         {
-                            if (amount >= payments[i].Amount)
+                            if (amount >= depositOrDebt)
                             {
                                 payments[i].Status = PaymentStatus.Payed;
-                                payments[i].TransferPaymentForeignKey = transferPayment.Id;
+                                payments[i].CashPaymentForeignKey = transferPayment.Id;
                                 payments[i].PayedOn = transferPayment.Date;
+                                amount -= depositOrDebt;
                                 payments[i].DepositOrDebt = 0;
-
-
                                 _context.Update(payments[i]);
-
-                                amount -= payments[i].Amount;
-
                                 if (amount == 0)
                                 {
                                     break;
@@ -111,46 +110,19 @@ namespace Flaw.Controllers
                             }
                             else
                             {
-                                if (payments[i].DepositOrDebt == null)
-                                {
-                                    payments[i].DepositOrDebt = amount;
-                                }
-                                else
-                                {
-                                    payments[i].DepositOrDebt += amount;
-                                }
-                                _context.Update(payments[i]);
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            if (amount >= payments[i].Amount - depOrDebt)
-                            {
-                                payments[i].Status = PaymentStatus.Payed;
-                                payments[i].TransferPaymentForeignKey = transferPayment.Id;
-                                payments[i].PayedOn = transferPayment.Date;
-
-                                amount -= payments[i].Amount - (double)payments[i].DepositOrDebt;
-                                payments[i].DepositOrDebt = 0;
-
-                                _context.Update(payments[i]);
-
-                                
-
-                                if (amount == 0)
-                                {
-                                    break;
-                                }
-                            }
-                            else
-                            {
+                                //if (payments[i].DepositOrDebt == null)
+                                //{
+                                //    payments[i].DepositOrDebt = amount;
+                                //}
+                                //else
+                                //{ }
                                 payments[i].DepositOrDebt += amount;
 
                                 _context.Update(payments[i]);
                                 break;
                             }
                         }
+
                     }
                 }
 
@@ -159,10 +131,10 @@ namespace Flaw.Controllers
                 transferPayment.Id = Guid.NewGuid().ToString();
                 _context.Add(transferPayment);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index","MembershipFees");
+                return RedirectToAction("Index", "MembershipFees");
             }
             ViewData["MembershipFeeId"] = new SelectList(_context.MembershipFees, "Id", "Id", transferPayment.MembershipFeeId);
-            return PartialView("_CreateTransferForFee",transferPayment);
+            return PartialView("_CreateTransferForFee", transferPayment);
         }
 
 
