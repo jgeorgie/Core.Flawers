@@ -24,15 +24,62 @@ namespace Flaw.Controllers
         }
 
         // GET: MembershipFees
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(bool Returned, double LeftOverFrom, double LeftOverTo, string Penalty,string sortOrder, int? page, string currentState = "-1", string PrivilegeType = "-1")
         {
-            var model = await _context.MembershipFees.ToListAsync();
-            ViewBag.pages = (model.Count / 20) + 2;
-            model = model.Take(20).ToList();
+            var model =_context.MembershipFees.AsQueryable();
+            ViewData["PrivilegeTypeFilterParam"] = PrivilegeType;
+            ViewData["currentStateFilterParam"] = currentState;
+            ViewData["LeftOverFromFilterParam"] = LeftOverFrom;
+            ViewData["LeftOverToFilterParam"] = LeftOverTo;
+            ViewData["PenaltyFilterParam"] = Penalty;
+            ViewData["ReturnedFilterParam"] = Returned;
+            if (currentState != "-1" )
+            {
+                switch (int.Parse(currentState))
+                {
+                    case (int)FeeState.Active:
+                        model = model.Where(m => m.CurrentState == FeeState.Active);
+                        break;
+                    case (int)FeeState.Pause:
+                        model = model.Where(m => m.CurrentState == FeeState.Pause);
+                        break;
+                    case (int)FeeState.Finish:
+                        model = model.Where(m => m.CurrentState == FeeState.Finish);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (PrivilegeType != "-1")
+            {
+                model = model.Where(m => m.PrivilegeType == PrivilegeType);
+            }
+
+            if (LeftOverFrom != 0)
+            {
+                model = model.Where(m => m.LeftOver >= LeftOverFrom);
+            }
+
+            if (LeftOverTo != 0)
+            {
+                model = model.Where(m => m.LeftOver <= LeftOverTo);
+            }
+
+            if (Penalty != null)
+            {
+                //TODO:Something
+            }
+
+            //if (Returned)
+            //{
+            //    model =model.Where(m=>m.FeeStateChanges.Contains()
+            //}
+            var p = await PaginatedList<MembershipFee>.CreateAsync(model.AsNoTracking(), page ?? 1, 20);
             var privileges = _context.Privileges.ToList();
             ViewBag.PrivilegeType = new SelectList(privileges, "Type", "Type");
 
-            return View(model);
+            return View(p);
         }
 
         public ActionResult Filter(string State, string Privilegee, bool Returned, double from, double to, string Penalty,int page=0)
@@ -212,7 +259,7 @@ namespace Flaw.Controllers
         {
             //var rand = new Random();
             //var privileges = await _context.Privileges.ToListAsync();
-            //for (int i = 0; i < 500; i++)
+            //for (int i = 1; i < 500; i++)
             //{
             //    var start = DateTime.Now.AddDays(rand.Next(1, 29)).AddMonths(rand.Next(1, 12));
             //    var fee = new MembershipFee()
@@ -221,7 +268,7 @@ namespace Flaw.Controllers
             //        RealAmount = i * 10000,
             //        AmountWithDiscount = i * 5000,
             //        CurrentState = rand.Next(2) == 1 ? FeeState.Active : FeeState.Pause,
-            //        FirstName = "Firstname"+i,
+            //        FirstName = "Firstname" + i,
             //        LastName = "LastName" + i,
             //        MiddleName = "MiddleName" + i,
             //        Start = start,

@@ -1,6 +1,7 @@
 ﻿@*@using Microsoft.CodeAnalysis.CSharp.Syntax*@
 @using Microsoft.CodeAnalysis
-@model IEnumerable<Flaw.Models.MembershipFee>
+@using Flaw.Data
+@model PaginatedList<Flaw.Models.MembershipFee>
 @{
     ViewData["Title"] = "Index";
 }
@@ -12,64 +13,64 @@
     <a><span id="exportToExcel">Արտահանել Excel</span></a>
 </p>
 <a><span id="filterText" style="font-size:18px">Filters</span></a>
-<div id="Filters" style="display:none">
-    <div class="table-bordered"><label>Ընթացիկ վիճակ<select asp-items="@Html.GetEnumSelectList<FeeState>()" id="state" class="form-control"><option value="-1"> </option></select></label></div>
+<form asp-action="Index" id="Filters" style="display:none">
+    <div class="table-bordered"><label>Ընթացիկ վիճակ<select asp-items="@Html.GetEnumSelectList<FeeState>()" id="state" name="currentState" class="form-control">
+        <option value="@(Html.GetEnumSelectList<FeeState>().Where(m=>m.Value==((string)ViewData["currentStateFilterParam"])))"> </option></select></label></div>
     <div class="table-bordered">
-        <label>Ըստ արտոնությունների<select asp-items="@ViewBag.PrivilegeType" id="privilege" class="form-control"><option value="-1"> </option></select></label>
-        <label>Ըստ վերականգման<input type="checkbox" id="returned" /></label>
+        <label>Ըստ արտոնությունների<select asp-items="@ViewBag.PrivilegeType" id="privilege" class="form-control" name="PrivilegeType"><option value="@ViewData["PrivilegeTypeFilterParam"]"> </option></select></label>
+        <label>Ըստ վերականգման<input type="checkbox" id="returned" name="Returned" value="@ViewData["ReturnedFilterParam"]" /></label>
     </div>
     <div class="table-bordered">
         <label>
             Ըստ պարտքի միջակայքի <br />
-            Սկսած<input id="startDate" type="number" name="from" value="0" /> <br />
-            Մինչև<input id="endDate" type="number" name="to" value="0" />
+            Սկսած<input id="startDate" type="number" name="LeftOverFrom" value="@((double)ViewData["LeftOverFromFilterParam"])" /> <br />
+            Մինչև<input id="endDate" type="number" name="LeftOverTo" value="@((double)ViewData["LeftOverToFilterParam"])" />
         </label>
     </div><br />
     <div class="table-bordered">
-        <label>Ըստ կարգապահական տույժերի <input id="penalty" /></label>
+        <label>Ըստ կարգապահական տույժերի <input id="penalty" name="Penalty" /></label>
     </div>
-    <input type="button" id="submit" value="OK" />
-</div>
+    <input type="submit" id="submit" value="OK" />
+</form>
 <table class="table">
 
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.RealAmount)
+                @Html.DisplayNameFor(model => model[0].RealAmount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AmountWithDiscount)
+                @Html.DisplayNameFor(model => model[0].AmountWithDiscount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MonthlyPay)
+                @Html.DisplayNameFor(model => model[0].MonthlyPay)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CurrentState)
+                @Html.DisplayNameFor(model => model[0].CurrentState)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-
+                @Html.DisplayNameFor(model => model[0].FirstName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LastName)
+                @Html.DisplayNameFor(model => model[0].LastName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MiddleName)
+                @Html.DisplayNameFor(model => model[0].MiddleName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Start)
+                @Html.DisplayNameFor(model => model[0].Start)
             </th>
             @*<th>
                     @Html.DisplayNameFor(model => model.End)
                 </th>*@
             <th>
-                @Html.DisplayNameFor(model => model.LeftOver)
+                @Html.DisplayNameFor(model => model[0].LeftOver)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Periodicity)
+                @Html.DisplayNameFor(model => model[0].Periodicity)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PrivilegeType)
+                @Html.DisplayNameFor(model => model[0].PrivilegeType)
             </th>
             <th> </th>
         </tr>
@@ -149,7 +150,20 @@
     </tbody>
 
 </table>
-<div id="pager"></div>
+
+<div id="pager">
+    @for (int i = 1; i < Model.TotalPages+1; i++)
+    {
+        <a asp-action="Index" asp-route-page="@i"
+           asp-route-currentState="@ViewData["currentStateFilterParam"]"
+           asp-route-PrivilegeType="@ViewData["PrivilegeTypeFilterParam"]"
+           asp-route-LeftOverFrom="@ViewData["LeftOverFromFilterParam"]"
+           asp-route-LeftOverTo="@ViewData["LeftOverToFilterParam"]"
+           asp-route-Penalty="@ViewData["PenaltyFilterParam"]"
+           asp-route-Returned="@ViewData["ReturnedFilterParam"]">@i</a>
+    }
+
+</div>
 
 @section scripts{
     <script>
@@ -161,23 +175,23 @@
                 endDate,
                 id,
                 penalty;
-            function attachClickEvent(){
+            function attachClickEvent() {
                 $(".paging")
                     .on('click',
-                        function(){
+                        function () {
                             id = parseInt($(event.target).attr('id'));
                             GetResult();
                         });
             }
 
-            count = @ViewBag.pages;
+            @*count = @ViewBag.pages;
             for (var i = 1; i < count; i++) {
                 var a = $('<a>');
                 a.attr('id',i);
                 a.attr('class','paging');
                 a.html(i);
                 a.appendTo($("#pager" ));
-            }
+            }*@
             attachClickEvent();
 
             $("#filterText")
@@ -196,7 +210,7 @@
                     });
 
             $("#submit")
-                .on('click',function(){
+                .on('click', function () {
                     GetResult();
                 });
 
@@ -209,14 +223,6 @@
                 penalty = $("#penalty option:selected").text();
                 $('.paging').remove();
 
-                count = @ViewBag.pages;
-                for (var i = 1; i < count; i++) {
-                    var a = $('<a>');
-                    a.attr('id',i);
-                    a.attr('class','paging');
-                    a.html(i);
-                    a.appendTo($("#pager" ));
-                }
 
                 attachClickEvent();
                 $.ajax({
@@ -229,10 +235,11 @@
                         from: startDate,
                         to: endDate,
                         Penalty: penalty,
-                        page:id
+                        page: id
                     },
                     success: function (result) {
                         $("#tbody").html("").html(result);
+                        @*count = @ViewBag.pages;*@
                         $(".actionsOpener")
                             .on('click',
                                 function () {
@@ -242,6 +249,13 @@
                                 });
                     }
                 });
+                //for (var i = 1; i < count; i++) {
+                //    var a = $('<a>');
+                //    a.attr('id',i);
+                //    a.attr('class','paging');
+                //    a.html(i);
+                //    a.appendTo($("#pager" ));
+                //}
             }
             $("#exportToExcel")
                 .click(function () {
