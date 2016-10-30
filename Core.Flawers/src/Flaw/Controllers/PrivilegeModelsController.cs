@@ -61,7 +61,7 @@ namespace Flaw.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,End,PrivilegeNumber,MembershipFeeFoeignKey,Start,Type")] PrivilegeModel privilegeModel)
         {
-            if (ModelState.IsValid && privilegeModel.Start > DateTime.Now)
+            if (ModelState.IsValid && privilegeModel.Start > DateTime.Now && privilegeModel.End > privilegeModel.Start)
             {
                 var privilige = _context.Privileges.FirstOrDefault(p => p.Type == privilegeModel.Type);
                 var membershipFee =
@@ -138,7 +138,7 @@ namespace Flaw.Controllers
                     await _context.SaveChangesAsync();
                     return RedirectToAction("Index", "MembershipFees");
                 }
-               
+
             }
             var privileges = _context.Privileges.ToList();
             ViewBag.PrivilegeType = new SelectList(privileges, "Type", "Type");
