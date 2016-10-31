@@ -29,7 +29,7 @@
         </label>
     </div><br />
     <div class="table-bordered">
-        <label>Ըստ կարգապահական տույժերի <input id="penalty" name="Penalty" /></label>
+        <label>Ըստ կարգապահական տույժերի <input id="penalty" name="Penalty" value="@ViewData["PenaltyFilterParam"]"/></label>
     </div>
     <input type="submit" id="submit" value="OK" />
 </form>
@@ -169,13 +169,13 @@
 @section scripts{
     <script>
         $(function () {
-            var state,
-                privilege,
-                reactivated,
-                startDate,
-                endDate,
-                id,
-                penalty;
+            var state=@ViewData["currentStateFilterParam"],
+                privilege=decodeURIComponent(@ViewData["PrivilegeTypeFilterParam"]),
+                reactivated=@ViewData["ReturnedFilterParam"],
+                startDate=@ViewData["LeftOverFromFilterParam"],
+                endDate=@ViewData["LeftOverToFilterParam"],
+                @*penalty=@ViewData["PenaltyFilterParam"],*@
+                id
             function attachClickEvent() {
                 $(".paging")
                     .on('click',
@@ -262,41 +262,41 @@
                 .click(function () {
                     var myObject = {};
 
-                    if (state != null && state != "") {
-                        myObject["State"] = state;
+                    if (state != "-1") {
+                        myObject["currentState"] = state;
                     } else {
-                        myObject["State"] = "null";
+                        myObject["currentState"] = "-1";
                     }
 
-                    if (privilege != null && privilege != "") {
-                        myObject["Privilegee"] = privilege;
+                    if (privilege != "-1") {
+                        myObject["PrivilegeType"] = privilege;
                     } else {
-                        myObject["Privilegee"] = "null";
+                        myObject["PrivilegeType"] = "-1";
                     }
 
-                    if (reactivated != null && reactivated != "") {
-                        myObject["Returned"] = reactivated;
+                    //if (reactivated != "-1" && reactivated != "") {
+                    //    myObject["Returned"] = reactivated;
+                    //} else {
+                    //    myObject["Returned"] = false;
+                    //}
+
+                    if (startDate != 0) {
+                        myObject["LeftOverFrom"] = startDate;
                     } else {
-                        myObject["Returned"] = "null";
+                        myObject["LeftOverFrom"] = 0;
                     }
 
-                    if (startDate != null && startDate != "") {
-                        myObject["from"] = startDate;
+                    if (endDate != 0) {
+                        myObject["LeftOverTo"] = endDate;
                     } else {
-                        myObject["from"] = 0;
+                        myObject["LeftOverTo"] = 0;
                     }
 
-                    if (endDate != null && endDate != "") {
-                        myObject["to"] = endDate;
-                    } else {
-                        myObject["to"] = 0;
-                    }
-
-                    if (penalty != null && penalty != "") {
-                        myObject["Penalty"] = penalty;
-                    } else {
-                        myObject["Penalty"] = "null";
-                    }
+                    //if (penalty != "-1" && penalty != "") {
+                    //    myObject["Penalty"] = penalty;
+                    //} else {
+                    //    myObject["Penalty"] = "null";
+                    //}
 
                     var querystr = $.param(myObject);
                     var actionUrl = '@Url.Action("ExportToExcel")';

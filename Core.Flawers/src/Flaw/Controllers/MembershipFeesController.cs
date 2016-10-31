@@ -24,7 +24,7 @@ namespace Flaw.Controllers
         }
 
         // GET: MembershipFees
-        public async Task<IActionResult> Index(bool Returned, double LeftOverFrom, double LeftOverTo, string Penalty,string sortOrder, int? page, string currentState = "-1", string PrivilegeType = "-1")
+        public async Task<IActionResult> Index( double LeftOverFrom, double LeftOverTo,string sortOrder, int? page, string Penalty="",  string currentState = "-1", string Returned="-1", string PrivilegeType = "-1")
         {
             var model =_context.MembershipFees.AsQueryable();
             ViewData["PrivilegeTypeFilterParam"] = PrivilegeType;
@@ -82,54 +82,54 @@ namespace Flaw.Controllers
             return View(p);
         }
 
-        public ActionResult Filter(string State, string Privilegee, bool Returned, double from, double to, string Penalty,int page=0)
-        {
-            var model = _context.MembershipFees.ToList();
-            if (State != "-1")
-            {
-                switch (int.Parse(State))
-                {
-                    case (int)FeeState.Active:
-                        model = model.Where(m => m.CurrentState == FeeState.Active).ToList();
-                        break;
-                    case (int)FeeState.Pause:
-                        model = model.Where(m => m.CurrentState == FeeState.Pause).ToList();
-                        break;
-                    case (int)FeeState.Finish:
-                        model = model.Where(m => m.CurrentState == FeeState.Finish).ToList();
-                        break;
-                    default:
-                        break;
-                }
-            }
-            if (Privilegee != "-1")
-            {
-                model = model.Where(m => m.PrivilegeType == Privilegee).ToList();
-            }
-            //if (Returned)
-            //{
-            //    model =model.Where(m=>m.FeeStateChanges.Contains()
-            //}
-            if (from != 0)
-            {
-                model = model.Where(m => m.LeftOver >= from).ToList();
-            }
+        //public ActionResult Filter(string State, string Privilegee, bool Returned, double from, double to, string Penalty,int page=0)
+        //{
+        //    var model = _context.MembershipFees.ToList();
+        //    if (State != "-1")
+        //    {
+        //        switch (int.Parse(State))
+        //        {
+        //            case (int)FeeState.Active:
+        //                model = model.Where(m => m.CurrentState == FeeState.Active).ToList();
+        //                break;
+        //            case (int)FeeState.Pause:
+        //                model = model.Where(m => m.CurrentState == FeeState.Pause).ToList();
+        //                break;
+        //            case (int)FeeState.Finish:
+        //                model = model.Where(m => m.CurrentState == FeeState.Finish).ToList();
+        //                break;
+        //            default:
+        //                break;
+        //        }
+        //    }
+        //    if (Privilegee != "-1")
+        //    {
+        //        model = model.Where(m => m.PrivilegeType == Privilegee).ToList();
+        //    }
+        //    //if (Returned)
+        //    //{
+        //    //    model =model.Where(m=>m.FeeStateChanges.Contains()
+        //    //}
+        //    if (from != 0)
+        //    {
+        //        model = model.Where(m => m.LeftOver >= from).ToList();
+        //    }
 
-            if (to != 0)
-            {
-                model = model.Where(m => m.LeftOver <= to).ToList();
-            }
+        //    if (to != 0)
+        //    {
+        //        model = model.Where(m => m.LeftOver <= to).ToList();
+        //    }
 
-            if (Penalty != null)
-            {
-                //TODO:Something
-            }
-            ViewBag.pages = (model.Count / 20) + 2;
+        //    if (Penalty != null)
+        //    {
+        //        //TODO:Something
+        //    }
+        //    ViewBag.pages = (model.Count / 20) + 2;
 
-            model = model.Skip(20 * page).Take(20).ToList();
+        //    model = model.Skip(20 * page).Take(20).ToList();
 
-            return PartialView("_FiltredList", model);
-        }
+        //    return PartialView("_FiltredList", model);
+        //}
 
 
         public IActionResult AddPayment(string id)
@@ -837,13 +837,14 @@ namespace Flaw.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> ExportToExcel(string State, string Privilegee, bool? Returned, double from, double to, string Penalty)
+        public async Task<IActionResult> ExportToExcel(double LeftOverFrom, double LeftOverTo, string Penalty = "", string currentState = "-1", string Returned = "-1", string PrivilegeType = "-1")
         {
+            //(double LeftOverFrom, double LeftOverTo, string sortOrder, int? page, string Penalty= "",  string currentState = "-1", string Returned = "-1", string PrivilegeType = "-1")
             var membershipFees = await _context.MembershipFees.ToListAsync();
 
-            if (State != "-1")
+            if (currentState != "-1")
             {
-                switch (int.Parse(State))
+                switch (int.Parse(currentState))
                 {
                     case (int)FeeState.Active:
                         membershipFees = membershipFees.Where(m => m.CurrentState == FeeState.Active).ToList();
@@ -858,22 +859,22 @@ namespace Flaw.Controllers
                         break;
                 }
             }
-            if (Privilegee != "-1")
+            if (PrivilegeType != "-1")
             {
-                membershipFees = membershipFees.Where(m => m.PrivilegeType == Privilegee).ToList();
+                membershipFees = membershipFees.Where(m => m.PrivilegeType == PrivilegeType).ToList();
             }
             //if (Returned)
             //{
             //    model =model.Where(m=>m.FeeStateChanges.Contains()
             //}
-            if (from != 0)
+            if (LeftOverFrom != 0)
             {
-                membershipFees = membershipFees.Where(m => m.LeftOver >= from).ToList();
+                membershipFees = membershipFees.Where(m => m.LeftOver >= LeftOverFrom).ToList();
             }
 
-            if (to != 0)
+            if (LeftOverTo != 0)
             {
-                membershipFees = membershipFees.Where(m => m.LeftOver <= to).ToList();
+                membershipFees = membershipFees.Where(m => m.LeftOver <= LeftOverTo).ToList();
             }
 
             if (Penalty != null)
