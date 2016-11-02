@@ -24,16 +24,16 @@ namespace Flaw.Controllers
         }
 
         // GET: MembershipFees
-        public async Task<IActionResult> Index( double LeftOverFrom, double LeftOverTo, int? page, string Penalty="",  string currentState = "-1", string Returned="-1", string PrivilegeType = "-1")
+        public async Task<IActionResult> Index(double LeftOverFrom, double LeftOverTo, int? page, string Penalty = "", string currentState = "-1", string Returned = "-1", string PrivilegeType = "-1")
         {
-            var model =_context.MembershipFees.AsQueryable();
+            var model = _context.MembershipFees.AsQueryable();
             ViewData["PrivilegeTypeFilterParam"] = PrivilegeType;
             ViewData["currentStateFilterParam"] = currentState;
             ViewData["LeftOverFromFilterParam"] = LeftOverFrom;
             ViewData["LeftOverToFilterParam"] = LeftOverTo;
             ViewData["PenaltyFilterParam"] = Penalty;
             ViewData["ReturnedFilterParam"] = Returned;
-            if (currentState != "-1" )
+            if (currentState != "-1")
             {
                 switch (int.Parse(currentState))
                 {
@@ -520,7 +520,7 @@ namespace Flaw.Controllers
                 membershipFee.Periodicity = previousModel.Periodicity;
                 membershipFee.MonthlyPay = previousModel.MonthlyPay;
 
-                if (previousModel.RealAmount != membershipFee.RealAmount)
+                if (previousModel.RealAmount != membershipFee.RealAmount && membershipFee.End < DateTime.Now)
                 {
                     if (HttpContext.User.Identity.Name != "admin@admin.am")
                     {
@@ -564,10 +564,13 @@ namespace Flaw.Controllers
 
                         }
 
+
                         var pendingPayments =
-                               await
-                                   _context.Payments.Where(p => p.MembershipFeeForeignKey == membershipFee.Id && p.PaymentDeadline >= DateTime.Now)
-                                       .ToListAsync();
+                           await
+                               _context.Payments.Where(p => p.MembershipFeeForeignKey == membershipFee.Id && p.PaymentDeadline >= DateTime.Now)
+                                   .ToListAsync();
+
+
 
                         membershipFee.MonthlyPay = Math.Floor(membershipFee.AmountWithDiscount / 12);
                         double newLeftOver = 0;
