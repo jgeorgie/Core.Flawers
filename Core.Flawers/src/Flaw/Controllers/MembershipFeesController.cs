@@ -24,7 +24,7 @@ namespace Flaw.Controllers
         }
 
         // GET: MembershipFees
-        public async Task<IActionResult> Index( double LeftOverFrom, double LeftOverTo,string sortOrder, int? page, string Penalty="",  string currentState = "-1", string Returned="-1", string PrivilegeType = "-1")
+        public async Task<IActionResult> Index( double LeftOverFrom, double LeftOverTo, int? page, string Penalty="",  string currentState = "-1", string Returned="-1", string PrivilegeType = "-1")
         {
             var model =_context.MembershipFees.AsQueryable();
             ViewData["PrivilegeTypeFilterParam"] = PrivilegeType;
