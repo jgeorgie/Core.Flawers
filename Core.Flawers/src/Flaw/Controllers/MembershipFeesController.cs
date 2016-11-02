@@ -326,6 +326,7 @@ namespace Flaw.Controllers
                 membershipFee.LeftOver = membershipFee.AmountWithDiscount;
 
                 membershipFee.End = membershipFee.Periodicity == FeePeriodicity.Year ? membershipFee.Start.AddMonths(12) : membershipFee.Start.AddMonths(1);
+
                 if (membershipFee.Periodicity != FeePeriodicity.Month)
                 {
                     membershipFee.MonthlyPay = Math.Floor(membershipFee.RealAmount / 12);
@@ -378,10 +379,7 @@ namespace Flaw.Controllers
                                 MembershipFeeForeignKey = membershipFee.Id,
                                 Amount = (membershipFee.MonthlyPay - differense),
                                 Id = Guid.NewGuid().ToString(),
-                                PaymentDeadline =
-                                   month + i <= 12
-                                       ? new DateTime(DateTime.Now.Year, month + i, 15)
-                                       : new DateTime(DateTime.Now.Year + 1, month + i - 12, 15),
+                                PaymentDeadline = membershipFee.Start.AddMonths(i),
                                 Status = PaymentStatus.Pending,
                                 DepositOrDebt = -(membershipFee.MonthlyPay - differense)
                             };
@@ -393,10 +391,7 @@ namespace Flaw.Controllers
                                 MembershipFeeForeignKey = membershipFee.Id,
                                 Amount = membershipFee.MonthlyPay,
                                 Id = Guid.NewGuid().ToString(),
-                                PaymentDeadline =
-                                    month + i <= 12
-                                        ? new DateTime(DateTime.Now.Year, month + i, 15)
-                                        : new DateTime(DateTime.Now.Year + 1, month + i - 12, 15),
+                                PaymentDeadline = membershipFee.Start.AddMonths(i),
                                 Status = PaymentStatus.Pending,
                                 DepositOrDebt = -membershipFee.MonthlyPay
                             };
@@ -568,6 +563,7 @@ namespace Flaw.Controllers
                             }
 
                         }
+
                         var pendingPayments =
                                await
                                    _context.Payments.Where(p => p.MembershipFeeForeignKey == membershipFee.Id && p.PaymentDeadline >= DateTime.Now)
@@ -588,6 +584,7 @@ namespace Flaw.Controllers
                             {
                                 payment.Amount = membershipFee.MonthlyPay;
                             }
+                            payment.DepositOrDebt = -payment.Amount;
                             newLeftOver += payment.Amount;
                             _context.Update(payment);
                         }
