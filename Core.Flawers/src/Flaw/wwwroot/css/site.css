@@ -133,3 +133,9 @@ p {
     cursor:pointer;
     display:inline-block;
 }
+.displayNone{
+    display:none;
+}
+display{
+    display:block;
+}

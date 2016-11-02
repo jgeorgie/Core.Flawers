@@ -14,11 +14,11 @@
     <a><span id="exportToExcel">Արտահանել Excel</span></a>
 </p>
 <a><span id="filterText" style="font-size:18px">Filters</span></a>
-<form asp-action="Index" id="Filters" style="display:none">
+<form asp-action="Index" id="Filters"class="displayNone">
     <div class="table-bordered"><label>Ընթացիկ վիճակ<select asp-items="@Html.GetEnumSelectList<FeeState>()" id="state" name="currentState" class="form-control">
-        <option value="@(Html.GetEnumSelectList<FeeState>().Where(m=>m.Value==((string)ViewData["currentStateFilterParam"])))"> </option></select></label></div>
+        <option value="-1"> </option></select></label></div>
     <div class="table-bordered">
-        <label>Ըստ արտոնությունների<select asp-items="@ViewBag.PrivilegeType" id="privilege" class="form-control" name="PrivilegeType"><option value="@ViewData["PrivilegeTypeFilterParam"]"> </option></select></label>
+        <label>Ըստ արտոնությունների<select asp-items="@ViewBag.PrivilegeType" id="privilege" class="form-control" name="PrivilegeType"><option value="-1"> </option></select></label>
         <label>Ըստ վերականգման<input type="checkbox" id="returned" name="Returned" value="@ViewData["ReturnedFilterParam"]" /></label>
     </div>
     <div class="table-bordered">
@@ -151,7 +151,7 @@
     </tbody>
 
 </table>
-
+<div id="code" style="display:none"></div>
 <div id="pager">
     @for (int i = 1; i < Model.TotalPages+1; i++)
     {
@@ -169,13 +169,13 @@
 @section scripts{
     <script>
         $(function () {
-            var state=@ViewData["currentStateFilterParam"],
-                privilege=decodeURIComponent(@ViewData["PrivilegeTypeFilterParam"]),
-                reactivated=@ViewData["ReturnedFilterParam"],
+            var state='@ViewData["currentStateFilterParam"]',
+                privilege='@ViewData["PrivilegeTypeFilterParam"]',
+                @*reactivated=@ViewData["ReturnedFilterParam"],*@
                 startDate=@ViewData["LeftOverFromFilterParam"],
                 endDate=@ViewData["LeftOverToFilterParam"],
                 @*penalty=@ViewData["PenaltyFilterParam"],*@
-                id
+                id;
             function attachClickEvent() {
                 $(".paging")
                     .on('click',
@@ -199,6 +199,7 @@
                 .on('click',
                     function () {
                         var div = $('#Filters');
+                        //div.toggleClass('displayNone display');
                         div.slideToggle();
                     });
 
@@ -226,7 +227,7 @@
 
 
                 attachClickEvent();
-                $.ajax({
+                @*$.ajax({
                     method: "GET",
                     url: '@Url.Action("Filter", "MembershipFees")',
                     data: {
@@ -240,7 +241,7 @@
                     },
                     success: function (result) {
                         $("#tbody").html("").html(result);
-                        @*count = @ViewBag.pages;*@
+                        @*count = @ViewBag.pages;
                         $(".actionsOpener")
                             .on('click',
                                 function () {
@@ -249,7 +250,7 @@
                                     div.slideToggle();
                                 });
                     }
-                });
+                });*@
                 //for (var i = 1; i < count; i++) {
                 //    var a = $('<a>');
                 //    a.attr('id',i);
@@ -262,17 +263,17 @@
                 .click(function () {
                     var myObject = {};
 
-                    if (state != "-1") {
+                    //if (state != "-1") {
                         myObject["currentState"] = state;
-                    } else {
-                        myObject["currentState"] = "-1";
-                    }
+                    //} else {
+                    //    myObject["currentState"] = "-1";
+                    //}
 
-                    if (privilege != "-1") {
-                        myObject["PrivilegeType"] = privilege;
-                    } else {
-                        myObject["PrivilegeType"] = "-1";
-                    }
+                    //if (privilege != "-1") {
+                        myObject["PrivilegeType"] = $('#code').html(privilege).text();
+                    //} else {
+                    //    myObject["PrivilegeType"] = "-1";
+                    //}
 
                     //if (reactivated != "-1" && reactivated != "") {
                     //    myObject["Returned"] = reactivated;
@@ -280,17 +281,17 @@
                     //    myObject["Returned"] = false;
                     //}
 
-                    if (startDate != 0) {
+                    //if (startDate != 0) {
                         myObject["LeftOverFrom"] = startDate;
-                    } else {
-                        myObject["LeftOverFrom"] = 0;
-                    }
+                    //} else {
+                    //    myObject["LeftOverFrom"] = 0;
+                    //}
 
-                    if (endDate != 0) {
+                    //if (endDate != 0) {
                         myObject["LeftOverTo"] = endDate;
-                    } else {
-                        myObject["LeftOverTo"] = 0;
-                    }
+                    //} else {
+                    //    myObject["LeftOverTo"] = 0;
+                    //}
 
                     //if (penalty != "-1" && penalty != "") {
                     //    myObject["Penalty"] = penalty;
