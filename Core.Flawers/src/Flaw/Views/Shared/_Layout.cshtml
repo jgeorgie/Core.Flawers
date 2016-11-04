@@ -26,7 +26,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Flaw</a>
+                @*<a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Flaw</a>*@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -37,8 +37,13 @@
                     {
                         <li><a asp-area="" asp-controller="Privileges" asp-action="Index">Արտոնություններ</a></li>
                     }
+                    @if (Context.User.Identity.Name == "admin@admin.am")
+                    {
+                        <li><a asp-action="Register" asp-controller="Account" asp-route-returnurl="@ViewData["ReturnUrl"]">Գրանցել նոր օգտատեր</a></li>
+                    }
                 </ul>
 
+               
                 <a href="@Url.Action("Notifications", "Privileges")"><span id="bell-wraper" class="glyphicon glyphicon-bell"></span></a>
                 @await Html.PartialAsync("_LoginPartial")
             </div>

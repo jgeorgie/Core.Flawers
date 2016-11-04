@@ -29,7 +29,7 @@ namespace Flaw.Models
         [DataType(DataType.Date)]
         public DateTime End { get; set; }
 
-        [Display(Name = "Անդամավճարի ամսական վճար")]
+        [Display(Name = "Անդամավճարի ամսական վճ.")]
         public double MonthlyPay { get; set; }
 
         [Display(Name = "Անդամավճարի չափ")]
@@ -41,7 +41,7 @@ namespace Flaw.Models
         [Display(Name = "Ընթացիկ վիճակ")]
         public FeeState CurrentState { get; set; }
 
-        [Display(Name = "Պարբերականություն")]
+        [Display(Name = "Պարբ.-թյուն")]
         public FeePeriodicity Periodicity { get; set; }
         [Display(Name = "Կասեցված")]
         public DateTime? Paused { get; set; }

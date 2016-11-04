@@ -139,3 +139,12 @@ p {
 display{
     display:block;
 }
+.marginleft5px{
+    margin-left: 16px;
+    margin-top: 10px;
+}
+
+.cursorPointer{
+     cursor:pointer;
+}
+

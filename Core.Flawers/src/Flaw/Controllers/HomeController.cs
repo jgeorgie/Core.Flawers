@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Flaw.Data;
 using Flaw.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Flaw.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -18,6 +20,7 @@ namespace Flaw.Controllers
             _context = context;
         }
 
+        
         public IActionResult Index()
         {
             return View();

@@ -11,27 +11,28 @@
     <a asp-action="Create">Ավելացնել</a>
 </p>
 <p>
-    <a><span id="exportToExcel">Արտահանել Excel</span></a>
+    <a><span id="exportToExcel" class="cursorPointer">Արտահանել Excel</span></a>
 </p>
-<a><span id="filterText" style="font-size:18px">Filters</span></a>
+<a><span id="filterText" class="cursorPointer" style="font-size:18px">Ֆիլտրեր</span></a>
 <form asp-action="Index" id="Filters"class="displayNone">
     <div class="table-bordered"><label>Ընթացիկ վիճակ<select asp-items="@Html.GetEnumSelectList<FeeState>()" id="state" name="currentState" class="form-control">
         <option value="-1"> </option></select></label></div>
     <div class="table-bordered">
         <label>Ըստ արտոնությունների<select asp-items="@ViewBag.PrivilegeType" id="privilege" class="form-control" name="PrivilegeType"><option value="-1"> </option></select></label>
-        <label>Ըստ վերականգման<input type="checkbox" id="returned" name="Returned" value="@ViewData["ReturnedFilterParam"]" /></label>
+        <br>
+        <label>Ըստ վերականգման @Html.CheckBox(Name) </label>
     </div>
     <div class="table-bordered">
         <label>
             Ըստ պարտքի միջակայքի <br />
-            Սկսած<input id="startDate" type="number" name="LeftOverFrom" value="@((double)ViewData["LeftOverFromFilterParam"])" /> <br />
-            Մինչև<input id="endDate" type="number" name="LeftOverTo" value="@((double)ViewData["LeftOverToFilterParam"])" />
+            Սկսած<input class="marginleft5px" id="startDate" type="number" name="LeftOverFrom" value="@((double)ViewData["LeftOverFromFilterParam"])" /> <br />
+            Մինչև<input class="marginleft5px" id="endDate" type="number" name="LeftOverTo" value="@((double)ViewData["LeftOverToFilterParam"])" />
         </label>
     </div><br />
-    <div class="table-bordered">
+    @*<div class="table-bordered">
         <label>Ըստ կարգապահական տույժերի <input id="penalty" name="Penalty" value="@ViewData["PenaltyFilterParam"]"/></label>
-    </div>
-    <input type="submit" id="submit" value="OK" />
+    </div>*@
+    <input type="submit" id="submit" value="Փնտրել" />
 </form>
 <table class="table">
 
@@ -77,26 +78,44 @@
         </tr>
     </thead>
     <tbody id="tbody">
-        @foreach (var item in Model)
-        {
-            @functions{
+        @functions{
 
-                public string GetClass(MembershipFee item)
+            public string GetClass(MembershipFee item)
+            {
+                if (item.CurrentState == FeeState.Pause)
                 {
-                    if (item.CurrentState == FeeState.Pause)
-                    {
-                        return "paused";
-                    }
-                    else if (item.CurrentState == FeeState.Finish)
-                    {
-                        return "finished";
-                    }
-                    else
-                    {
-                        return string.Empty;
-                    }
+                    return "paused";
+                }
+                else if (item.CurrentState == FeeState.Finish)
+                {
+                    return "finished";
+                }
+                else
+                {
+                    return string.Empty;
                 }
             }
+
+            public string GetStateValue(MembershipFee item)
+            {
+                if (item.CurrentState == FeeState.Pause)
+                {
+                    return "Սառեցված";
+                }
+                else if (item.CurrentState == FeeState.Finish)
+                {
+                    return "Ավարտված";
+                }
+                else
+                {
+                    return "Ակտիվ";
+                }
+            }
+        }
+
+        @foreach (var item in Model)
+        {
+            
 
             <tr class="@GetClass(item)">
                 <td>
@@ -109,7 +128,7 @@
                     @Html.DisplayFor(modelItem => item.MonthlyPay)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CurrentState)
+                    @GetStateValue(item)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.FirstName)
@@ -133,7 +152,7 @@
                     @Html.DisplayFor(modelItem => item.PrivilegeType)
                 </td>
                 <td>
-                    <a><span class="actionsOpener">Actions</span></a>
+                    <a><span class="actionsOpener">Գործողություններ</span></a>
                     <div class="actions">
                         <a asp-action="Edit" asp-route-id="@item.Id">Խմբագրել</a>
                         <a asp-action="AddPayment" asp-route-id="@item.Id">Ավելացնել Վճարում</a>
@@ -160,10 +179,10 @@
            asp-route-PrivilegeType="@ViewData["PrivilegeTypeFilterParam"]"
            asp-route-LeftOverFrom="@ViewData["LeftOverFromFilterParam"]"
            asp-route-LeftOverTo="@ViewData["LeftOverToFilterParam"]"
-           asp-route-Penalty="@ViewData["PenaltyFilterParam"]"
+          
            asp-route-Returned="@ViewData["ReturnedFilterParam"]">@i</a>
     }
-
+    @*asp-route-Penalty="@ViewData["PenaltyFilterParam"]"*@
 </div>
 
 @section scripts{
@@ -171,11 +190,16 @@
         $(function () {
             var state='@ViewData["currentStateFilterParam"]',
                 privilege='@ViewData["PrivilegeTypeFilterParam"]',
-                @*reactivated=@ViewData["ReturnedFilterParam"],*@
+                reactivated=@ViewData["ReturnedFilterParam"],
                 startDate=@ViewData["LeftOverFromFilterParam"],
                 endDate=@ViewData["LeftOverToFilterParam"],
                 @*penalty=@ViewData["PenaltyFilterParam"],*@
                 id;
+
+            if(reactivated=="true"){
+                $("#returned").prop( "checked", true ); 
+            }
+
             function attachClickEvent() {
                 $(".paging")
                     .on('click',
@@ -203,26 +227,35 @@
                         div.slideToggle();
                     });
 
+            $(document).on("click", function () {
+                $(".actions").hide();
+            });
+
+            $(".actions").on("click", function (event) {
+                event.stopPropagation();
+            });
+
             $(".actionsOpener")
                 .on('click',
-                    function () {
+                    function (e) {
+                        e.stopPropagation();
                         var tr = $(this).parent().parent();
                         var div = tr.find('div.actions');
                         div.slideToggle();
                     });
 
-            $("#submit")
-                .on('click', function () {
-                    GetResult();
-                });
+            //$("#submit")
+            //    .on('click', function () {
+            //        GetResult();
+            //    });
 
             function GetResult() {
                 state = $("#state option:selected").val();
                 privilege = $("#privilege option:selected").val();
-                reactivated = $("#returned option:selected").text();
+                reactivated = $("#returned").is(':checked');
                 startDate = $("#startDate").val();
                 endDate = $("#endDate").val();
-                penalty = $("#penalty option:selected").text();
+                //penalty = $("#penalty option:selected").text();
                 $('.paging').remove();
 
 
@@ -259,6 +292,7 @@
                 //    a.appendTo($("#pager" ));
                 //}
             }
+
             $("#exportToExcel")
                 .click(function () {
                     var myObject = {};
@@ -276,7 +310,7 @@
                     //}
 
                     //if (reactivated != "-1" && reactivated != "") {
-                    //    myObject["Returned"] = reactivated;
+                        myObject["Returned"] = reactivated;
                     //} else {
                     //    myObject["Returned"] = false;
                     //}

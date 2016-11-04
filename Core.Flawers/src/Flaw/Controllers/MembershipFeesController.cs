@@ -24,7 +24,7 @@ namespace Flaw.Controllers
         }
 
         // GET: MembershipFees
-        public async Task<IActionResult> Index(double LeftOverFrom, double LeftOverTo, int? page, string Penalty = "", string currentState = "-1", string Returned = "-1", string PrivilegeType = "-1")
+        public async Task<IActionResult> Index(bool Returned, double LeftOverFrom, double LeftOverTo, int? page, string Penalty = "", string currentState = "-1",  string PrivilegeType = "-1")
         {
             var model = _context.MembershipFees.AsQueryable();
             ViewData["PrivilegeTypeFilterParam"] = PrivilegeType;
@@ -32,7 +32,7 @@ namespace Flaw.Controllers
             ViewData["LeftOverFromFilterParam"] = LeftOverFrom;
             ViewData["LeftOverToFilterParam"] = LeftOverTo;
             ViewData["PenaltyFilterParam"] = Penalty;
-            ViewData["ReturnedFilterParam"] = Returned;
+            ViewData["ReturnedFilterParam"] = Returned.ToString().ToLower();
             if (currentState != "-1")
             {
                 switch (int.Parse(currentState))
@@ -66,15 +66,15 @@ namespace Flaw.Controllers
                 model = model.Where(m => m.LeftOver <= LeftOverTo);
             }
 
-            if (Penalty != null)
-            {
-                //TODO:Something
-            }
-
-            //if (Returned)
+            //if (Penalty != null)
             //{
-            //    model =model.Where(m=>m.FeeStateChanges.Contains()
+            //    //TODO:Something
             //}
+
+            if (Returned)
+            {
+                model = model.Where(m => m.Reactiveted != null);
+            }
             var p = await PaginatedList<MembershipFee>.CreateAsync(model.AsNoTracking(), page ?? 1, 20);
             var privileges = _context.Privileges.ToList();
             ViewBag.PrivilegeType = new SelectList(privileges, "Type", "Type");
@@ -837,23 +837,23 @@ namespace Flaw.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> ExportToExcel(double LeftOverFrom, double LeftOverTo, string Penalty = "", string currentState = "-1", string Returned = "-1", string PrivilegeType = "-1")
+        public IActionResult ExportToExcel(double LeftOverFrom, double LeftOverTo, string currentState = "-1", string Returned = "-1", string PrivilegeType = "-1")
         {
             //(double LeftOverFrom, double LeftOverTo, string sortOrder, int? page, string Penalty= "",  string currentState = "-1", string Returned = "-1", string PrivilegeType = "-1")
-            var membershipFees = await _context.MembershipFees.ToListAsync();
+            var membershipFees = _context.MembershipFees.AsQueryable();
 
             if (currentState != "-1")
             {
                 switch (int.Parse(currentState))
                 {
                     case (int)FeeState.Active:
-                        membershipFees = membershipFees.Where(m => m.CurrentState == FeeState.Active).ToList();
+                        membershipFees = membershipFees.Where(m => m.CurrentState == FeeState.Active);
                         break;
                     case (int)FeeState.Pause:
-                        membershipFees = membershipFees.Where(m => m.CurrentState == FeeState.Pause).ToList();
+                        membershipFees = membershipFees.Where(m => m.CurrentState == FeeState.Pause);
                         break;
                     case (int)FeeState.Finish:
-                        membershipFees = membershipFees.Where(m => m.CurrentState == FeeState.Finish).ToList();
+                        membershipFees = membershipFees.Where(m => m.CurrentState == FeeState.Finish);
                         break;
                     default:
                         break;
@@ -861,26 +861,28 @@ namespace Flaw.Controllers
             }
             if (PrivilegeType != "-1")
             {
-                membershipFees = membershipFees.Where(m => m.PrivilegeType == PrivilegeType).ToList();
+                membershipFees = membershipFees.Where(m => m.PrivilegeType == PrivilegeType);
             }
-            //if (Returned)
-            //{
-            //    model =model.Where(m=>m.FeeStateChanges.Contains()
-            //}
+
+            if (Returned=="true")
+            {
+                membershipFees = membershipFees.Where(m => m.Reactiveted != null);
+            }
+
             if (LeftOverFrom != 0)
             {
-                membershipFees = membershipFees.Where(m => m.LeftOver >= LeftOverFrom).ToList();
+                membershipFees = membershipFees.Where(m => m.LeftOver >= LeftOverFrom);
             }
 
             if (LeftOverTo != 0)
             {
-                membershipFees = membershipFees.Where(m => m.LeftOver <= LeftOverTo).ToList();
+                membershipFees = membershipFees.Where(m => m.LeftOver <= LeftOverTo);
             }
 
-            if (Penalty != null)
-            {
-                //TODO:Something
-            }
+            //if (Penalty != null)
+            //{
+            //    //TODO:Something
+            //}
 
 
             var sb = new StringBuilder();

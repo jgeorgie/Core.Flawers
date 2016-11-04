@@ -3,10 +3,7 @@
 }
 <h2>Գլխավոր</h2>
 
-@if (Context.User.Identity.Name == "admin@admin.am")
-{
-    <a class="registerUser" asp-action="Register" asp-controller="Account" asp-route-returnurl="@ViewData["ReturnUrl"]">Գրանցել նոր օգտատեր</a>
-}
+
 
 <fieldset class="container_divs">
     <legend class="legendo">
@@ -62,7 +59,17 @@
                     },
                     success: function (result) {
                         $("#membershipTable").html("").html(result);
+
+                        $(document).on("click", function () {
+                            $(".actions").hide();
+                        });
+
+                        $(".actions").on("click", function (event) {
+                            event.stopPropagation();
+                        });
+
                         $(".actionsOpener").on('click', function () {
+                            event.stopPropagation();
                             var tr = $(this).parent().parent();
                             var div = tr.find('div.actions');
                             div.slideToggle();

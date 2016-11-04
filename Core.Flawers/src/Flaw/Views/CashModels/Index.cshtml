@@ -37,6 +37,21 @@
     </tr>
     </thead>
     <tbody>
+        @functions{
+
+            public string GetTypeValue(CashModel item)
+            {
+                if (item.Type == BargainType.CashIn)
+                {
+                    return "Մուտք";
+                }
+                else
+                {
+                    return "Ելք";
+                }
+            }
+        }
+
     @foreach (var item in Model)
     {
         <tr>
@@ -62,10 +77,10 @@
                 @Html.DisplayFor(modelItem => item.FullName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Type)
+                @GetTypeValue(item)
             </td>
             <td>
-                <a><span class="actionsOpener">Actions</span></a>
+                <a><span class="actionsOpener">Գործողություններ</span></a>
                 <div class="actions">
                     <a asp-action="Edit" asp-route-id="@item.Id">Խմբագրել</a>
                     <a asp-action="Details" asp-route-id="@item.Id">Մանրամասներ</a>
@@ -84,7 +99,18 @@
 @section scripts{
     <script>
         $(function () {
+
+
+            $(document).on("click", function () {
+                $(".actions").hide();
+            });
+
+            $(".actions").on("click", function (event) {
+                event.stopPropagation();
+            });
+
             $(".actionsOpener").on('click', function () {
+                event.stopPropagation();
                 var tr = $(this).parent().parent();
                 var div = tr.find('div.actions');
                 div.slideToggle();
