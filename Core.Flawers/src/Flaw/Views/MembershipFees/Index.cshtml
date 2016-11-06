@@ -14,13 +14,18 @@
     <a><span id="exportToExcel" class="cursorPointer">Արտահանել Excel</span></a>
 </p>
 <a><span id="filterText" class="cursorPointer" style="font-size:18px">Ֆիլտրեր</span></a>
-<form asp-action="Index" id="Filters"class="displayNone">
-    <div class="table-bordered"><label>Ընթացիկ վիճակ<select asp-items="@Html.GetEnumSelectList<FeeState>()" id="state" name="currentState" class="form-control">
-        <option value="-1"> </option></select></label></div>
+<form asp-action="Index" id="Filters" class="displayNone">
+    <div class="table-bordered">
+        <label>
+            Ընթացիկ վիճակ<select asp-items="@Html.GetEnumSelectList<FeeState>()" id="state" name="currentState" class="form-control">
+                <option value="-1"> </option>
+            </select>
+        </label>
+    </div>
     <div class="table-bordered">
         <label>Ըստ արտոնությունների<select asp-items="@ViewBag.PrivilegeType" id="privilege" class="form-control" name="PrivilegeType"><option value="-1"> </option></select></label>
         <br>
-        <label>Ըստ վերականգման @Html.CheckBox(Name) </label>
+        @*<label>Ըստ վերականգման @Html.CheckBox(Name) </label>*@
     </div>
     <div class="table-bordered">
         <label>
@@ -30,8 +35,8 @@
         </label>
     </div><br />
     @*<div class="table-bordered">
-        <label>Ըստ կարգապահական տույժերի <input id="penalty" name="Penalty" value="@ViewData["PenaltyFilterParam"]"/></label>
-    </div>*@
+            <label>Ըստ կարգապահական տույժերի <input id="penalty" name="Penalty" value="@ViewData["PenaltyFilterParam"]"/></label>
+        </div>*@
     <input type="submit" id="submit" value="Փնտրել" />
 </form>
 <table class="table">
@@ -111,11 +116,23 @@
                     return "Ակտիվ";
                 }
             }
+
+            public string GetPeriodicityValue(MembershipFee item)
+            {
+                if (item.Periodicity == FeePeriodicity.Year)
+                {
+                    return "Տարի";
+                }
+                else
+                {
+                    return "Ամիս";
+                }
+            }
         }
 
         @foreach (var item in Model)
         {
-            
+
 
             <tr class="@GetClass(item)">
                 <td>
@@ -146,7 +163,7 @@
                     @Html.DisplayFor(modelItem => item.LeftOver)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Periodicity)
+                    @GetPeriodicityValue(item)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.PrivilegeType)
@@ -172,14 +189,13 @@
 </table>
 <div id="code" style="display:none"></div>
 <div id="pager">
-    @for (int i = 1; i < Model.TotalPages+1; i++)
+    @for (int i = 1; i < Model.TotalPages + 1; i++)
     {
         <a asp-action="Index" asp-route-page="@i"
            asp-route-currentState="@ViewData["currentStateFilterParam"]"
            asp-route-PrivilegeType="@ViewData["PrivilegeTypeFilterParam"]"
            asp-route-LeftOverFrom="@ViewData["LeftOverFromFilterParam"]"
            asp-route-LeftOverTo="@ViewData["LeftOverToFilterParam"]"
-          
            asp-route-Returned="@ViewData["ReturnedFilterParam"]">@i</a>
     }
     @*asp-route-Penalty="@ViewData["PenaltyFilterParam"]"*@
@@ -197,7 +213,7 @@
                 id;
 
             if(reactivated=="true"){
-                $("#returned").prop( "checked", true ); 
+                $("#returned").prop( "checked", true );
             }
 
             function attachClickEvent() {
@@ -298,31 +314,31 @@
                     var myObject = {};
 
                     //if (state != "-1") {
-                        myObject["currentState"] = state;
+                    myObject["currentState"] = state;
                     //} else {
                     //    myObject["currentState"] = "-1";
                     //}
 
                     //if (privilege != "-1") {
-                        myObject["PrivilegeType"] = $('#code').html(privilege).text();
+                    myObject["PrivilegeType"] = $('#code').html(privilege).text();
                     //} else {
                     //    myObject["PrivilegeType"] = "-1";
                     //}
 
                     //if (reactivated != "-1" && reactivated != "") {
-                        myObject["Returned"] = reactivated;
+                    myObject["Returned"] = reactivated;
                     //} else {
                     //    myObject["Returned"] = false;
                     //}
 
                     //if (startDate != 0) {
-                        myObject["LeftOverFrom"] = startDate;
+                    myObject["LeftOverFrom"] = startDate;
                     //} else {
                     //    myObject["LeftOverFrom"] = 0;
                     //}
 
                     //if (endDate != 0) {
-                        myObject["LeftOverTo"] = endDate;
+                    myObject["LeftOverTo"] = endDate;
                     //} else {
                     //    myObject["LeftOverTo"] = 0;
                     //}

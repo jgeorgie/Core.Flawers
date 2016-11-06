@@ -63,14 +63,14 @@ namespace Flaw.Models
         [Display(Name = "Արտոնագրի համար")]
         public int ActivePrivilegeNo { get; set; }
 
-        [Display(Name = "Արտոնագրի տեսակ")]
+        [Display(Name = "Արտոնության տեսակ")]
         public string PrivilegeType { get; set; }
 
-        [Display(Name = "Արտոնագրի սկիզբ")]
+        [Display(Name = "Արտոնության սկիզբ")]
         [DataType(DataType.Date)]
         public DateTime? ActivePrivilegeStart { get; set; }
 
-        [Display(Name = "Արտոնագրի ավարտ")]
+        [Display(Name = "Արտոնության ավարտ")]
         [DataType(DataType.Date)]
         public DateTime? ActivePrivilegeEnd { get; set; }
 
