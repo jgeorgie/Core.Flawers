@@ -17,9 +17,19 @@
 <form asp-action="Index" id="Filters" class="displayNone">
     <div class="table-bordered">
         <label>
-            Ըստ արտոնագրի համարի<input class="marginleft5px" id="License" type="number" name="LicenseNumber" />
+            Ըստ արտոնագրի համարի<input class="marginleft5px" id="License" type="number" name="LicenseNumber" value="@((int)ViewData["LicenseNumber"])"/>
         </label>
     </div>
+    <div class="table-bordered">
+        <label>
+            Անուն<input class="marginleft5px" id="FirstName" name="FirstName" value="@ViewData["FirstName"]"/>
+        </label>
+        <label>
+            Ազգանուն<input class="marginleft5px" id="LastName" name="LastName" value="@ViewData["LastName"]"/>
+        </label>
+
+    </div>
+
 
     <div class="table-bordered">
         <label>
@@ -225,6 +235,10 @@
                 reactivated=@ViewData["ReturnedFilterParam"],
                 startDate=@ViewData["LeftOverFromFilterParam"],
                 endDate=@ViewData["LeftOverToFilterParam"],
+                licenseNumber = @ViewData["LicenseNumber"],
+                firstName = '@ViewData["FirstName"]',
+                lastName = '@ViewData["LastName"]',
+
                 @*penalty=@ViewData["PenaltyFilterParam"],*@
                 id;
 
@@ -287,6 +301,9 @@
                 reactivated = $("#returned").is(':checked');
                 startDate = $("#startDate").val();
                 endDate = $("#endDate").val();
+                licenseNumber = $("#LicenseNumber").val();
+                firstName = $("#FirstName").val();
+                lastName = $("#LastName").val();
                 //penalty = $("#penalty option:selected").text();
                 $('.paging').remove();
 
@@ -328,7 +345,9 @@
             $("#exportToExcel")
                 .click(function () {
                     var myObject = {};
-
+                    myObject["FirstName"] = firstName;
+                    myObject["LastName"] = lastName;
+                    myObject["LicenseNumber"] = licenseNumber;
                     //if (state != "-1") {
                     myObject["currentState"] = state;
                     //} else {
