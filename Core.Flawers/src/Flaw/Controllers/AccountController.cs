@@ -93,8 +93,8 @@ namespace Flaw.Controllers
         //
         // GET: /Account/Register
         [HttpGet]
-        //[Authorize(Roles = "SuperAdmin")]
-        [AllowAnonymous]
+        [Authorize(Roles = "SuperAdmin")]
+        //[AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -104,8 +104,8 @@ namespace Flaw.Controllers
         //
         // POST: /Account/Register
         [HttpPost]
-        //[Authorize(Roles = "SuperAdmin")]
-        [AllowAnonymous]
+        [Authorize(Roles = "SuperAdmin")]
+        //[AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
         {
@@ -430,12 +430,34 @@ namespace Flaw.Controllers
         }
 
 
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> UsersList()
         {
             var users =await _userManager.Users.ToListAsync();
             return View(users);
         }
 
+
+        [Authorize(Roles = "SuperAdmin")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userManager.Users.SingleOrDefaultAsync(m => m.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
+        }
+
+
+        [Authorize(Roles = "SuperAdmin")]
+        [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteUser(string id)
         {
             var user = _userManager.Users.SingleOrDefault(u => u.Id == id);
@@ -450,10 +472,8 @@ namespace Flaw.Controllers
             {
                 return RedirectToAction("UsersList");
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
 
