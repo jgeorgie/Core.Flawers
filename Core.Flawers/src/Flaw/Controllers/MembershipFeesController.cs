@@ -28,6 +28,8 @@ namespace Flaw.Controllers
             bool Returned, 
             double LeftOverFrom, 
             double LeftOverTo, 
+            string FirstName,
+            string LastName,
             int? page, 
             int LicenseNumber=-1,
             string Penalty = "", 
@@ -44,11 +46,24 @@ namespace Flaw.Controllers
             ViewData["PenaltyFilterParam"] = Penalty;
             ViewData["ReturnedFilterParam"] = Returned.ToString().ToLower();
             ViewData["LicenseNumber"] = LicenseNumber;
+            ViewData["FirstName"] = FirstName;
+            ViewData["LastName"] = LastName;
 
             if (LicenseNumber!=-1)
             {
                 model = model.Where(m => m.LicenseNumber == LicenseNumber);
             }
+
+            if (FirstName!=null)
+            {
+                model = model.Where(m => m.FirstName.ToLower().Contains(FirstName.ToLower()));
+            }
+
+            if (LastName != null)
+            {
+                model = model.Where(m => m.LastName.ToLower().Contains(LastName.ToLower()));
+            }
+
 
             if (currentState != "-1")
             {
@@ -854,10 +869,36 @@ namespace Flaw.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult ExportToExcel(double LeftOverFrom, double LeftOverTo, string currentState = "-1", string Returned = "-1", string PrivilegeType = "-1")
+        public IActionResult ExportToExcel(
+            bool Returned,
+            double LeftOverFrom,
+            double LeftOverTo,
+            string FirstName,
+            string LastName,
+            int LicenseNumber = -1,
+            string Penalty = "",
+            string currentState = "-1",
+            string PrivilegeType = "-1"
+            )
         {
             //(double LeftOverFrom, double LeftOverTo, string sortOrder, int? page, string Penalty= "",  string currentState = "-1", string Returned = "-1", string PrivilegeType = "-1")
             var membershipFees = _context.MembershipFees.AsQueryable();
+
+            if (LicenseNumber != -1)
+            {
+                membershipFees = membershipFees.Where(m => m.LicenseNumber == LicenseNumber);
+            }
+
+            if (FirstName != null)
+            {
+                membershipFees = membershipFees.Where(m => m.FirstName.ToLower().Contains(FirstName.ToLower()));
+            }
+
+            if (LastName != null)
+            {
+                membershipFees = membershipFees.Where(m => m.LastName.ToLower().Contains(LastName.ToLower()));
+            }
+
 
             if (currentState != "-1")
             {
@@ -881,7 +922,7 @@ namespace Flaw.Controllers
                 membershipFees = membershipFees.Where(m => m.PrivilegeType == PrivilegeType);
             }
 
-            if (Returned=="true")
+            if (Returned)
             {
                 membershipFees = membershipFees.Where(m => m.Reactiveted != null);
             }
