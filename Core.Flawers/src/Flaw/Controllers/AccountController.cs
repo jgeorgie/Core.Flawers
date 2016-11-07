@@ -433,7 +433,7 @@ namespace Flaw.Controllers
         [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> UsersList()
         {
-            var users =await _userManager.Users.ToListAsync();
+            var users = await _userManager.Users.ToListAsync();
             return View(users);
         }
 
@@ -447,9 +447,14 @@ namespace Flaw.Controllers
             }
 
             var user = await _userManager.Users.SingleOrDefaultAsync(m => m.Id == id);
+
             if (user == null)
             {
                 return NotFound();
+            }
+            else if (user.UserName == "admin@admin.am")
+            {
+                return BadRequest();
             }
 
             return View(user);
@@ -461,7 +466,7 @@ namespace Flaw.Controllers
         public async Task<IActionResult> DeleteUser(string id)
         {
             var user = _userManager.Users.SingleOrDefault(u => u.Id == id);
-            if (user == null)
+            if (user == null || user.UserName == "admin@admin.am")
             {
                 return NotFound();
             }

@@ -164,8 +164,13 @@ namespace Flaw.Controllers
         //}
 
 
-        public IActionResult AddPayment(string id)
+        public async Task<IActionResult> AddPayment(string id)
         {
+            var fee = await _context.MembershipFees.SingleOrDefaultAsync(f => f.Id == id);
+            if (fee.CurrentState != FeeState.Active)
+            {
+                return BadRequest();
+            }
             return View();
         }
 
@@ -287,7 +292,7 @@ namespace Flaw.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AmountWithDiscount,CurrentState,FirstName,LastName,MiddleName,RealAmount,Start,LeftOver,Periodicity,ActivePrivilegeEnd,ActivePrivilegeStart,PrivilegeType,ActivePrivilegeNo")] MembershipFee membershipFee, long? privilegeNumber)
+        public async Task<IActionResult> Create([Bind("Id,AmountWithDiscount,CurrentState,FirstName,LastName,MiddleName,RealAmount,Start,LeftOver,Periodicity,ActivePrivilegeEnd,ActivePrivilegeStart,PrivilegeType,LicenseNumber")] MembershipFee membershipFee)
         {
             //var rand = new Random();
             //var privileges = await _context.Privileges.ToListAsync();
@@ -372,11 +377,9 @@ namespace Flaw.Controllers
                     {
                         Id = Guid.NewGuid().ToString(),
                         Start = (DateTime)membershipFee.ActivePrivilegeStart,
-
                         End = (DateTime)membershipFee.ActivePrivilegeEnd,
                         Type = membershipFee.PrivilegeType + $"({privilige.Discount})",
-                        MembershipFeeFoeignKey = membershipFee.Id,
-                        PrivilegeNumber = (long)privilegeNumber
+                        MembershipFeeFoeignKey = membershipFee.Id
                     };
                     _context.Add(priviligeModel);
 
@@ -534,7 +537,7 @@ namespace Flaw.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,AmountWithDiscount,CurrentState,FirstName,LastName,MiddleName,RealAmount,Start,End,LeftOver,Periodicity,ActivePrivilegeEnd,ActivePrivilegeStart,PrivilegeType,ActivePrivilegeNo")] MembershipFee membershipFee)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,AmountWithDiscount,CurrentState,FirstName,LastName,MiddleName,RealAmount,Start,End,LeftOver,Periodicity,ActivePrivilegeEnd,ActivePrivilegeStart,PrivilegeType,LicenseNumber")] MembershipFee membershipFee)
         {
             if (id != membershipFee.Id)
             {

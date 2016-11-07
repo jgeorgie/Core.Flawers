@@ -3,9 +3,9 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.PrivilegeNumber)
-            </th>
+            </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.Type)
             </th>
@@ -23,9 +23,9 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
+                @*<td>
                     @Html.DisplayFor(modelItem => item.PrivilegeNumber)
-                </td>
+                </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.Type)
                 </td>

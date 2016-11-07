@@ -10,6 +10,9 @@
         <thead>
             <tr>
                 <th>
+                    @Html.DisplayNameFor(model => model.LicenseNumber)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.RealAmount)
                 </th>
                 <th>
@@ -27,12 +30,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.MiddleName)
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LeftOver)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LicenseNumber)
-                </th>
+
                 <th>
                     @Html.DisplayNameFor(model => model.Start)
                 </th>
@@ -42,24 +40,16 @@
                 <th>
                     @Html.DisplayNameFor(model => model.LeftOver)
                 </th>
-                @if (Model.Paused != null)
-                {
-                    <th>
-                        @Html.DisplayNameFor(model => model.Paused)
-                    </th>
-                }
-                @if (Model.Reactiveted != null)
-                {
-                    <th>
-                        @Html.DisplayNameFor(model => model.Reactiveted)
-                    </th>
-                }
+
             </tr>
 
         </thead>
 
         <tbody>
             <tr>
+                <td>
+                    @Html.DisplayFor(model => model.LicenseNumber)
+                </td>
                 <td>
                     @Html.DisplayFor(model => model.RealAmount)
                 </td>
@@ -74,7 +64,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(model => model.LastName)
-
                 </td>
                 <td>
                     @Html.DisplayFor(model => model.MiddleName)
@@ -88,20 +77,6 @@
                 <td>
                     @Html.DisplayFor(model => model.LeftOver)
                 </td>
-                <td>
-                    @Html.DisplayFor(model => model.LicenseNumber)
-                </td>
-                @if (Model.Paused != null)
-            {
-                    <td>
-                        @Html.DisplayFor(model => model.Paused)
-                    </td>}
-                @if (Model.Reactiveted != null)
-            {
-                    <td>
-                        @Html.DisplayFor(model => model.Reactiveted)
-                    </td>
-                }
 
 
             </tr>

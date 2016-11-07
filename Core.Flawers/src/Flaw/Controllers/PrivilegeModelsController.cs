@@ -59,7 +59,7 @@ namespace Flaw.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,End,PrivilegeNumber,MembershipFeeFoeignKey,Start,Type")] PrivilegeModel privilegeModel)
+        public async Task<IActionResult> Create([Bind("Id,End,MembershipFeeFoeignKey,Start,Type")] PrivilegeModel privilegeModel)
         {
             if (ModelState.IsValid && privilegeModel.Start > DateTime.Now && privilegeModel.End > privilegeModel.Start)
             {
@@ -167,7 +167,7 @@ namespace Flaw.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,End,MembershipFeeFoeignKey,PrivilegeNumber,Start,Type")] PrivilegeModel privilegeModel)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,End,MembershipFeeFoeignKey,Start,Type")] PrivilegeModel privilegeModel)
         {
             if (id != privilegeModel.Id)
             {

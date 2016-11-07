@@ -13,16 +13,20 @@ namespace Flaw.Models
         public string Id { get; set; }
 
         [Display(Name = "Անուն")]
+        [Required]
         public string FirstName { get; set; }
 
         [Display(Name = "Ազգանուն")]
+        [Required]
         public string LastName { get; set; }
 
         [Display(Name = "Հայրանուն")]
+        [Required]
         public string MiddleName { get; set; }
 
         [Display(Name = "Սկիզբ")]
         [DataType(DataType.Date)]
+        [Required]
         public DateTime Start { get; set; }
 
         [Display(Name = "Ավարտ")]
@@ -33,6 +37,7 @@ namespace Flaw.Models
         public double MonthlyPay { get; set; }
 
         [Display(Name = "Անդամավճարի չափ")]
+        [Required]
         public double RealAmount { get; set; }
 
         [Display(Name = "Զեղչված Անդամավճարի չափ")]
@@ -61,6 +66,7 @@ namespace Flaw.Models
 
 
         [Display(Name = "Արտոնագրի համար")]
+        [Required]
         public int LicenseNumber { get; set; }
 
         [Display(Name = "Արտոնության տեսակ")]
