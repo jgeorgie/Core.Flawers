@@ -3,44 +3,50 @@
 <h3>Անդամավճարներ</h3>
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.RealAmount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AmountWithDiscount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MonthlyPay)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CurrentState)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MiddleName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Start)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LeftOver)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PrivilegeType)
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.LicenseNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RealAmount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AmountWithDiscount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MonthlyPay)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CurrentState)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MiddleName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Start)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LeftOver)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PrivilegeType)
+        </th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LicenseNumber)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.RealAmount)
                 </td>
