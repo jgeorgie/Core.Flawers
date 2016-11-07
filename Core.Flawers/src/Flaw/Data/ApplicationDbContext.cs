@@ -66,5 +66,7 @@ namespace Flaw.Data
 
         public DbSet<FeeStateChangeModel> FeeStateChanges { get; set; }
 
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
+
     }
 }

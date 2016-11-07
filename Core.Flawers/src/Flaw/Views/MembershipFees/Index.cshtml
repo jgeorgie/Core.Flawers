@@ -50,48 +50,49 @@
 <table class="table">
 
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model[0].RealAmount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].AmountWithDiscount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].MonthlyPay)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].CurrentState)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].MiddleName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].Start)
-            </th>
-            @*<th>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model[0].LicenseNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].RealAmount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].AmountWithDiscount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].MonthlyPay)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].CurrentState)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].LastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].MiddleName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].Start)
+        </th>
+        @*<th>
                     @Html.DisplayNameFor(model => model.End)
                 </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model[0].LeftOver)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].Periodicity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].PrivilegeType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model[0].ActivePrivilegeNo)
-            </th>
-            <th> </th>
-        </tr>
+        <th>
+            @Html.DisplayNameFor(model => model[0].LeftOver)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].Periodicity)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].PrivilegeType)
+        </th>
+
+        <th> </th>
+    </tr>
     </thead>
     <tbody id="tbody">
         @functions{
@@ -147,6 +148,9 @@
 
             <tr class="@GetClass(item)">
                 <td>
+                    @Html.DisplayFor(modelItem => item.LicenseNumber)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.RealAmount)
                 </td>
                 <td>
@@ -179,9 +183,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.PrivilegeType)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ActivePrivilegeNo)
-                </td>
+
                 <td>
                     <a><span class="actionsOpener">Գործողություններ</span></a>
                     <div class="actions">

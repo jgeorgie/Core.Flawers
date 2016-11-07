@@ -4,54 +4,59 @@
 
     <tbody>
 @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.RealAmount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AmountWithDiscount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MonthlyPay)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CurrentState)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MiddleName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Start)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LeftOver)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Periodicity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PrivilegeType)
-            </td>
-            <td>
-                <a><span class="actionsOpener">Actions</span></a>
-                <div class="actions">
-                    <a asp-action="Edit" asp-route-id="@item.Id">Խմբագրել</a>
-                    <a asp-action="AddPayment" asp-route-id="@item.Id">Ավելացնել վճարում</a>
-                    <a asp-action="Details" asp-route-id="@item.Id">Մանրամասներ</a>
-                    @if (Context.User.Identity.Name == "admin@admin.am")
-                    {
-                        <a asp-action="Delete" asp-route-id="@item.Id">Ջնջել</a>
-                    }
-                </div>
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.LicenseNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RealAmount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AmountWithDiscount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MonthlyPay)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CurrentState)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FirstName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MiddleName)
+        </td>
 
-            </td>
-        </tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Start)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LeftOver)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Periodicity)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PrivilegeType)
+        </td>
+
+        <td>
+            <a><span class="actionsOpener">Actions</span></a>
+            <div class="actions">
+                <a asp-action="Edit" asp-route-id="@item.Id">Խմբագրել</a>
+                <a asp-action="AddPayment" asp-route-id="@item.Id">Ավելացնել վճարում</a>
+                <a asp-action="Details" asp-route-id="@item.Id">Մանրամասներ</a>
+                @if (Context.User.Identity.Name == "admin@admin.am")
+                {
+                    <a asp-action="Delete" asp-route-id="@item.Id">Ջնջել</a>
+                }
+            </div>
+
+        </td>
+    </tr>
 }
     </tbody>
 </table>

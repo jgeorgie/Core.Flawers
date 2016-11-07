@@ -61,7 +61,7 @@ namespace Flaw.Models
 
 
         [Display(Name = "Արտոնագրի համար")]
-        public int ActivePrivilegeNo { get; set; }
+        public int LicenseNumber { get; set; }
 
         [Display(Name = "Արտոնության տեսակ")]
         public string PrivilegeType { get; set; }

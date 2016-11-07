@@ -12,6 +12,7 @@ using Flaw.Models;
 using Flaw.Models.AccountViewModels;
 using Flaw.Services;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Flaw.Controllers
 {
@@ -428,21 +429,32 @@ namespace Flaw.Controllers
             return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
-        //public async Task<IActionResult> DeleteUser(string id)
-        //{
-        //    var user = _userManager.Users.SingleOrDefault(u => u.Id == id);
-        //    if (user == null)
-        //    {
-        //        return NotFound();
-        //    }
 
-        //    var results = await _userManager.DeleteAsync(user);
+        public async Task<IActionResult> UsersList()
+        {
+            var users =await _userManager.Users.ToListAsync();
+            return View(users);
+        }
 
-        //    if (results.Succeeded)
-        //    {
-        //        RedirectToAction()
-        //    }
-        //}
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var user = _userManager.Users.SingleOrDefault(u => u.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var results = await _userManager.DeleteAsync(user);
+
+            if (results.Succeeded)
+            {
+                return RedirectToAction("UsersList");
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
 
 
         //

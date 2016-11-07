@@ -34,6 +34,7 @@ namespace Flaw.Controllers
             string currentState = "-1",  
             string PrivilegeType = "-1"
             )
+
         {
             var model = _context.MembershipFees.AsQueryable();
             ViewData["PrivilegeTypeFilterParam"] = PrivilegeType;
@@ -43,11 +44,12 @@ namespace Flaw.Controllers
             ViewData["PenaltyFilterParam"] = Penalty;
             ViewData["ReturnedFilterParam"] = Returned.ToString().ToLower();
             ViewData["LicenseNumber"] = LicenseNumber;
+
             if (LicenseNumber!=-1)
             {
-                model = model.Where(m => m.ActivePrivilegeNo == LicenseNumber);
-
+                model = model.Where(m => m.LicenseNumber == LicenseNumber);
             }
+
             if (currentState != "-1")
             {
                 switch (int.Parse(currentState))
@@ -527,7 +529,7 @@ namespace Flaw.Controllers
             if (ModelState.IsValid)
             {
                 var previousModel = _context.MembershipFees.Where(m => m.Id == membershipFee.Id).AsNoTracking().SingleOrDefault();
-                membershipFee.ActivePrivilegeNo = previousModel.ActivePrivilegeNo;
+                membershipFee.LicenseNumber = previousModel.LicenseNumber;
                 membershipFee.ActivePrivilegeEnd = previousModel.ActivePrivilegeEnd;
                 membershipFee.ActivePrivilegeStart = previousModel.ActivePrivilegeEnd;
                 membershipFee.LeftOver = previousModel.LeftOver;

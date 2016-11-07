@@ -28,6 +28,12 @@
                     @Html.DisplayNameFor(model => model.MiddleName)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.LeftOver)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LicenseNumber)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Start)
                 </th>
                 <th>
@@ -37,17 +43,19 @@
                     @Html.DisplayNameFor(model => model.LeftOver)
                 </th>
                 @if (Model.Paused != null)
-            {
+                {
                     <th>
                         @Html.DisplayNameFor(model => model.Paused)
                     </th>
                 }
                 @if (Model.Reactiveted != null)
-            {
+                {
                     <th>
                         @Html.DisplayNameFor(model => model.Reactiveted)
-                    </th>}
+                    </th>
+                }
             </tr>
+
         </thead>
 
         <tbody>
@@ -79,6 +87,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(model => model.LeftOver)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.LicenseNumber)
                 </td>
                 @if (Model.Paused != null)
             {

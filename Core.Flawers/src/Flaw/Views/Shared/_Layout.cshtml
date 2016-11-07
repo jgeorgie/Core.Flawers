@@ -36,10 +36,7 @@
                     @if (Context.User.Identity.Name == "admin@admin.am")
                     {
                         <li><a asp-area="" asp-controller="Privileges" asp-action="Index">Արտոնություններ</a></li>
-                    }
-                    @if (Context.User.Identity.Name == "admin@admin.am")
-                    {
-                        <li><a asp-action="Register" asp-controller="Account" asp-route-returnurl="@ViewData["ReturnUrl"]">Գրանցել նոր օգտատեր</a></li>
+                        <li><a asp-area="" asp-controller="Account" asp-action="UsersList">Օգտատերերի ցանկ</a></li>
                     }
                 </ul>
 

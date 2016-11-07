@@ -47,6 +47,12 @@
         <dd>
             @Html.DisplayFor(model => model.MiddleName)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LicenseNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LicenseNumber)
+        </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.RealAmount)
@@ -65,7 +71,7 @@
     <form asp-action="Delete">
         <div class="form-actions no-color">
             <input type="submit" value="Delete" class="btn btn-default" /> |
-            <a asp-action="Index">Back to List</a>
+            <a asp-action="Index">Վերադառնալ ցուցակ</a>
         </div>
     </form>
 </div>
