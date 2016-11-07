@@ -1,9 +1,44 @@
 ﻿@model IEnumerable<Flaw.Models.MembershipFee>
 
 <h3>Անդամավճարներ</h3>
+@functions{
+
+    public string GetClass(MembershipFee item)
+    {
+        if (item.CurrentState == FeeState.Pause)
+        {
+            return "paused";
+        }
+        else if (item.CurrentState == FeeState.Finish)
+        {
+            return "finished";
+        }
+        else
+        {
+            return string.Empty;
+        }
+    }
+
+    public string GetStateValue(MembershipFee item)
+    {
+        if (item.CurrentState == FeeState.Pause)
+        {
+            return "Սառեցված";
+        }
+        else if (item.CurrentState == FeeState.Finish)
+        {
+            return "Ավարտված";
+        }
+        else
+        {
+            return "Ակտիվ";
+        }
+    }
+
+}
 <table class="table">
     <thead>
-    <tr>
+    <tr >
         <th>
             @Html.DisplayNameFor(model => model.LicenseNumber)
         </th>
@@ -43,7 +78,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+            <tr class="@GetClass(item)">
                 <td>
                     @Html.DisplayFor(modelItem => item.LicenseNumber)
                 </td>
@@ -57,7 +92,7 @@
                     @Html.DisplayFor(modelItem => item.MonthlyPay)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CurrentState)
+                    @GetStateValue(item)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.FirstName)
@@ -78,7 +113,7 @@
                     @Html.DisplayFor(modelItem => item.PrivilegeType)
                 </td>
                 <td>
-                    <a><span class="actionsOpener">Գործողություններ</span></a>
+                    <a><span class="actionsOpener">Գործ.</span></a>
                     <div class="actions">
                         <a asp-controller="MembershipFees" asp-action="Edit" asp-route-id="@item.Id">Խմբագրել</a>
                         <a asp-controller="MembershipFees" asp-action="AddPayment" asp-route-id="@item.Id">Ավելացնել Վճարում</a>
