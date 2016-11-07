@@ -428,21 +428,21 @@ namespace Flaw.Controllers
             return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
-        public async Task<IActionResult> DeleteUser(string id)
-        {
-            var user = _userManager.Users.SingleOrDefault(u => u.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> DeleteUser(string id)
+        //{
+        //    var user = _userManager.Users.SingleOrDefault(u => u.Id == id);
+        //    if (user == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var results = await _userManager.DeleteAsync(user);
+        //    var results = await _userManager.DeleteAsync(user);
 
-            if (results.Succeeded)
-            {
-                RedirectToAction()
-            }
-        }
+        //    if (results.Succeeded)
+        //    {
+        //        RedirectToAction()
+        //    }
+        //}
 
 
         //

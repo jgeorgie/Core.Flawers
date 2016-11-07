@@ -24,7 +24,16 @@ namespace Flaw.Controllers
         }
 
         // GET: MembershipFees
-        public async Task<IActionResult> Index(bool Returned, double LeftOverFrom, double LeftOverTo, int? page, string Penalty = "", string currentState = "-1",  string PrivilegeType = "-1")
+        public async Task<IActionResult> Index(
+            bool Returned, 
+            double LeftOverFrom, 
+            double LeftOverTo, 
+            int? page, 
+            int LicenseNumber=-1,
+            string Penalty = "", 
+            string currentState = "-1",  
+            string PrivilegeType = "-1"
+            )
         {
             var model = _context.MembershipFees.AsQueryable();
             ViewData["PrivilegeTypeFilterParam"] = PrivilegeType;
@@ -33,6 +42,12 @@ namespace Flaw.Controllers
             ViewData["LeftOverToFilterParam"] = LeftOverTo;
             ViewData["PenaltyFilterParam"] = Penalty;
             ViewData["ReturnedFilterParam"] = Returned.ToString().ToLower();
+            ViewData["LicenseNumber"] = LicenseNumber;
+            if (LicenseNumber!=-1)
+            {
+                model = model.Where(m => m.ActivePrivilegeNo == LicenseNumber);
+
+            }
             if (currentState != "-1")
             {
                 switch (int.Parse(currentState))
