@@ -3,6 +3,10 @@
     padding-bottom: 20px;
 }
 
+#getUserNameLi {
+    display: block;
+}
+
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
@@ -28,7 +32,7 @@ textarea {
 }
 
 .orange {
-    color:#ff3d00;
+    color: #ff3d00;
 }
 
 /* buttons and links extension to use brackets: [ click me ] */
@@ -76,10 +80,10 @@ table {
     padding: 10px;
 }
 
-.container_divs>input {
-    margin-top: 5px;
-    margin-left: 5px;
-}
+    .container_divs > input {
+        margin-top: 5px;
+        margin-left: 5px;
+    }
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */
@@ -129,27 +133,63 @@ p {
     font-size: 18px;
 }
 
-.paging{
-    cursor:pointer;
-    display:inline-block;
+.paging {
+    cursor: pointer;
+    display: inline-block;
 }
-.displayNone{
-    display:none;
+
+.displayNone {
+    display: none;
 }
-display{
-    display:block;
+
+display {
+    display: block;
 }
-.marginleft5px{
+
+.marginleft5px {
     margin-left: 16px;
     margin-top: 10px;
 }
 
-.cursorPointer{
-     cursor:pointer;
+.cursorPointer {
+    cursor: pointer;
+}
+@media (max-width:1238px){
+     #actions_div{
+        right:1px;
+    }
+}
+@media (min-width: 1200px) {
+    .container {
+        width: 80%;
+    }
 }
 
-@media (min-width: 1200px) {
-  .container {
-    width: 1470px;
-}  
+@media(max-width:1100px) {
+    .table > thead {
+        font-size: 12px;
+    }
+
+    .table > tbody > tr > td {
+        font-size: 12px;
+    }
+    #actions_div{
+        right:1px;
+        font-size:12px;
+    }
+}
+
+@media(max-width:991px) {
+
+    #cont {
+        width: 100%;
+    }
+
+    #getUserNameLi {
+        display: none;
+    }
+
+    #logout_btn {
+        margin-right: 10px;
+    }
 }

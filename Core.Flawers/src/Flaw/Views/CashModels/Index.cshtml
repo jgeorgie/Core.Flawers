@@ -81,7 +81,7 @@
             </td>
             <td>
                 <a><span class="actionsOpener">Գործ.</span></a>
-                <div class="actions">
+                <div class="actions" id="actions_div">
                     <a asp-action="Edit" asp-route-id="@item.Id">Խմբագրել</a>
                     <a asp-action="Details" asp-route-id="@item.Id">Մանրամասներ</a>
                     @if (Context.User.Identity.Name == "admin@admin.am")

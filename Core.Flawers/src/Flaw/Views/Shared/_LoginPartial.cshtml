@@ -8,11 +8,11 @@
 {
     <form asp-area="" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
-            <li>
+            <li id="getUserNameLi">
                 <a title="Manage">Բարև @UserManager.GetUserName(User)!</a>
             </li>
             <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Դուրս գալ</button>
+                <button type="submit" class="btn btn-link navbar-btn navbar-link" id="logout_btn">Դուրս գալ</button>
             </li>
         </ul>
     </form>
