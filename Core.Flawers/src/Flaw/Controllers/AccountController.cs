@@ -52,6 +52,28 @@ namespace Flaw.Controllers
             return View();
         }
 
+        [AllowAnonymous]
+        public async Task SeedDB()
+        {
+            var admin = await _userManager.FindByEmailAsync("admin@admin.am");
+            if (admin == null)
+            {
+                var user = new ApplicationUser { UserName = "admin@admin.am", Email = "admin@admin.am", FullName = "Admin Admin" };
+                var result = await _userManager.CreateAsync(user, "admin123");
+
+                MyIdentityRole role = new MyIdentityRole();
+                role.Name = "SuperAdmin";
+                role.Description = "Perform normal operations.";
+                IdentityResult roleResult = _roleManager.CreateAsync(role).Result;
+                if (!roleResult.Succeeded)
+                {
+                    ModelState.AddModelError("",
+                     "Error while creating role!");
+                }
+                _userManager.AddToRoleAsync(user, "SuperAdmin").Wait();
+            }
+        }
+
         //
         // POST: /Account/Login
         [HttpPost]

@@ -107,6 +107,7 @@ namespace Flaw
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
+            //DbContextSeedData.Seed(app);
 
 
 
