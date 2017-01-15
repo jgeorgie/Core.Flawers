@@ -9,8 +9,9 @@ namespace Flaw.Models
 {
     public class TransferPayment
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public string Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
         [Display(Name = "Ամսաթիվ")]
         [DataType(DataType.Date)]
@@ -28,9 +29,7 @@ namespace Flaw.Models
         [Display(Name = "Նպատակ")]
         public string Destination { get; set; }
 
-
+        public int MembershipFeeId { get; set; }
         public MembershipFee Fee { get; set; }
-        public string MembershipFeeId { get; set; }
-
     }
 }

@@ -54,7 +54,8 @@ namespace Flaw.Migrations
                 name: "Privileges",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Description = table.Column<string>(nullable: true),
                     Discount = table.Column<int>(nullable: false),
                     Type = table.Column<string>(nullable: true)
@@ -168,22 +169,23 @@ namespace Flaw.Migrations
                 name: "MembershipFees",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ActivePrivilegeEnd = table.Column<DateTime>(nullable: true),
-                    ActivePrivilegeNo = table.Column<int>(nullable: false),
                     ActivePrivilegeStart = table.Column<DateTime>(nullable: true),
                     AmountWithDiscount = table.Column<double>(nullable: false),
                     CurrentState = table.Column<int>(nullable: false),
                     Deposit = table.Column<double>(nullable: true),
                     End = table.Column<DateTime>(nullable: false),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(nullable: false),
+                    LastName = table.Column<string>(nullable: false),
                     LeftOver = table.Column<double>(nullable: false),
-                    MiddleName = table.Column<string>(nullable: true),
+                    LicenseNumber = table.Column<int>(nullable: false),
+                    MiddleName = table.Column<string>(nullable: false),
                     MonthlyPay = table.Column<double>(nullable: false),
                     Paused = table.Column<DateTime>(nullable: true),
                     Periodicity = table.Column<int>(nullable: false),
-                    PrivilegeId = table.Column<string>(nullable: true),
+                    PrivilegeId = table.Column<int>(nullable: true),
                     PrivilegeType = table.Column<string>(nullable: true),
                     Reactiveted = table.Column<DateTime>(nullable: true),
                     RealAmount = table.Column<double>(nullable: false),
@@ -206,14 +208,15 @@ namespace Flaw.Migrations
                 name: "CashModel",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Account = table.Column<string>(nullable: true),
                     AccountingPass = table.Column<string>(nullable: true),
                     Amount = table.Column<double>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
                     Destination = table.Column<string>(nullable: true),
                     FullName = table.Column<string>(nullable: true),
-                    MembershipFeeId = table.Column<string>(nullable: true),
+                    MembershipFeeId = table.Column<int>(nullable: false),
                     OrdersNumber = table.Column<string>(nullable: true),
                     Type = table.Column<int>(nullable: false)
                 },
@@ -232,16 +235,17 @@ namespace Flaw.Migrations
                 name: "FeeAmountChangeModels",
                 columns: table => new
                 {
-                    id = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ChangeDate = table.Column<DateTime>(nullable: false),
-                    FeeId = table.Column<string>(nullable: true),
-                    MembershipFeeForeignKey = table.Column<string>(nullable: true),
+                    FeeId = table.Column<int>(nullable: true),
+                    MembershipFeeForeignKey = table.Column<int>(nullable: false),
                     NewAmount = table.Column<double>(nullable: false),
                     OldAmount = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FeeAmountChangeModels", x => x.id);
+                    table.PrimaryKey("PK_FeeAmountChangeModels", x => x.Id);
                     table.ForeignKey(
                         name: "FK_FeeAmountChangeModels_MembershipFees_FeeId",
                         column: x => x.FeeId,
@@ -254,9 +258,10 @@ namespace Flaw.Migrations
                 name: "FeeStateChanges",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ChangeDate = table.Column<DateTime>(nullable: false),
-                    MembershipFeeForeignKey = table.Column<string>(nullable: true),
+                    MembershipFeeForeignKey = table.Column<int>(nullable: false),
                     NewState = table.Column<int>(nullable: false),
                     PreviousState = table.Column<int>(nullable: false)
                 },
@@ -275,9 +280,10 @@ namespace Flaw.Migrations
                 name: "PrivilegeModels",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     End = table.Column<DateTime>(nullable: false),
-                    MembershipFeeFoeignKey = table.Column<string>(nullable: true),
+                    MembershipFeeFoeignKey = table.Column<int>(nullable: false),
                     PrivilegeNumber = table.Column<long>(nullable: false),
                     Start = table.Column<DateTime>(nullable: false),
                     Type = table.Column<string>(nullable: true)
@@ -297,12 +303,13 @@ namespace Flaw.Migrations
                 name: "TransferPayments",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Amount = table.Column<double>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
                     Destination = table.Column<string>(nullable: true),
                     FullName = table.Column<string>(nullable: true),
-                    MembershipFeeId = table.Column<string>(nullable: true),
+                    MembershipFeeId = table.Column<int>(nullable: false),
                     PaymentNo = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -320,18 +327,19 @@ namespace Flaw.Migrations
                 name: "Payments",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Amount = table.Column<double>(nullable: false),
-                    CashPaymentForeignKey = table.Column<string>(nullable: true),
-                    CashPaymentId = table.Column<string>(nullable: true),
+                    CashPaymentForeignKey = table.Column<int>(nullable: false),
+                    CashPaymentId = table.Column<int>(nullable: true),
                     DepositOrDebt = table.Column<double>(nullable: true),
-                    FeeId = table.Column<string>(nullable: true),
-                    MembershipFeeForeignKey = table.Column<string>(nullable: true),
+                    FeeId = table.Column<int>(nullable: true),
+                    MembershipFeeForeignKey = table.Column<int>(nullable: false),
                     PayedOn = table.Column<DateTime>(nullable: false),
                     PaymentDeadline = table.Column<DateTime>(nullable: false),
                     Status = table.Column<int>(nullable: false),
-                    TransferPaymentForeignKey = table.Column<string>(nullable: true),
-                    TransferPaymentId = table.Column<string>(nullable: true)
+                    TransferPaymentForeignKey = table.Column<int>(nullable: false),
+                    TransferPaymentId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {

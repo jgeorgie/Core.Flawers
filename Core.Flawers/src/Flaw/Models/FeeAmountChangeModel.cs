@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,7 +9,9 @@ namespace Flaw.Models
 {
     public class FeeAmountChangeModel
     {
-        public string id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
         [DataType(DataType.Date)]
         [Display(Name = "Փոփոխման ամսաթիվ")]
@@ -21,7 +24,7 @@ namespace Flaw.Models
         public double NewAmount { get; set; }
 
 
-        public string MembershipFeeForeignKey { get; set; }
+        public int MembershipFeeForeignKey { get; set; }
         public MembershipFee Fee { get; set; }
     }
 }

@@ -30,14 +30,14 @@ namespace Flaw.Controllers
         }
 
         // GET: CashModels/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
+            if (id == 0)
             {
                 return NotFound();
             }
 
-            var cashModel = await _context.CashModel.SingleOrDefaultAsync(m => m.Id == id);
+            var cashModel = await _context.CashModel.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
             if (cashModel == null)
             {
                 return NotFound();
@@ -47,9 +47,9 @@ namespace Flaw.Controllers
         }
 
 
-        public void ExportToXML(string id)
+        public void ExportToXML(int id)
         {
-            var cashModel = _context.CashModel.SingleOrDefault(c => c.Id == id);
+            var cashModel = _context.CashModel.AsNoTracking().SingleOrDefault(c => c.Id == id);
 
             var xs = new XmlSerializer(cashModel.GetType());
             HttpContext.Response.ContentType = "text/xml";
@@ -57,15 +57,13 @@ namespace Flaw.Controllers
             xs.Serialize(HttpContext.Response.Body, cashModel);
         }
 
-
-
         // GET: CashModels/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        public IActionResult CreateForFee(string Id)
+        public IActionResult CreateForFee(int Id)
         {
             ViewBag.FeeId = Id;
             return PartialView("_CreateForFee");
@@ -108,51 +106,16 @@ namespace Flaw.Controllers
                             }
                             else
                             {
-                                //if (payments[i].DepositOrDebt == null)
-                                //{
-                                //    payments[i].DepositOrDebt = amount;
-                                //}
-                                //else
-                                //{ }
                                 payments[i].DepositOrDebt += amount;
 
                                 _context.Update(payments[i]);
                                 break;
                             }
                         }
-
-                        //}
-                        //else
-                        //{
-                        //    if (amount >= payments[i].Amount - depOrDebt)
-                        //    {
-                        //        payments[i].Status = PaymentStatus.Payed;
-                        //        payments[i].CashPaymentForeignKey = cashModel.Id;
-                        //        payments[i].PayedOn = cashModel.Date;
-
-                        //        amount -= payments[i].Amount - (double)payments[i].DepositOrDebt;
-                        //        payments[i].DepositOrDebt = 0;
-
-                        //        _context.Update(payments[i]);
-
-                        //        if (amount == 0)
-                        //        {
-                        //            break;
-                        //        }
-                        //    }
-                        //    else
-                        //    {
-                        //        payments[i].DepositOrDebt += amount;
-
-                        //        _context.Update(payments[i]);
-                        //        break;
-                        //    }
-                        //}
                     }
                 }
 
                 _context.Update(fee);
-                cashModel.Id = Guid.NewGuid().ToString();
                 _context.Add(cashModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "MembershipFees");
@@ -170,7 +133,6 @@ namespace Flaw.Controllers
         {
             if (ModelState.IsValid)
             {
-                cashModel.Id = Guid.NewGuid().ToString();
                 _context.Add(cashModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -179,19 +141,16 @@ namespace Flaw.Controllers
         }
 
         // GET: CashModels/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var cashModel = await _context.CashModel.SingleOrDefaultAsync(m => m.Id == id);
-            @ViewBag.FeeId = cashModel.MembershipFeeId;
+
             if (cashModel == null)
             {
                 return NotFound();
             }
+            ViewBag.FeeId = cashModel.MembershipFeeId;
+
             return View(cashModel);
         }
 
@@ -200,7 +159,7 @@ namespace Flaw.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,AccountingPass,OrdersNumber,Amount,Destination,Date,FullName,Account")] CashModel cashModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountingPass,OrdersNumber,Amount,Destination,Date,FullName,Account")] CashModel cashModel)
         {
             if (id != cashModel.Id)
             {
@@ -214,7 +173,7 @@ namespace Flaw.Controllers
 
                 if (previousModel.Amount != cashModel.Amount)
                 {
-                    var fee = await _context.MembershipFees.SingleOrDefaultAsync(f => f.Id == cashModel.MembershipFeeId);
+                    var fee = await _context.MembershipFees.AsNoTracking().SingleOrDefaultAsync(f => f.Id == cashModel.MembershipFeeId);
                     double difference = previousModel.Amount - cashModel.Amount;
                     fee.LeftOver += difference;
                     var payments =
@@ -252,14 +211,9 @@ namespace Flaw.Controllers
 
         // GET: CashModels/Delete/5
         [Authorize(Roles = "SuperAdmin")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var cashModel = await _context.CashModel.SingleOrDefaultAsync(m => m.Id == id);
+            var cashModel = await _context.CashModel.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
             if (cashModel == null)
             {
                 return NotFound();
@@ -272,7 +226,7 @@ namespace Flaw.Controllers
         [Authorize(Roles = "SuperAdmin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var cashModel = await _context.CashModel.SingleOrDefaultAsync(m => m.Id == id);
             _context.CashModel.Remove(cashModel);
@@ -280,7 +234,7 @@ namespace Flaw.Controllers
             return RedirectToAction("Index");
         }
 
-        private bool CashModelExists(string id)
+        private bool CashModelExists(int id)
         {
             return _context.CashModel.Any(e => e.Id == id);
         }

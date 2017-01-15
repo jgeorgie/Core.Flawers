@@ -28,14 +28,9 @@ namespace Flaw.Controllers
         }
 
         // GET: PrivilegeModels/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var privilegeModel = await _context.PrivilegeModels.SingleOrDefaultAsync(m => m.Id == id);
+            var privilegeModel = await _context.PrivilegeModels.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
             if (privilegeModel == null)
             {
                 return NotFound();
@@ -45,11 +40,11 @@ namespace Flaw.Controllers
         }
 
         // GET: PrivilegeModels/Create
-        public IActionResult Create(string feeId)
+        public IActionResult Create(int feeId)
         {
             //ViewData["MembershipFeeFoeignKey"] = new SelectList(_context.MembershipFees, "Id", "Id");
             ViewBag.FeeId = feeId;
-            var privileges = _context.Privileges.ToList();
+            var privileges = _context.Privileges.AsNoTracking().ToList();
             ViewBag.PrivilegeType = new SelectList(privileges, "Type", "Type");
             return View();
         }
@@ -63,30 +58,33 @@ namespace Flaw.Controllers
         {
             if (ModelState.IsValid && privilegeModel.Start > DateTime.Now && privilegeModel.End > privilegeModel.Start)
             {
-                var privilige = _context.Privileges.FirstOrDefault(p => p.Type == privilegeModel.Type);
+                var privilige = _context.Privileges.AsNoTracking().FirstOrDefault(p => p.Type == privilegeModel.Type);
                 var membershipFee =
                     await
-                        _context.MembershipFees.SingleOrDefaultAsync(f => f.Id == privilegeModel.MembershipFeeFoeignKey);
+                        _context.MembershipFees.AsNoTracking()
+                            .SingleOrDefaultAsync(f => f.Id == privilegeModel.MembershipFeeFoeignKey);
                 bool privExist =
-                    _context.PrivilegeModels.FirstOrDefault(
+                    _context.PrivilegeModels.AsNoTracking().FirstOrDefault(
                         p => p.MembershipFeeFoeignKey == membershipFee.Id && p.Type == privilegeModel.Type) != null;
 
                 if (!privExist)
                 {
                     var transfers =
-                   await
-                       _context.TransferPayments.Where(t => t.MembershipFeeId == privilegeModel.MembershipFeeFoeignKey)
-                           .ToListAsync();
+                        await
+                            _context.TransferPayments.AsNoTracking()
+                                .Where(t => t.MembershipFeeId == privilegeModel.MembershipFeeFoeignKey)
+                                .ToListAsync();
                     var cashs =
                         await
-                            _context.CashModel.Where(c => c.MembershipFeeId == privilegeModel.MembershipFeeFoeignKey)
+                            _context.CashModel.AsNoTracking()
+                                .Where(c => c.MembershipFeeId == privilegeModel.MembershipFeeFoeignKey)
                                 .ToListAsync();
 
                     var d = DateTime.Now.AddMonths(1);
                     var newDate = new DateTime(d.Year, d.Month, 15);
                     var payments =
                         await
-                            _context.Payments.Where(
+                            _context.Payments.AsNoTracking().Where(
                                     p => p.MembershipFeeForeignKey == membershipFee.Id && p.PaymentDeadline >= newDate)
                                 .OrderBy(p => p.PaymentDeadline)
                                 .ToListAsync();
@@ -133,27 +131,21 @@ namespace Flaw.Controllers
                     }
                     _context.Update(membershipFee);
 
-                    privilegeModel.Id = Guid.NewGuid().ToString();
                     _context.Add(privilegeModel);
                     await _context.SaveChangesAsync();
                     return RedirectToAction("Index", "MembershipFees");
                 }
 
             }
-            var privileges = _context.Privileges.ToList();
+            var privileges = _context.Privileges.AsNoTracking().ToList();
             ViewBag.PrivilegeType = new SelectList(privileges, "Type", "Type");
             return View(privilegeModel);
         }
 
         // GET: PrivilegeModels/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var privilegeModel = await _context.PrivilegeModels.SingleOrDefaultAsync(m => m.Id == id);
+            var privilegeModel = await _context.PrivilegeModels.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
             if (privilegeModel == null)
             {
                 return NotFound();
@@ -167,7 +159,7 @@ namespace Flaw.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,End,MembershipFeeFoeignKey,Start,Type")] PrivilegeModel privilegeModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,End,MembershipFeeFoeignKey,Start,Type")] PrivilegeModel privilegeModel)
         {
             if (id != privilegeModel.Id)
             {
@@ -200,13 +192,8 @@ namespace Flaw.Controllers
 
         // GET: PrivilegeModels/Delete/5
         [Authorize(Roles = "SuperAdmin")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var privilegeModel = await _context.PrivilegeModels.SingleOrDefaultAsync(m => m.Id == id);
             if (privilegeModel == null)
             {
@@ -220,7 +207,7 @@ namespace Flaw.Controllers
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "SuperAdmin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var privilegeModel = await _context.PrivilegeModels.SingleOrDefaultAsync(m => m.Id == id);
             _context.PrivilegeModels.Remove(privilegeModel);
@@ -228,12 +215,12 @@ namespace Flaw.Controllers
             return RedirectToAction("Index");
         }
 
-        private bool PrivilegeModelExists(string id)
+        private bool PrivilegeModelExists(int id)
         {
             return _context.PrivilegeModels.Any(e => e.Id == id);
         }
 
-        private async Task ReCountPayments(string feeId, CashModel cashModel, TransferPayment transferPayment)
+        private async Task ReCountPayments(int feeId, CashModel cashModel, TransferPayment transferPayment)
         {
             //var fee = await _context.MembershipFees.SingleOrDefaultAsync(f => f.Id == feeId);
             var payments =
@@ -253,9 +240,6 @@ namespace Flaw.Controllers
                 double amount = cashModel.Amount;
                 for (int i = 0; i < payments.Count; i++)
                 {
-                    //double depOrDebt = payments[i].DepositOrDebt == null ? 0 : (double)payments[i].DepositOrDebt;
-                    //if (depOrDebt <= 0)
-                    //{
                     if (amount >= Math.Abs(payments[i].DepositOrDebt.Value))
                     {
                         payments[i].Status = PaymentStatus.Payed;
@@ -273,44 +257,11 @@ namespace Flaw.Controllers
                     }
                     else
                     {
-                        //    if (payments[i].DepositOrDebt == null)
-                        //    {
-                        //        payments[i].DepositOrDebt = amount;
-                        //    }
-                        //    else
-                        //{ }
                         payments[i].DepositOrDebt += amount;
 
                         _context.Update(payments[i]);
                         break;
                     }
-                    //}
-                    //else
-                    //{
-                    //    if (amount >= payments[i].Amount - Math.Abs(depOrDebt))
-                    //    {
-                    //        payments[i].Status = PaymentStatus.Payed;
-                    //        payments[i].CashPaymentForeignKey = cashModel.Id;
-                    //        payments[i].PayedOn = cashModel.Date;
-
-                    //        amount -= payments[i].Amount - Math.Abs((double)payments[i].DepositOrDebt);
-                    //        payments[i].DepositOrDebt = 0;
-
-                    //        _context.Update(payments[i]);
-
-                    //        if (amount == 0)
-                    //        {
-                    //            break;
-                    //        }
-                    //    }
-                    //    else
-                    //    {
-                    //        payments[i].DepositOrDebt += amount;
-
-                    //        _context.Update(payments[i]);
-                    //        break;
-                    //    }
-                    //}
                 }
                 await _context.SaveChangesAsync();
             }
@@ -320,9 +271,6 @@ namespace Flaw.Controllers
 
                 for (int i = 0; i < payments.Count; i++)
                 {
-                    //double depOrDebt = payments[i].DepositOrDebt == null ? 0 : (double)payments[i].DepositOrDebt;
-                    //if (depOrDebt <= 0)
-                    //{
                     if (amount >= Math.Abs(payments[i].DepositOrDebt.Value))
                     {
                         payments[i].Status = PaymentStatus.Payed;
@@ -341,46 +289,11 @@ namespace Flaw.Controllers
                     }
                     else
                     {
-                        //if (payments[i].DepositOrDebt == null)
-                        //{
-                        //    payments[i].DepositOrDebt = amount;
-                        //}
-                        //else
-                        //{ }
                         payments[i].DepositOrDebt += amount;
 
                         _context.Update(payments[i]);
                         break;
                     }
-                    //}
-                    //else
-                    //{
-                    //    if (amount >= payments[i].Amount - depOrDebt)
-                    //    {
-                    //        payments[i].Status = PaymentStatus.Payed;
-                    //        payments[i].TransferPaymentForeignKey = transferPayment.Id;
-                    //        payments[i].PayedOn = transferPayment.Date;
-
-                    //        amount -= payments[i].Amount - (double)payments[i].DepositOrDebt;
-                    //        payments[i].DepositOrDebt = 0;
-
-                    //        _context.Update(payments[i]);
-
-
-
-                    //        if (amount == 0)
-                    //        {
-                    //            break;
-                    //        }
-                    //    }
-                    //    else
-                    //    {
-                    //        payments[i].DepositOrDebt += amount;
-
-                    //        _context.Update(payments[i]);
-                    //        break;
-                    //    }
-                    //}
                 }
                 await _context.SaveChangesAsync();
             }

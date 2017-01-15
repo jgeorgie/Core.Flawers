@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Flaw.Models;
 using Flaw.Controllers;
+using Microsoft.Extensions.Configuration;
 
 namespace Flaw.Data
 {
@@ -16,7 +17,6 @@ namespace Flaw.Data
         {
             //Database.EnsureCreated();
         }
-
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -8,7 +8,7 @@ using Flaw.Data;
 namespace Flaw.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20161026174653_InitialMigration")]
+    [Migration("20170115115526_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -93,7 +93,8 @@ namespace Flaw.Migrations
 
             modelBuilder.Entity("Flaw.Models.CashModel", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Account");
 
@@ -107,7 +108,7 @@ namespace Flaw.Migrations
 
                     b.Property<string>("FullName");
 
-                    b.Property<string>("MembershipFeeId");
+                    b.Property<int>("MembershipFeeId");
 
                     b.Property<string>("OrdersNumber");
 
@@ -122,19 +123,20 @@ namespace Flaw.Migrations
 
             modelBuilder.Entity("Flaw.Models.FeeAmountChangeModel", b =>
                 {
-                    b.Property<string>("id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("ChangeDate");
 
-                    b.Property<string>("FeeId");
+                    b.Property<int?>("FeeId");
 
-                    b.Property<string>("MembershipFeeForeignKey");
+                    b.Property<int>("MembershipFeeForeignKey");
 
                     b.Property<double>("NewAmount");
 
                     b.Property<double>("OldAmount");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.HasIndex("FeeId");
 
@@ -143,11 +145,12 @@ namespace Flaw.Migrations
 
             modelBuilder.Entity("Flaw.Models.FeeStateChangeModel", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("ChangeDate");
 
-                    b.Property<string>("MembershipFeeForeignKey");
+                    b.Property<int>("MembershipFeeForeignKey");
 
                     b.Property<int>("NewState");
 
@@ -162,11 +165,10 @@ namespace Flaw.Migrations
 
             modelBuilder.Entity("Flaw.Models.MembershipFee", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime?>("ActivePrivilegeEnd");
-
-                    b.Property<int>("ActivePrivilegeNo");
 
                     b.Property<DateTime?>("ActivePrivilegeStart");
 
@@ -178,13 +180,18 @@ namespace Flaw.Migrations
 
                     b.Property<DateTime>("End");
 
-                    b.Property<string>("FirstName");
+                    b.Property<string>("FirstName")
+                        .IsRequired();
 
-                    b.Property<string>("LastName");
+                    b.Property<string>("LastName")
+                        .IsRequired();
 
                     b.Property<double>("LeftOver");
 
-                    b.Property<string>("MiddleName");
+                    b.Property<int>("LicenseNumber");
+
+                    b.Property<string>("MiddleName")
+                        .IsRequired();
 
                     b.Property<double>("MonthlyPay");
 
@@ -192,7 +199,7 @@ namespace Flaw.Migrations
 
                     b.Property<int>("Periodicity");
 
-                    b.Property<string>("PrivilegeId");
+                    b.Property<int?>("PrivilegeId");
 
                     b.Property<string>("PrivilegeType");
 
@@ -215,19 +222,20 @@ namespace Flaw.Migrations
 
             modelBuilder.Entity("Flaw.Models.PendingPaymentModel", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<double>("Amount");
 
-                    b.Property<string>("CashPaymentForeignKey");
+                    b.Property<int>("CashPaymentForeignKey");
 
-                    b.Property<string>("CashPaymentId");
+                    b.Property<int?>("CashPaymentId");
 
                     b.Property<double?>("DepositOrDebt");
 
-                    b.Property<string>("FeeId");
+                    b.Property<int?>("FeeId");
 
-                    b.Property<string>("MembershipFeeForeignKey");
+                    b.Property<int>("MembershipFeeForeignKey");
 
                     b.Property<DateTime>("PayedOn");
 
@@ -235,9 +243,9 @@ namespace Flaw.Migrations
 
                     b.Property<int>("Status");
 
-                    b.Property<string>("TransferPaymentForeignKey");
+                    b.Property<int>("TransferPaymentForeignKey");
 
-                    b.Property<string>("TransferPaymentId");
+                    b.Property<int?>("TransferPaymentId");
 
                     b.HasKey("Id");
 
@@ -252,7 +260,8 @@ namespace Flaw.Migrations
 
             modelBuilder.Entity("Flaw.Models.Privilege", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description");
 
@@ -267,11 +276,12 @@ namespace Flaw.Migrations
 
             modelBuilder.Entity("Flaw.Models.PrivilegeModel", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("End");
 
-                    b.Property<string>("MembershipFeeFoeignKey");
+                    b.Property<int>("MembershipFeeFoeignKey");
 
                     b.Property<long>("PrivilegeNumber");
 
@@ -288,7 +298,8 @@ namespace Flaw.Migrations
 
             modelBuilder.Entity("Flaw.Models.TransferPayment", b =>
                 {
-                    b.Property<string>("Id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<double>("Amount");
 
@@ -298,7 +309,7 @@ namespace Flaw.Migrations
 
                     b.Property<string>("FullName");
 
-                    b.Property<string>("MembershipFeeId");
+                    b.Property<int>("MembershipFeeId");
 
                     b.Property<string>("PaymentNo");
 

@@ -9,8 +9,9 @@ namespace Flaw.Models
 {
     public class MembershipFee
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public string Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
         [Display(Name = "Անուն")]
         [Required]

@@ -30,14 +30,9 @@ namespace Flaw.Controllers
         }
 
         // GET: Privileges/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var privilege = await _context.Privileges.SingleOrDefaultAsync(m => m.Id == id);
+            var privilege = await _context.Privileges.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
             if (privilege == null)
             {
                 return NotFound();
@@ -50,7 +45,10 @@ namespace Flaw.Controllers
         //[Authorize(Roles = )]
         public async Task<IActionResult> Notifications()
         {
-            var priv = await _context.PrivilegeModels.Where(p => p.End.Date >= DateTime.Now.Date && (p.End - DateTime.Now).TotalDays <= 3).ToListAsync();
+            var priv =
+                await _context.PrivilegeModels.AsNoTracking()
+                    .Where(p => p.End.Date >= DateTime.Now.Date && (p.End - DateTime.Now).TotalDays <= 3)
+                    .ToListAsync();
             return View(priv);
         }
 
@@ -73,7 +71,6 @@ namespace Flaw.Controllers
         {
             if (ModelState.IsValid)  //&& privilege.Start.Date >= DateTime.Now.Date
             {
-                privilege.Id = Guid.NewGuid().ToString();
                 //privilege.PrivilegeNumber = privilege.GetHashCode();
                 _context.Add(privilege);
 
@@ -107,13 +104,8 @@ namespace Flaw.Controllers
         }
 
         // GET: Privileges/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var privilege = await _context.Privileges.SingleOrDefaultAsync(m => m.Id == id);
             if (privilege == null)
             {
@@ -128,7 +120,7 @@ namespace Flaw.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Type,Description,Discount")] Privilege privilege)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Type,Description,Discount")] Privilege privilege)
         {
             if (id != privilege.Id)
             {
@@ -189,7 +181,7 @@ namespace Flaw.Controllers
         }
 
         // GET: Privileges/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id == null)
             {
@@ -208,7 +200,7 @@ namespace Flaw.Controllers
         // POST: Privileges/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var privilege = await _context.Privileges.SingleOrDefaultAsync(m => m.Id == id);
             _context.Privileges.Remove(privilege);
@@ -216,7 +208,7 @@ namespace Flaw.Controllers
             return RedirectToAction("Index");
         }
 
-        private bool PrivilegeExists(string id)
+        private bool PrivilegeExists(int id)
         {
             return _context.Privileges.Any(e => e.Id == id);
         }

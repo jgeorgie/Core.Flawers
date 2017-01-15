@@ -9,8 +9,9 @@ namespace Flaw.Models
 {
     public class CashModel
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public string Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
         [Display(Name = "Փասթաթղթի համարը")]
         public string OrdersNumber { get; set; }
@@ -38,7 +39,7 @@ namespace Flaw.Models
         public BargainType Type { get; set; }
 
 
-        public string MembershipFeeId { get; set; }
+        public int MembershipFeeId { get; set; }
         public MembershipFee Fee { get; set; }
 
     }

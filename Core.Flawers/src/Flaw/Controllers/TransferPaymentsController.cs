@@ -29,14 +29,9 @@ namespace Flaw.Controllers
         }
 
         // GET: TransferPayments/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var transferPayment = await _context.TransferPayments.SingleOrDefaultAsync(m => m.Id == id);
+            var transferPayment = await _context.TransferPayments.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
             if (transferPayment == null)
             {
                 return NotFound();
@@ -69,7 +64,7 @@ namespace Flaw.Controllers
             return View(transferPayment);
         }
 
-        public IActionResult CreateForFee(string feeId)
+        public IActionResult CreateForFee(int feeId)
         {
             return PartialView("_CreateTransferForFee");
         }
@@ -81,8 +76,12 @@ namespace Flaw.Controllers
         {
             if (ModelState.IsValid)
             {
-                var fee = await _context.MembershipFees.SingleOrDefaultAsync(f => f.Id == transferPayment.MembershipFeeId);
-                var payments = await _context.Payments.Where(p => p.MembershipFeeForeignKey == fee.Id && p.Status == PaymentStatus.Pending).OrderBy(p => p.PaymentDeadline).ToListAsync();
+                var fee = await _context.MembershipFees.AsNoTracking().SingleOrDefaultAsync(f => f.Id == transferPayment.MembershipFeeId);
+                var payments =
+                    await _context.Payments.AsNoTracking()
+                        .Where(p => p.MembershipFeeForeignKey == fee.Id && p.Status == PaymentStatus.Pending)
+                        .OrderBy(p => p.PaymentDeadline)
+                        .ToListAsync();
                 double amount = transferPayment.Amount;
 
                 if (amount > 0)
@@ -110,12 +109,6 @@ namespace Flaw.Controllers
                             }
                             else
                             {
-                                //if (payments[i].DepositOrDebt == null)
-                                //{
-                                //    payments[i].DepositOrDebt = amount;
-                                //}
-                                //else
-                                //{ }
                                 payments[i].DepositOrDebt += amount;
 
                                 _context.Update(payments[i]);
@@ -128,7 +121,6 @@ namespace Flaw.Controllers
 
                 fee.LeftOver -= transferPayment.Amount;
                 _context.Update(fee);
-                transferPayment.Id = Guid.NewGuid().ToString();
                 _context.Add(transferPayment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "MembershipFees");
@@ -139,14 +131,9 @@ namespace Flaw.Controllers
 
 
         // GET: TransferPayments/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var transferPayment = await _context.TransferPayments.SingleOrDefaultAsync(m => m.Id == id);
+            var transferPayment = await _context.TransferPayments.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
             if (transferPayment == null)
             {
                 return NotFound();
@@ -160,7 +147,7 @@ namespace Flaw.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Amount,Date,PaymentNo,Destination,FullName,MembershipFeeId")] TransferPayment transferPayment)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Amount,Date,PaymentNo,Destination,FullName,MembershipFeeId")] TransferPayment transferPayment)
         {
             if (id != transferPayment.Id)
             {
@@ -193,7 +180,7 @@ namespace Flaw.Controllers
 
         // GET: TransferPayments/Delete/5
         [Authorize(Roles = "SuperAdmin")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id == null)
             {
@@ -213,7 +200,7 @@ namespace Flaw.Controllers
         [Authorize(Roles = "SuperAdmin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var transferPayment = await _context.TransferPayments.SingleOrDefaultAsync(m => m.Id == id);
             _context.TransferPayments.Remove(transferPayment);
@@ -221,7 +208,7 @@ namespace Flaw.Controllers
             return RedirectToAction("Index");
         }
 
-        private bool TransferPaymentExists(string id)
+        private bool TransferPaymentExists(int id)
         {
             return _context.TransferPayments.Any(e => e.Id == id);
         }

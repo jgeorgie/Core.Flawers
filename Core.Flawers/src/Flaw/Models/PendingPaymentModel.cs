@@ -10,8 +10,9 @@ namespace Flaw.Models
 {
     public class PendingPaymentModel
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public string Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
         [Display(Name = "Վերջնաժամկետ")]
         [DataType(DataType.Date)]
@@ -28,14 +29,14 @@ namespace Flaw.Models
         [Display(Name = "Կարգավիճակ")]
         public PaymentStatus Status { get; set; }
 
-        public string MembershipFeeForeignKey { get; set; }
+        public int MembershipFeeForeignKey { get; set; }
         public MembershipFee Fee { get; set; }
 
 
-        public string TransferPaymentForeignKey { get; set; }
+        public int TransferPaymentForeignKey { get; set; }
         public TransferPayment TransferPayment { get; set; }
 
-        public string CashPaymentForeignKey { get; set; }
+        public int CashPaymentForeignKey { get; set; }
         public CashModel CashPayment { get; set; }
 
     }

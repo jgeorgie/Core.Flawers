@@ -11,10 +11,8 @@ namespace Flaw.Models
     {
        
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public string Id { get; set; }
-
-
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
         [Display(Name = "Արտոնության տեսակ")]
         public string Type { get; set; }
